@@ -6,6 +6,7 @@
 - We need 7 major and 2 minors make 1 major
 
 Main themes we like to focus on according to the discussion and some modules from those:
+
 *Web:*
 - Backend (Backend itself is not a module we can just have it or not and if we have it it must be php but if we choose the module then it's Fastify with Node.js)
 - Backend database (minor)
@@ -34,4 +35,12 @@ Main themes we like to focus on according to the discussion and some modules fro
 - Major module: Replace basic Pong with server-side Pong and implement a API?
 
 So, the focus is not really on the game play or user experience but more technical stuff like cybsec, user mngmt and devops.
+
+`UPDATES 12.3`
+- Discussed we should first build the mandatory part: frontend and the game.
+      - Single page app.
+      - Must run on a container
+      - The game must adhere the default frontend constraints?
+- Therefore need some study on how to do it and then start doing it together make tasks etc.
+
   
