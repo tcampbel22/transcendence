@@ -43,4 +43,13 @@ So, the focus is not really on the game play or user experience but more technic
       - The game must adhere the default frontend constraints?
 - Therefore need some study on how to do it and then start doing it together make tasks etc.
 
+`MODULES 20.3`
+- Backend
+- Database
+- Std user MGNT
+- Remote authentication
+- Remote players
+- Xavis security module
+- Two/factor authentication
+- Backend as microservices
   
