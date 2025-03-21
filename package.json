@@ -2,5 +2,8 @@
   "devDependencies": {
     "jest": "^29.7.0",
     "sqlite3": "^5.1.7"
+  },
+  "scripts": {
+    "test": "cd backend && npm test"
   }
 }
