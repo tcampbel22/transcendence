@@ -1,0 +1,8 @@
+{
+  "Dependencies": {
+    "typescript": "^5.8.2"
+  },
+  "scrpits": {
+    "build": "tsc; cp src/index.html dist/index.html"
+  }
+}
