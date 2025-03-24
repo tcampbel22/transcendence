@@ -2,7 +2,7 @@
   "Dependencies": {
     "typescript": "^5.8.2"
   },
-  "scrpits": {
+  "scripts": {
     "build": "tsc; cp src/index.html dist/index.html"
   }
 }
