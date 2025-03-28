@@ -18,7 +18,8 @@ const App: React.FC = () => {
         <button>versus AI</button>
         <button>Tournament</button>
         <Login />
-        <h2>Score: {leftScore} - {rightScore}</h2>
+        <h2>Player 1 : {leftScore}</h2> 
+        <h2>Player 2 : {rightScore}</h2>
         <Pong setLeftScore={setLeftScore} setRightScore={setRightScore} />
       </div>} />
         <Route path="/register" element={<Register />} />

@@ -78,17 +78,32 @@ const Pong: React.FC<PongProps> = ({ setLeftScore, setRightScore }) => {
     }
 
     if (newBallX <= 0 || newBallX >= BOARD_WIDTH - BALL_SIZE) {
-      if (newBallX <= 0) {
-        setRightScore((score) => (score >= 5 ? 0 : score + 1));
-      } else {
-        setLeftScore((score) => (score >= 5 ? 0 : score + 1));
-      }
-      newBallX = BOARD_WIDTH / 2;
-      newBallY = BOARD_HEIGHT / 2;
-      ballSpeedX.current = BALL_SPEED * (Math.random() > 0.5 ? 1 : -1);
-      ballSpeedY.current = BALL_SPEED * (Math.random() > 0.5 ? 1 : -1);
-    }
 
+        if (newBallX <= 0) {  
+            setRightScore((score) => {
+                const newScore = score + 1;
+                if (newScore > 5) {
+                    setLeftScore(0);
+                    return 0;
+                }
+                return newScore;
+            });
+        } 
+        else if (newBallX >= BOARD_WIDTH - BALL_SIZE) {  
+            setLeftScore((score) => {
+                const newScore = score + 1;
+                if (newScore > 5) {
+                    setRightScore(0);
+                    return 0;
+                }
+                return newScore;
+            });
+        }
+        newBallX = BOARD_WIDTH / 2;
+        newBallY = BOARD_HEIGHT / 2;
+        ballSpeedX.current = BALL_SPEED * (Math.random() > 0.5 ? 1 : -1);
+        ballSpeedY.current = BALL_SPEED * (Math.random() > 0.5 ? 1 : -1);
+    }
     setBallX(newBallX);
     setBallY(newBallY);
   };
@@ -105,7 +120,11 @@ const Pong: React.FC<PongProps> = ({ setLeftScore, setRightScore }) => {
     if (!ctx) return;
 
     ctx.clearRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
+
     ctx.fillStyle = 'red';
+    ctx.fillRect(0, 0, BOARD_WIDTH, 2);
+    ctx.fillRect(0, BOARD_HEIGHT - 5, BOARD_WIDTH, 2);
+    ctx.fillStyle = 'black';
     ctx.fillRect(ballX, ballY, BALL_SIZE, BALL_SIZE);
     ctx.fillStyle = 'green';
     ctx.fillRect(0, leftPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
@@ -115,7 +134,6 @@ const Pong: React.FC<PongProps> = ({ setLeftScore, setRightScore }) => {
 
   return (
     <div>
-      <h1>Pong Game</h1>
       <canvas ref={canvasRef} width={BOARD_WIDTH} height={BOARD_HEIGHT} />
     </div>
   );
