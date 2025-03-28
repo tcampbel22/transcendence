@@ -2,7 +2,7 @@ import React, { useState }  from "react";
 import { Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Pong from "./Pong";
+import Pong from "./components/Pong";
 
 const App: React.FC = () => {
 
