@@ -1,0 +1,25 @@
+services:
+  nginx:
+    build:
+      context: ./backend/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "4433:4433"
+      - "8080:80"
+    depends_on:
+      - nodejs
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  nodejs:
+    build:
+      context: ./backend/nodejs
+      dockerfile: Dockerfile
+    networks:
+      - app_network
+    restart: unless-stopped
+
+networks:
+  app_network:
+    driver: bridge
