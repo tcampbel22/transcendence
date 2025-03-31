@@ -1,9 +1,33 @@
-const fastify = require("fastify")({ logger: true });
-await fastify.register(require("@fastify/helmet"));
+import Fastify from "fastify";
+import helmet from "@fastify/helmet";
+
+const fastify = Fastify({ logger: true });
+
+await fastify.register(helmet);
 
 // Declare a route
 fastify.get("/", async (request, reply) => {
 	return { hello: "world" };
+});
+
+// Health check route
+fastify.get("/api/health", async (request, reply) => {
+	return { status: "ok" };
+});
+
+// Calculator route
+fastify.post("/api/calculate", async (request, reply) => {
+	const numbers = request.body.numbers;
+	try {
+		const result = numbers
+			.split(",")
+			.map((x) => parseInt(x.trim()))
+			.reduce((a, b) => a + b);
+		return `Result: ${result}`;
+	} catch (error) {
+		reply.code(400);
+		return "Invalid input";
+	}
 });
 
 // Start the server
