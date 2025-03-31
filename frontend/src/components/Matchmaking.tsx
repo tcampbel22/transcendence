@@ -16,8 +16,34 @@ const TournamentModal: React.FC<{ isOpen: boolean; closeModal: () => void }> = (
 
   // Function to handle player selection
   const addPlayer = (playerName: string) => {
-    setPlayers((prev) => [...prev, playerName]);
+	if (!parsePlayerName(playerName))
+		return ;
+	else if (players.length == parseInt(tournamentType[0]))
+		alert(`Cannot add more players to this tournament`);
+	else if (players.find((existingPlayer) => existingPlayer === playerName))
+		alert(`${playerName} already exists, choose another name`);
+	else
+    	setPlayers((prev) => [...prev, playerName]);
   };
+
+  const isAlphaNum = (name: string): boolean => {
+	return /^[a-zA-Z0-9]+$/.test(name);
+  } 
+  const parsePlayerName = (playerName: string) : boolean => {
+	if (playerName.length === 0) {
+		alert("Player name cannot be empty");
+		return false;
+	}
+	else if (!isAlphaNum(playerName)) {
+		alert("Invalid characters in name, please use alpha-numeric only");
+		return false;
+	}
+	return true;
+  }
+  //Remove player from players array
+  const removePlayer = (playerName: string) => {
+	setPlayers(players.filter(player => player !== playerName));
+  }
 
   // Function to handle the creation of random matches
   const createRandomMatches = () => {
@@ -39,7 +65,7 @@ const TournamentModal: React.FC<{ isOpen: boolean; closeModal: () => void }> = (
 
   // Function to handle tournament setup
   const handleTournamentStart = () => {
-    if (players.length >= parseInt(tournamentType[0])) {
+    if (players.length == parseInt(tournamentType[0])) {
       createRandomMatches();
     } else {
       alert(`Please add at least ${tournamentType[0]} players.`);
@@ -56,15 +82,15 @@ const TournamentModal: React.FC<{ isOpen: boolean; closeModal: () => void }> = (
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="modal-content bg-black p-6 rounded shadow-lg">
-        <button className="absolute top-2 right-2" onClick={closeModal}>X</button>
+    <div className="modal-overlay fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center">
+      <div className="modal-content bg-white p-6 rounded shadow-lg">
+        <button className="absolute top-2 right-2 font-bold" onClick={closeModal}>X</button>
         <h1 className="text-xl font-bold text-center mb-4">Tournament</h1>
 
         <div className="mb-4">
           <label className="text-lg">Choose Tournament Type:</label>
           <select
-            className="bg-black p-2 rounded border"
+            className="bg-white p-2 rounded border"
             value={tournamentType}
             onChange={handleTournamentChange}
           >
@@ -78,7 +104,10 @@ const TournamentModal: React.FC<{ isOpen: boolean; closeModal: () => void }> = (
           <h2 className="text-lg font-semibold">Players</h2>
           <ul>
             {players.map((player, index) => (
-              <li key={index}>{player}</li>
+              <li key={index} className='flex justify-between items-center'>
+			  <span>{player}</span>
+			  <button className='font-bold text-red-500 hover:text-red-200' onClick={() => removePlayer(player)}>Remove</button>
+			  </li>
             ))}
           </ul>
           <input
@@ -127,10 +156,10 @@ const TournamentButton: React.FC = () => {
   return (
     <div>
       <button
-        className="bg-green-500 text-white p-2 rounded"
+        className="bg-green-500 text-white p-2 rounded-lg font-bold"
         onClick={openModal}
       >
-        Open Tournament
+        Tournament
       </button>
 
       <TournamentModal isOpen={isModalOpen} closeModal={closeModal} />
