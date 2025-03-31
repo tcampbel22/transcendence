@@ -1,13 +1,26 @@
 import React from "react";
+import { Routes, Route } from "react-router-dom";
+import login from "./components/Login";
+import Login from "./components/Login";
+import Register from "./components/Register";
 import Matchmaking from "./components/Matchmaking";
+
 
 const App: React.FC = () => {
     return (
-		<div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
-		<h1 className="text-3xl font-bold mb-4">Welcome to Pong</h1>
-		<Matchmaking/>
-	  </div>
-      );
+      <Routes>
+        <Route path="/" element={
+      <div style={{ textAlign: "center", marginTop: "50px" }}>
+        <h1>Welcome to Pong</h1>
+        <p>Choose if you want to play 1v1 or tournament</p>
+        <button>1v1</button>
+        <button>versus AI</button>
+        <button>Tournament</button>
+        <Login />
+      </div>} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    );
 };
 
 
