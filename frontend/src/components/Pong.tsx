@@ -19,6 +19,8 @@ const Pong: React.FC<PongProps> = ({ setLeftScore, setRightScore }) => {
   const [rightPaddleY, setRightPaddleY] = useState(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
   const [ballX, setBallX] = useState(BOARD_WIDTH / 2);
   const [ballY, setBallY] = useState(BOARD_HEIGHT / 2);
+  const [leftScore, setLeftScoreState] = useState(0);
+  const [rightScore, setRightScoreState] = useState(0);
 
   const ballSpeedX = useRef<number>(BALL_SPEED);
   const ballSpeedY = useRef<number>(BALL_SPEED);
@@ -80,8 +82,10 @@ const Pong: React.FC<PongProps> = ({ setLeftScore, setRightScore }) => {
     if (newBallX <= 0 || newBallX >= BOARD_WIDTH - BALL_SIZE) {
       if (newBallX <= 0) {
         setRightScore((score) => (score >= 5 ? 0 : score + 1));
+        setRightScoreState((score) => (score >= 5 ? 0 : score + 1));
       } else {
         setLeftScore((score) => (score >= 5 ? 0 : score + 1));
+        setLeftScoreState((score) => (score >= 5 ? 0 : score + 1));
       }
       newBallX = BOARD_WIDTH / 2;
       newBallY = BOARD_HEIGHT / 2;
@@ -100,9 +104,15 @@ const Pong: React.FC<PongProps> = ({ setLeftScore, setRightScore }) => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) {
+      console.error("Canvas not found"); 
+      return;
+    }
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {
+      console.error("Failed to get 2D context");
+      return;
+    }
 
     ctx.clearRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
     ctx.fillStyle = 'red';
@@ -116,6 +126,7 @@ const Pong: React.FC<PongProps> = ({ setLeftScore, setRightScore }) => {
   return (
     <div>
       <h1>Pong Game</h1>
+      <h2>Score: {leftScore} - {rightScore}</h2> {}
       <canvas ref={canvasRef} width={BOARD_WIDTH} height={BOARD_HEIGHT} />
     </div>
   );
