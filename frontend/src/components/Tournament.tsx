@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // Define the types of tournaments
-type TournamentType = '2player' | '4player' | '8player';
+type TournamentType = '4player' | '8player';
 
 interface Match {
   player1: string;
@@ -10,7 +10,7 @@ interface Match {
 }
 
 const TournamentModal: React.FC<{ isOpen: boolean; closeModal: () => void }> = ({ isOpen, closeModal }) => {
-  const [tournamentType, setTournamentType] = useState<TournamentType>('2player');
+  const [tournamentType, setTournamentType] = useState<TournamentType>('4player');
   const [players, setPlayers] = useState<string[]>([]);
   const [matches, setMatches] = useState<Match[]>([]);
 
@@ -40,6 +40,7 @@ const TournamentModal: React.FC<{ isOpen: boolean; closeModal: () => void }> = (
 	}
 	return true;
   }
+  
   //Remove player from players array
   const removePlayer = (playerName: string) => {
 	setPlayers(players.filter(player => player !== playerName));
@@ -94,7 +95,6 @@ const TournamentModal: React.FC<{ isOpen: boolean; closeModal: () => void }> = (
             value={tournamentType}
             onChange={handleTournamentChange}
           >
-            <option value="2player">2 Player</option>
             <option value="4player">4 Player</option>
             <option value="8player">8 Player</option>
           </select>

@@ -2,6 +2,10 @@ import React, { useEffect, useState, useRef } from 'react';
 
 type PongProps = {
   onScoreChange?: (leftScore: number, rightScore: number) => void;
+  onGameEnd?: (winner: string) => void;  // Add this for tournament progression
+  player1?: string;                      // Add player names
+  player2?: string;
+  winningScore?: number;                 // Make winning score configurable
 };
 
 const PADDLE_WIDTH = 10;
@@ -13,7 +17,13 @@ const PADDLE_SPEED = 5;
 const BALL_SPEED = 5;
 const WINNING_SCORE = 1;
 
-const Pong: React.FC<PongProps> = ({ onScoreChange }) => {
+const Pong: React.FC<PongProps> = ({ 
+  onScoreChange, 
+  onGameEnd,
+  player1 = "Left Player", 
+  player2 = "Right Player",
+  winningScore = WINNING_SCORE 
+}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [leftPaddleY, setLeftPaddleY] = useState(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
   const [rightPaddleY, setRightPaddleY] = useState(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
@@ -30,18 +40,20 @@ const Pong: React.FC<PongProps> = ({ onScoreChange }) => {
   const updateLeftScore = (newScore: number) => {
     setLeftScore(newScore);
     onScoreChange?.(newScore, rightScore);
-    if (newScore >= WINNING_SCORE) {
+    if (newScore >= (winningScore || WINNING_SCORE)) {
       setGameOver(true);
       setWinner('left');
+      onGameEnd?.(player1); // Notify tournament system who won
     }
   };
 
   const updateRightScore = (newScore: number) => {
     setRightScore(newScore);
     onScoreChange?.(leftScore, newScore);
-    if (newScore >= WINNING_SCORE) {
+    if (newScore >= (winningScore || WINNING_SCORE)) {
       setGameOver(true);
       setWinner('right');
+      onGameEnd?.(player2); // Notify tournament system who won
     }
   };
 
@@ -98,7 +110,6 @@ const Pong: React.FC<PongProps> = ({ onScoreChange }) => {
 
   useEffect(() => {
     if (gameOver) return;
-    
     // Move updateGame inside so it always has fresh state
     const updateGame = () => {
       let newBallX = ballX + ballSpeedX.current;
@@ -144,7 +155,9 @@ const Pong: React.FC<PongProps> = ({ onScoreChange }) => {
 
     ctx.clearRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
     ctx.fillStyle = 'red';
-    ctx.fillRect(ballX, ballY, BALL_SIZE, BALL_SIZE);
+	ctx.beginPath();
+	ctx.arc(ballX + BALL_SIZE/2, ballY + BALL_SIZE/2, BALL_SIZE/2, 0, Math.PI * 2);
+	ctx.fill();
     ctx.fillStyle = 'green';
     ctx.fillRect(0, leftPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
     ctx.fillStyle = 'blue';
@@ -158,7 +171,7 @@ const Pong: React.FC<PongProps> = ({ onScoreChange }) => {
       <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-70">
         <div className="bg-white p-6 rounded-lg text-center">
           <h2 className="text-2xl font-bold mb-4">
-            {winner === 'left' ? 'Left Player' : 'Right Player'} Wins!
+            {winner === 'left' ? player1 : player2} Wins!
           </h2>
           <button 
             onClick={resetGame}
