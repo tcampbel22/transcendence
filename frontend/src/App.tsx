@@ -25,9 +25,6 @@ const App: React.FC = () => {
         <button>versus AI</button>
         <button>Tournament</button>
         <Login />
-        <h2>Player 1 : {leftScore}</h2> 
-        <h2>Player 2 : {rightScore}</h2>
-        <Pong setLeftScore={setLeftScore} setRightScore={setRightScore} />
       </div>} />
         <Route path="/register" element={<Register />} />
         <Route path="/1v1" element={<Pong setLeftScore={setLeftScore} setRightScore={setRightScore} />} />
