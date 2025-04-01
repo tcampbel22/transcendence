@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState }  from "react";
 import { Routes, Route } from "react-router-dom";
-import login from "./components/Login";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Pong from "./Pong";
 
 const App: React.FC = () => {
+
+  const [leftScore, setLeftScore] = useState(0);
+  const [rightScore, setRightScore] = useState(0);
     return (
       <Routes>
         <Route path="/" element={
@@ -15,6 +18,9 @@ const App: React.FC = () => {
         <button>versus AI</button>
         <button>Tournament</button>
         <Login />
+        <h2>Player 1 : {leftScore}</h2> 
+        <h2>Player 2 : {rightScore}</h2>
+        <Pong setLeftScore={setLeftScore} setRightScore={setRightScore} />
       </div>} />
         <Route path="/register" element={<Register />} />
       </Routes>
