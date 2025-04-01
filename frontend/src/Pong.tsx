@@ -8,10 +8,11 @@ type PongProps = {
 const PADDLE_WIDTH = 10;
 const PADDLE_HEIGHT = 100;
 const BALL_SIZE = 10;
-const BOARD_WIDTH = 800;
-const BOARD_HEIGHT = 400;
-const PADDLE_SPEED = 5;
-const BALL_SPEED = 5;
+const BOARD_WIDTH = 1000;
+const BOARD_HEIGHT = 500;
+const PADDLE_SPEED = 10;
+const BALL_SPEED = 10;
+const PADDLE_SIZE = 5;
 
 const Pong: React.FC<PongProps> = ({ setLeftScore, setRightScore }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -21,7 +22,7 @@ const Pong: React.FC<PongProps> = ({ setLeftScore, setRightScore }) => {
   const [ballY, setBallY] = useState(BOARD_HEIGHT / 2);
 
   const ballSpeedX = useRef<number>(BALL_SPEED);
-  const ballSpeedY = useRef<number>(BALL_SPEED);
+  const ballSpeedY = useRef<number>(0);
   const keysPressed = useRef<{ [key: string]: boolean }>({ ArrowUp: false, ArrowDown: false, w: false, s: false });
 
   useEffect(() => {
@@ -71,14 +72,17 @@ const Pong: React.FC<PongProps> = ({ setLeftScore, setRightScore }) => {
 
     if (newBallX <= PADDLE_WIDTH && newBallY + BALL_SIZE >= leftPaddleY && newBallY <= leftPaddleY + PADDLE_HEIGHT) {
       ballSpeedX.current *= -1;
+      const impact = (newBallY - leftPaddleY) / PADDLE_HEIGHT - 0.5;
+      ballSpeedY.current = BALL_SPEED * impact * 1.5;
     }
 
     if (newBallX >= BOARD_WIDTH - PADDLE_WIDTH - BALL_SIZE && newBallY + BALL_SIZE >= rightPaddleY && newBallY <= rightPaddleY + PADDLE_HEIGHT) {
       ballSpeedX.current *= -1;
+      const impact = (newBallY - rightPaddleY) / PADDLE_HEIGHT - 0.5;
+      ballSpeedY.current = BALL_SPEED * impact * 1.5;
     }
 
     if (newBallX <= 0 || newBallX >= BOARD_WIDTH - BALL_SIZE) {
-
         if (newBallX <= 0) {  
             setRightScore((score) => {
                 const newScore = score + 1;
@@ -99,10 +103,16 @@ const Pong: React.FC<PongProps> = ({ setLeftScore, setRightScore }) => {
                 return newScore;
             });
         }
-        newBallX = BOARD_WIDTH / 2;
-        newBallY = BOARD_HEIGHT / 2;
+        if (newBallX >= BOARD_WIDTH / 2)
+            setBallX(BOARD_WIDTH - PADDLE_WIDTH - PADDLE_SIZE);
+        else
+            setBallX(0 + PADDLE_WIDTH + PADDLE_SIZE);
+        setBallY(BOARD_HEIGHT / 2);
         ballSpeedX.current = BALL_SPEED * (Math.random() > 0.5 ? 1 : -1);
-        ballSpeedY.current = BALL_SPEED * (Math.random() > 0.5 ? 1 : -1);
+        ballSpeedY.current = 0;
+        setLeftPaddleY(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
+        setRightPaddleY(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
+        return ;
     }
     setBallX(newBallX);
     setBallY(newBallY);
@@ -115,18 +125,20 @@ const Pong: React.FC<PongProps> = ({ setLeftScore, setRightScore }) => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) 
+        return;
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx)
+      return;
 
     ctx.clearRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
 
     ctx.fillStyle = 'red';
-    ctx.fillRect(0, 0, BOARD_WIDTH, 2);
-    ctx.fillRect(0, BOARD_HEIGHT - 5, BOARD_WIDTH, 2);
+    ctx.fillRect(0, 0, BOARD_WIDTH, PADDLE_SIZE);
+    ctx.fillRect(0, BOARD_HEIGHT - PADDLE_SIZE, BOARD_WIDTH, PADDLE_SIZE);
     ctx.fillStyle = 'black';
     ctx.fillRect(ballX, ballY, BALL_SIZE, BALL_SIZE);
-    ctx.fillStyle = 'green';
+    ctx.fillStyle = 'yellow';
     ctx.fillRect(0, leftPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
     ctx.fillStyle = 'blue';
     ctx.fillRect(BOARD_WIDTH - PADDLE_WIDTH, rightPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
