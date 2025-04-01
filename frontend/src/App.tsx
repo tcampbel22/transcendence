@@ -2,7 +2,6 @@ import React, { useState }  from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Tournament from "./components/Tournament";
 import OneVsOnePage from "./pages/OneVsOnePage";
 import TournamentPage from "./pages/TournamentPage";
 
