@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const Login = () => {
   return (
-	<div >
+	<div>
 	  <h1 className='font-bold text-3xl m-5'>Login</h1>
 	  <form className="flex flex-col items-center gap-4">
 		<input type="text" placeholder="Username" className='border border-black px-1 rounded w-auto focus:outline-none'/>
