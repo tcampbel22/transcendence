@@ -1,33 +1,31 @@
 import React, { useState }  from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Pong from "./components/Pong";
-import { Link } from "react-router-dom";
+import OneVsOnePage from "./pages/OneVsOnePage";
+import TournamentPage from "./pages/TournamentPage";
+
 
 const App: React.FC = () => {
-
-  const [leftScore, setLeftScore] = useState(0);
-  const [rightScore, setRightScore] = useState(0);
-  const navigate = useNavigate();
-
-  const handle1v1Click = () => {
-    navigate("/1v1");
-  };
+	
 
     return (
       <Routes>
         <Route path="/" element={
-      <div style={{ textAlign: "center", marginTop: "50px" }}>
+      <div className="flex flex-col items-center gap-4 my-4">
         <h1>Welcome to Pong</h1>
         <p>Choose if you want to play 1v1 or tournament</p>
-        <button onClick ={handle1v1Click}>1v1</button>
-        <button>versus AI</button>
-        <button>Tournament</button>
-        <Login />
+			<Link to="/play/1v1">
+            <button className="bg-red-500 hover:bg-red-200 text-white font-bold py-2 px-2 rounded-lg shadow-md transition">1v1</button>
+          </Link>
+		  <Link to="/play/Tournament">
+			<button className="bg-green-500 hover:bg-green-200 text-white font-bold py-2 px-2 rounded-lg shadow-md transition">Tournament</button>
+		  </Link>
+			<Login />
       </div>} />
         <Route path="/register" element={<Register />} />
-        <Route path="/1v1" element={<Pong setLeftScore={setLeftScore} setRightScore={setRightScore} />} />
+		<Route path="/play/1v1" element={<OneVsOnePage />} />
+		<Route path="/play/Tournament" element={<TournamentPage />} />
       </Routes>
     );
 };
