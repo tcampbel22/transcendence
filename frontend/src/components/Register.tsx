@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const Register = () => {
 	const [username, setUsername] = useState('')
@@ -21,41 +22,22 @@ const Register = () => {
 			password,
 		};
 		try {
-			// const response = await fetch("our backend", {
-			// 	method: 'POST',
-			// 	headers: {
-			// 		'Content-Type':'application/json',
-			// 	},
-			// 	body: JSON.stringify(payload)
-			// });
-			const fakeResponse = {
-				ok: true,
-				json: async () => ({ message: "User registered successfully" }),
-			  };
-			// if (!response.ok) {
-			// 	throw new Error('Registration error')
-			// }
-			if (!fakeResponse.ok) {
-				throw new Error('Registration failed');
-			  }
-
-			const data = await fakeResponse.json();
-			console.log("Success (FAKE):", data);
-			// const data = await response.json()
-			// console.log('Success', data)
-			setRegistered(true)
-			setTimeout(() => { navigate('/') }, 1500 )
+			const response = await axios.post("/api/register", payload);
+		
+			console.log("Success:", response.data);
+		
+			setRegistered(true);
+			setTimeout(() => {
+			  navigate('/');
+			}, 1500);
+		} catch (error: any) {
+			console.error("Error:", error.response?.data || error.message);
 		}
-		catch (error) {
-			console.error('Error:', error);
-		}
-		setPassword('')
-		setUsername('')
 	}
 
 	return (
 	<div className="flex flex-col items-center gap-4 bg-gradient-moving bg-[length:200%_200%] animate-bg-pan min-h-screen">
-		<h1 className="text-3xl m-1 items-center opacity-0 animate-fade-in delay-700">Register</h1>
+		<h1 className="text-3xl m-1 items-center opacity-0 animate-fade-in delay-700 font-semibold">Register</h1>
 		<div className='animate-slide-in'>
 			<form className="flex flex-col items-center gap-4" onSubmit={handleSubmit}>
 				<input 	type="text"
@@ -72,7 +54,7 @@ const Register = () => {
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 				/>
-				<button  type="submit" className='border-2 border-black rounded px-1 hover:shadow-lg '>Register</button>
+				<button  type="submit" className='border-2 border-black font-bold rounded px-1 hover:shadow-lg '>Register</button>
 				{registered && (
 					<p className="transition-opacity duration-600 opacity-100 text-black font-semibold mt-4">
 							✅ Registration successful! You can now log in. ✅

@@ -1,18 +1,15 @@
-import React from "react"
 import { Link} from "react-router-dom";
 
-type ButtonGroupProps = {
-	buttons: string[]
-}
 
+const Button = () => {
+	const buttons = ["1v1", "Tournament"]
 
-const Button = ({buttons} : ButtonGroupProps) => {
 	return (
-		<div className="flex flex-col items-center gap-4">
-			<p className="font-semibold text-1xl m-4">Choose if you want to play 1v1 or tournament</p>
+		<div className="flex flex-col items-center gap-4 animate-slide-in">
+			<p className="font-semibold text-1xl m-4 animate-fade-in">Choose if you want to play 1v1 or tournament</p>
 			{buttons.map((label, i) => (
   				<Link to={`/play/${label}`} key={i}>
-    				<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-auto">
+    				<button className="border-2 border-black font-bold rounded px-2 hover:shadow-lg m-2 animate-fade-in">
      			 		{label}
    					 </button>
   				</Link>
