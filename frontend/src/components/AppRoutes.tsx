@@ -8,7 +8,7 @@ import Login from "./Login"
 const AppRoutes = () => (
 	<Routes>
 		<Route path="/" element={
-			<div className="min-h-screen text-center bg-gradient-moving bg-[length:200%_200%] animate-bg-pan">
+			<div>
 				<h1 className="font-bold text-5xl">Welcome to Pong</h1>
 				<Login />
 				{/* need to move these some where else, could use navigate(); after a succesfull login */}

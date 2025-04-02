@@ -10,13 +10,10 @@ import AppRoutes from "./components/AppRoutes";
 
 
 const App: React.FC = () => {
-
-  const [leftScore, setLeftScore] = useState(0);
-  const [rightScore, setRightScore] = useState(0);
   const buttons = ["1v1", "Tournament"]
 
     return (
-	<div>
+	<div className="min-h-screen text-center bg-gradient-moving bg-[length:200%_200%] animate-bg-pan">
 		<AppRoutes />
 		<Button buttons={buttons}/>
 	</div>
