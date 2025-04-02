@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY package*.json ./
 COPY node_modules ./node_modules
-COPY pong.js .
+COPY index.js ./
+COPY routes ./routes 
 
-ENTRYPOINT [ "node", "pong.js" ]
+ENTRYPOINT [ "node", "index.js" ]
