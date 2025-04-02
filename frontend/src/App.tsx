@@ -1,9 +1,12 @@
 import React, { useState }  from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Pong from "./Pong";
 import Button from "./components/ButtonGroup";
+import OneVsOnePage from "./pages/OneVsOnePage";
+import TournamentPage from "./pages/TournamentPage";
+
 
 const App: React.FC = () => {
 
@@ -22,7 +25,10 @@ const App: React.FC = () => {
         {/* <h2>Score: {leftScore} - {rightScore}</h2> */}
         {/* <Pong setLeftScore={setLeftScore} setRightScore={setRightScore} /> */}
       </div>} />
+		
         <Route path="/register" element={<Register />} />
+		<Route path="/play/1v1" element={<OneVsOnePage />} />
+		<Route path="/play/Tournament" element={<TournamentPage />} />
       </Routes>
     );
 };
