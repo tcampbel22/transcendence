@@ -16,7 +16,7 @@ const BOARD_HEIGHT = 500;
 const PADDLE_SPEED = 10;
 const BALL_SPEED = 10;
 const PADDLE_SIZE = 5;
-const WINNING_SCORE = 1;
+const WINNING_SCORE = 5;
 
 const Pong: React.FC<PongProps> = ({ 
   onScoreChange, 
@@ -133,26 +133,6 @@ const Pong: React.FC<PongProps> = ({
       }
   
       if (newBallX <= 0 || newBallX >= BOARD_WIDTH - BALL_SIZE) {
-          if (newBallX <= 0) {  
-              setRightScore((score) => {
-                  const newScore = score + 1;
-                  if (newScore > 5) {
-                      setLeftScore(0);
-                      return 0;
-                  }
-                  return newScore;
-              });
-          } 
-          else if (newBallX >= BOARD_WIDTH - BALL_SIZE) {  
-              setLeftScore((score) => {
-                  const newScore = score + 1;
-                  if (newScore > 5) {
-                      setRightScore(0);
-                      return 0;
-                  }
-                  return newScore;
-              });
-          }
           if (newBallX <= 0) {
             updateRightScore(rightScore + 1);
           } else {
@@ -175,7 +155,7 @@ const Pong: React.FC<PongProps> = ({
     
     const gameLoop = setInterval(updateGame, 1000 / 60);
     return () => clearInterval(gameLoop);
-  }, [gameOver, ballX, ballY, leftScore, rightScore]);
+  }, [gameOver, ballX, ballY]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
