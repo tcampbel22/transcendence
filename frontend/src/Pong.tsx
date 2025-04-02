@@ -114,9 +114,9 @@ const Pong: React.FC<PongProps> = ({ setLeftScore, setRightScore }) => {
   }, [ballX, ballY, leftPaddleY, rightPaddleY]);
 
   return (
-    <div>
-      <h1>Pong Game</h1>
-      <canvas ref={canvasRef} width={BOARD_WIDTH} height={BOARD_HEIGHT} />
+    <div className='font-bold flex flex-col'>
+      <h1 className='text-5xl m-3'>Pong Game</h1>
+      <canvas ref={canvasRef} width={BOARD_WIDTH} height={BOARD_HEIGHT} className='border border-white items-center bg-black p-5'/>
     </div>
   );
 };
