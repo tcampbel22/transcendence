@@ -17,9 +17,10 @@ const App: React.FC = () => {
       <div className="min-h-screen text-center bg-gradient-moving bg-[length:200%_200%] animate-bg-pan">
         <h1 className="font-bold text-5xl">Welcome to Pong</h1>
         <Login />
-        <Button buttons={buttons}/>
-        <h2>Score: {leftScore} - {rightScore}</h2>
-        <Pong setLeftScore={setLeftScore} setRightScore={setRightScore} />
+        {/* need to move these some where else, could use navigate(); after a succesfull login */}
+        {/* <Button buttons={buttons}/> */}
+        {/* <h2>Score: {leftScore} - {rightScore}</h2> */}
+        {/* <Pong setLeftScore={setLeftScore} setRightScore={setRightScore} /> */}
       </div>} />
         <Route path="/register" element={<Register />} />
       </Routes>

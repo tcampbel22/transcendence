@@ -14,7 +14,7 @@ module.exports = {
 		},
 		animation: {
 		  'bg-pan': 'bg-pan 20s ease infinite',
-		  'slide-in': 'slideIn 0.7s ease-out forwards',
+		  'slide-in': 'slideIn 0.6s ease-out forwards',
 		  'fade-in': 'fadeIn 1s ease-in forwards',
 		},
 		keyframes: {
