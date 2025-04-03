@@ -34,8 +34,9 @@ const Login = () => {
 	}
 
   	return (
-		<div className='flex flex-col justify-center items-center gap-4'>
-		<h1 className='font-bold text-3xl m-5 animate-fade-in'>Login</h1>
+		<div className='flex flex-col justify-center min-h-screen animate-fade-in'>
+		<h1 className="font-bold text-5xl">Welcome to Pong</h1>
+		<h2 className='font-bold text-3xl m-5 animate-fade-in'>Login</h2>
 		<form className="flex flex-col items-center gap-4 animate-slide-in" onSubmit={handleSubmit}>
 			<input 	type="text"
 					placeholder="Username"
