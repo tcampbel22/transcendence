@@ -18,11 +18,6 @@ fastify.get("/", async (request, reply) => {
 	// This is just for testing purposes I guess
 })
 
-fastify.post("/api/register", async (request, reply) => {
-	console.log("GET /api/register");
-	const { username, password } = request.body;	
-})
-
 // Start the server
 const start = async () => {
 	try {
