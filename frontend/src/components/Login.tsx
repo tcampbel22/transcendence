@@ -12,7 +12,7 @@ const Login = () => {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 
-		console.log("uname:", username)
+		console.log("uname:", username) //testing purposes
 		console.log("pword:", password)
 
 		const loginInput = {
@@ -20,9 +20,10 @@ const Login = () => {
 			password,
 		}
 		try {
+			//uncomment these when database is connected to the frontend
 			// const response = await axios.post("/api/login", loginInput)
-
 			// console.log("logged in succesfully", response.data)
+			navigate('/mainpage')
 		} catch (error: any) {
 			console.error("Error:", error.response?.data || error.message);
 			setLoginError(error.response?.data?.message || "invalid username or password")
@@ -30,14 +31,12 @@ const Login = () => {
 		}
 		setPassword('')
 		setUsername('')
-		console.log("great success, lets play the game")
-		navigate('/mainpage')
 	}
 
   	return (
-		<div>
-		<h1 className='font-bold text-3xl m-5'>Login</h1>
-		<form className="flex flex-col items-center gap-4" onSubmit={handleSubmit}>
+		<div className='flex flex-col justify-center items-center gap-4'>
+		<h1 className='font-bold text-3xl m-5 animate-fade-in'>Login</h1>
+		<form className="flex flex-col items-center gap-4 animate-slide-in" onSubmit={handleSubmit}>
 			<input 	type="text"
 					placeholder="Username"
 					className='border-2 border-black px-1 rounded w-auto focus:outline-none'

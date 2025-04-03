@@ -9,13 +9,9 @@ import ButtonGroup from "./ButtonGroup"
 const AppRoutes = () => (
 	<Routes>
 		<Route path="/" element={
-			<div>
+			<div className="flex flex-col justify-center min-h-screen animate-fade-in">
 				<h1 className="font-bold text-5xl">Welcome to Pong</h1>
 				<Login />
-				{/* need to move these some where else, could use navigate(); after a succesfull login */}
-				{/* <Button buttons={buttons}/> */}
-				{/* <h2>Score: {leftScore} - {rightScore}</h2> */}
-				{/* <Pong setLeftScore={setLeftScore} setRightScore={setRightScore} /> */}
 			</div>
 	  	}/>
 		<Route path="/register" element={<Register />} />
