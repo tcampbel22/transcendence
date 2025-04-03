@@ -10,7 +10,7 @@ module.exports = {
 		  beige: "#f5f5dc",
 		},
 		backgroundImage: {
-		  'gradient-moving': 'linear-gradient(270deg, #ffecd2, #fcb69f, #a1c4fd, #c2e9fb)',
+		  'gradient-moving': 'linear-gradient(270deg, #ffffff, #94a3b8, #3b82f6)',
 		},
 		animation: {
 		  'bg-pan': 'bg-pan 20s ease infinite',
