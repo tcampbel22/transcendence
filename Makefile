@@ -10,12 +10,12 @@ YELLOW = $$(printf '\033[0;33m')
 RED = $$(printf '\033[0;31m')
 RESET = $$(printf '\033[0m')
 
-all: setup up
+all: setup build-frontend up
 
 setup: ssl_cert
 	@echo "$(YELLOW)Building docker images...$(RESET)"
-	@docker compose -f $(DOCKER_COMPOSE_FILE) up setup
-	@echo "$(GREEN)Setup built.$(RESET)"
+#	@docker compose -f $(DOCKER_COMPOSE_FILE) up setup
+#	@echo "$(GREEN)Setup built.$(RESET)"
 
 ssl_cert:
 	@mkdir -p $(SSL_DIR)
@@ -31,6 +31,10 @@ ssl_cert:
 		echo "$(YELLOW)SSL certificate already exists.$(RESET)"; \
 	fi
 
+build-frontend:
+	cd frontend && npm install && npm run build
+	mv frontend/dist backend/api/frontend/dist
+
 up:
 	@echo "$(YELLOW)Building docker images...$(RESET)"
 	@docker-compose -f $(DOCKER_COMPOSE_FILE) up -d
@@ -39,13 +43,15 @@ up:
 down:
 	@echo "$(YELLOW)Stopping docker containers...$(RESET)"
 	@docker compose -f $(DOCKER_COMPOSE_FILE) down
-	@docker compose -f $(DOCKER_COMPOSE_FILE) down setup
+#	@docker compose -f $(DOCKER_COMPOSE_FILE) down setup
 	@echo "$(GREEN)Docker containers stopped.$(RESET)"
 
 clean: down
 	@echo "$(YELLOW)Removing docker images...$(RESET)"
 	@docker system prune -af
 	@echo "$(GREEN)Docker images removed.$(RESET)"
+	rm -rf ./frontend/dist
+	rm -rf ./backend/api/frontend
 
 logs:
 	@echo "$(YELLOW)Container logs:$(RESET)"
