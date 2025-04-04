@@ -3,33 +3,57 @@ import { Link } from "react-router-dom";
 
 
 const Hub = () => {
+    const baseCardClass = "w-60 h-72 bg-cover bg-center rounded-lg shadow-lg p-1 transform hover:scale-110 transition-all duration-300 ease-in-out relative hover:shadow-xl hover:rotate-1";
     return (
-        <div className="">
-         <h1 className="items-center text-4xl font-bold animate-fade-in">Welcome</h1>
+        <div style={{
+                    backgroundImage: 'url("/images/epic_background.png")',
+                }}
+        >
+         <h1 className="items-center text-white text-4xl font-bold animate-fade-in">Welcome</h1>
             <div className="flex  min-h-screen sm:flex-row items-center justify-center gap-6 animate-slide-in">
-                <div    className="w-64 h-80 bg-cover bg-center rounded-lg shadow-lg p-1 hover:scale-105 transition relative"
+
+                <div    className={baseCardClass} //1v1
                         style={{
-                            backgroundImage: `url("https://tse3.mm.bing.net/th?id=OIP.hoJXUuebo-w3GKdlGCo_owHaDk&pid=Api")`  // 👈 your image path here
+                            backgroundImage: `url("/images/1v1_2.png")`,
                         }}
                     >
                     <Link 
                         to="/play/1v1" 
-                        className="w-full h-full flex items-center justify-center text-xl font-bold text-white backdrop-brightness-50 rounded-lg">1v1</Link>
+                        className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">    
+                    </Link>
                 </div>
-                <div className="w-64 h-80 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg shadow-md p-1 hover:scale-105 transition">
+
+                <div className={baseCardClass} //tournamenet
+                        style={{
+                            backgroundImage: `url("/images/tournament.png")`,
+                        }}
+                    >
                     <Link 
-                        to="/tournament" 
-                        className="flex w-full h-full text-center text-xl font-semibold text-white items-center justify-center">Tournament</Link>
+                        to="/play/tournament" 
+                        className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">
+                    </Link>
                 </div>
-                <div className="w-64 h-80 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg shadow-md p-1 hover:scale-105 transition">
+
+                <div className={baseCardClass} //profile
+                        style={{
+                            backgroundImage: `url("/images/happy_profile.png")`,
+                        }}
+                    >
                     <Link 
                         to="/profile" 
-                        className="flex w-full h-full text-center text-xl font-semibold text-white items-center justify-center">Profile</Link>
+                        className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">     
+                    </Link>
                 </div>
-                <div className="w-64 h-80 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg shadow-md p-1 hover:scale-105 transition">
+                
+                <div className={baseCardClass} //settings/logout
+                        style={{
+                            backgroundImage: `url("/images/settings.png")`,
+                        }}
+                    >
                     <Link 
                         to="/settings" 
-                        className="flex w-full h-full text-center text-xl font-semibold text-white items-center justify-center">Settings</Link>
+                        className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">    
+                    </Link>
                 </div>
             </div>
         </div>
