@@ -1,6 +1,7 @@
 import Fastify from "fastify";
 import helmet from "@fastify/helmet";
 import authRoute from "./routes/auth.js";
+import registerRoute from "./routes/register.js";
 
 const fastify = Fastify({ logger: true });
 
@@ -8,18 +9,13 @@ const fastify = Fastify({ logger: true });
 fastify.register(helmet);
 
 fastify.register(authRoute) 
-/*this will route all requests to /api/login to the authRoute function. We can also use fastify.register(authRoute, 
-{ prefix: "/api" }) to add a prefix to all routes in the authRoute function. authRoute is in routes/auth.js*/
+fastify.register(registerRoute)
+// Register routes so ther is a route for each reqeuest which are registered here
 
 fastify.get("/", async (request, reply) => {
 	console.log("GET /");
 	reply.status(200).send("hello from backend");
 	// This is just for testing purposes I guess
-})
-
-fastify.post("/api/register", async (request, reply) => {
-	console.log("GET /api/register");
-	const { username, password } = request.body;	
 })
 
 // Start the server
