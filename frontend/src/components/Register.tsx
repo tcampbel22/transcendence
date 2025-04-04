@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 const Register = () => {
+	const baseAddress = "http://127.0.0.1:3000"
 	const [username, setUsername] = useState('')
   	const [password, setPassword] = useState('')
 	const [email, setEmail] = useState('')
@@ -24,7 +25,7 @@ const Register = () => {
 			password,
 		};
 
-		const response = await axios.post('/api/register', payload)
+		const response = await axios.post('api/routes/register', payload)
 		return response.data.userId
 	}
 
