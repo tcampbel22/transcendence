@@ -1,0 +1,5 @@
+/*I think here should be the user input validation and the same function 
+coudle be used in other files like in register. and auth.
+Because at least protection from sql injection and other attacks is quite 
+uniersal for all inputs.
+*/
