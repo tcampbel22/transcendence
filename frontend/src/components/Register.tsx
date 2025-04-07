@@ -70,6 +70,7 @@ const Register = () => {
 		<div className='animate-slide-in'>
 			<form className="flex flex-col items-center gap-4" onSubmit={handleSubmit}>
 				<input 	type="text"
+						required
 						placeholder="username"
 						autoComplete="new-username"
 						className='border-2 border-black px-1 rounded w-auto focus:outline-none'
@@ -77,6 +78,7 @@ const Register = () => {
 						onChange={(e) => setUsername(e.target.value)}
 				/>
 				<input 	type="email"
+						required
 						placeholder="email@example.com"
 						autoComplete="new-email"
 						className='border-2 border-black px-1 rounded w-auto focus:outline-none'
@@ -84,6 +86,7 @@ const Register = () => {
 						onChange={(e) => setEmail(e.target.value)}
 				/>
 				<input 	type="password"
+						required
 						placeholder="password"
 						autoComplete="new-password"
 						className='border-2 border-black px-1 rounded w-auto focus:outline-none'
