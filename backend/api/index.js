@@ -1,10 +1,12 @@
 import Fastify from "fastify";
 import helmet from "@fastify/helmet";
+import cors from "@fastify/cors";
+import fastifyStatic from "@fastify/static";
 import path from "path";
 import { fileURLToPath } from "url";
-import fastifyStatic from "@fastify/static";
 import authRoute from "./routes/auth.js";
 import registerRoute from "./routes/register.js";
+import { testConnection } from "../database/db.js";
 
 const fastify = Fastify({ logger: true });
 
@@ -18,6 +20,7 @@ fastify.register(fastifyStatic, {
 	prefix: "/",
 });
 
+fastify.register(cors);
 fastify.register(authRoute) 
 fastify.register(registerRoute)
 // Register routes so ther is a route for each reqeuest which are registered here
@@ -32,6 +35,10 @@ fastify.get("/", async (request, reply) => {
 // Start the server
 const start = async () => {
 	try {
+		const dbConnected = await testConnection();
+		if (!dbConnected) {
+		  throw new Error('Failed to connect to the database');
+		}
 		await fastify.listen({ port: 3000, host: "0.0.0.0" });
 	} catch (err) {
 		fastify.log.error(err);

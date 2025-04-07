@@ -6,4 +6,9 @@ COPY package*.json ./
 RUN npm install --production
 COPY . .
 
-ENTRYPOINT [ "node", "index.js" ]
+COPY ./backend/database/utils/db_entrypoint.sh /app/db_entrypoint.sh
+
+RUN chmod +x /app/db_entrypoint.sh
+
+# ENTRYPOINT [ "node", "index.js" ]
+ENTRYPOINT ["/bin/sh", "/app/db_entrypoint.sh", "npm", "start"]

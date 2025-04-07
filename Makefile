@@ -33,7 +33,7 @@ ssl_cert:
 
 build-frontend:
 	cd frontend && npm install && npm run build
-	mv frontend/dist backend/api/frontend/dist
+	mv frontend/dist backend/api/
 
 up:
 	@echo "$(YELLOW)Building docker images...$(RESET)"
