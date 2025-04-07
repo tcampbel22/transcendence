@@ -13,7 +13,12 @@ const App: React.FC = () => {
   
 
     return (
-	<div className="min-h-screen text-center bg-gradient-moving bg-[length:200%_200%] animate-bg-pan">
+	<div 	className="min-h-screen text-center"
+			style={{
+				backgroundImage: 'url("/images/epic_background.png")',
+				
+			}}
+	>
 		<AppRoutes />
 	</div>
     );
