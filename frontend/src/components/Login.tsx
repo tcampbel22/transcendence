@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+	const API_URL = "http://127.0.0.1:3000"
 	const [password, setPassword] = useState('')
 	const [username, setUsername] = useState('')
 	const [loginError, setLoginError] = useState('');
@@ -21,12 +22,12 @@ const Login = () => {
 		}
 		try {
 			//uncomment these when database is connected to the frontend
-			// const response = await axios.post("/api/login", loginInput)
-			// console.log("logged in succesfully", response.data)
+			const response = await axios.post(`${API_URL}/api/login`, loginInput)
+			console.log("logged in succesfully", response.data)
 			navigate('/hub')
 		} catch (error: any) {
 			console.error("Error:", error.response?.data || error.message);
-			setLoginError(error.response?.data?.message || "invalid username or password")
+			setLoginError("invalid username or password")
 			return;
 		}
 		setPassword('')
