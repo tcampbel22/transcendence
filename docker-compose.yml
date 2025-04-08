@@ -42,17 +42,16 @@ services:
 
   nodejs:
     build:
-      context: ./backend
-      dockerfile: api/Dockerfile
+      context: ./backend/fastify
+      dockerfile: Dockerfile
     container_name: nodejs
     volumes:
-      - ./backend/database/data/soyboys.db:/app/soyboys.db
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
+      - ./backend/fastify/database/data/soyboys.db:/app/database/data/soyboys.db
+    env_file:
+        - backend/fastify/.env
     networks:
       - app_network
     restart: unless-stopped
-    command: ["backend/database/utils/db_entrypoint.sh", "npm", "start"]
 
   # elasticsearch:
   #   build:

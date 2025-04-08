@@ -1,6 +1,6 @@
 import Fastify from "fastify";
 import helmet from "@fastify/helmet";
-import cors from "@fastify/cors";
+// import cors from "@fastify/cors";
 import fastifyStatic from "@fastify/static";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -16,13 +16,16 @@ fastify.register(helmet);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 fastify.register(fastifyStatic, {
-	root: path.join(__dirname, "frontend/dist"),
+	root: path.join(__dirname, "dist"),
 	prefix: "/",
 });
-
-fastify.register(cors);
-fastify.register(authRoute) 
-fastify.register(registerRoute)
+try {
+	fastify.register(authRoute) 
+	fastify.register(registerRoute)
+	// await fastify.register(cors)
+} catch (err) {
+	fastify.log.error(err);
+}
 // Register routes so ther is a route for each reqeuest which are registered here
 
 /*

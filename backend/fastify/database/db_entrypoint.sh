@@ -1,9 +1,9 @@
 #!/bin/bash
 
-cd ./app
-
+cd database
 echo "Initialising db..."
 npx prisma generate
 npx prisma db push
+cd ..
 echo "Starting application"
 exec "$@"
