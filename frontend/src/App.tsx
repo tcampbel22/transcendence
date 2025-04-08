@@ -1,31 +1,26 @@
 import React, { useState }  from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Pong from "./Pong";
+// import Pong from "./Pong";
+import Button from "./components/ButtonGroup";
+import OneVsOnePage from "./pages/OneVsOnePage";
+import TournamentPage from "./pages/TournamentPage";
+import AppRoutes from "./components/AppRoutes";
+
 
 const App: React.FC = () => {
+  
 
-  const [leftScore, setLeftScore] = useState(0);
-  const [rightScore, setRightScore] = useState(0);
     return (
-      <Routes>
-        <Route path="/" element={
-      <div style={{ textAlign: "center", marginTop: "50px" }}>
-        <h1>Welcome to Pong</h1>
-        <p>Choose if you want to play 1v1 or tournament</p>
-        <button>1v1</button>
-        <button>versus AI</button>
-        <button>Tournament</button>
-        <Login />
-        <h2>Player 1 : {leftScore}</h2> 
-        <h2>Player 2 : {rightScore}</h2>
-        <Pong setLeftScore={setLeftScore} setRightScore={setRightScore} />
-      </div>} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
+	<div className="min-h-screen text-center bg-gradient-moving bg-[length:200%_200%] animate-bg-pan">
+		<AppRoutes />
+	</div>
     );
 };
 
 
 export default App;
+{/* <Route path="/register" element={<Register />} />
+<Route path="/play/1v1" element={<OneVsOnePage />} />
+<Route path="/play/Tournament" element={<TournamentPage />} /> */}
