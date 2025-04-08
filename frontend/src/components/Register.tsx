@@ -10,6 +10,7 @@ const Register = () => {
 	const [registered, setRegistered] = useState(false)
 	const [image, setImage] = useState<File | null>(null)
 	const [preview, setPreview] = useState<string | null>(null)
+	const [loginError, setError] = useState('')
 	const navigate = useNavigate();
 
 	const registerUser = async () => {
@@ -59,8 +60,8 @@ const Register = () => {
 			  navigate('/');
 			}, 1500);
 		} catch (error: any) {
-			// console.error("Error:", error.response?.data || error.message);
-			navigate('/');
+			console.error("Error:", error.response?.data || error.message);
+			setError(error.response.data)
 		}
 	}
 
@@ -119,6 +120,10 @@ const Register = () => {
 							✅ Registration successful! You can now log in. ✅
 					</p>
 	)}
+				{loginError && 
+			(
+				<p className="text-red-600 font-semibold text-center my-2"> {loginError} </p>
+			)}
 			</form>
 		</div>
 	</div>

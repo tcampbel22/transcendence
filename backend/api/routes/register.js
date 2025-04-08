@@ -26,7 +26,13 @@ export default async function registerRoute(fastify, options) {
 	};
 
 	
-	fastify.post("/api/register", registerSchema, async (request, reply) => {
+	fastify.post("/api/register", {
+		schema: registerSchema, 
+		handler: async (request, reply) => {
+
+
+
+
 		console.log("POST /api/register");
 		const { username, email, password } = request.body;
 		console.log("ysername:", username)
@@ -52,6 +58,7 @@ export default async function registerRoute(fastify, options) {
 			console.error("Error hashing password:", error);
 			reply.status(500).send({ message: "Internal server error" });
 			return;
+		}
 		}
 	});
 }
