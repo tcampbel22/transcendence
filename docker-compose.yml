@@ -42,9 +42,13 @@ services:
 
   nodejs:
     build:
-      context: ./backend/api
+      context: ./backend/fastify
       dockerfile: Dockerfile
     container_name: nodejs
+    volumes:
+      - ./backend/fastify/database/data:/app/database/data
+    env_file:
+        - backend/fastify/.env
     networks:
       - app_network
     restart: unless-stopped

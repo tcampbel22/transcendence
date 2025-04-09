@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 const Register = () => {
+	const baseAddress = "https://localhost:4433";
 	const [username, setUsername] = useState('')
   	const [password, setPassword] = useState('')
 	const [email, setEmail] = useState('')
@@ -24,7 +25,7 @@ const Register = () => {
 			password,
 		};
 
-		const response = await axios.post('/api/register', payload)
+		const response = await axios.post(`${baseAddress}/api/register`, payload)
 		return response.data.userId
 	}
 
@@ -34,7 +35,7 @@ const Register = () => {
 		formData.append("image", image)
 
 		try {
-			const response = await axios.post('/api/users/userId/image', image) //the post location might change
+			const response = await axios.post(`${baseAddress}/api/users/userId/image`, image) //the post location might change
 			console.log("Profile image uploaded:", response.data);
 			
 		} catch (error: any) {
@@ -69,6 +70,7 @@ const Register = () => {
 		<div className='animate-slide-in'>
 			<form className="flex flex-col items-center gap-4" onSubmit={handleSubmit}>
 				<input 	type="text"
+						required
 						placeholder="username"
 						autoComplete="new-username"
 						className='border-2 border-black px-1 rounded w-auto focus:outline-none'
@@ -76,6 +78,7 @@ const Register = () => {
 						onChange={(e) => setUsername(e.target.value)}
 				/>
 				<input 	type="email"
+						required
 						placeholder="email@example.com"
 						autoComplete="new-email"
 						className='border-2 border-black px-1 rounded w-auto focus:outline-none'
@@ -83,6 +86,7 @@ const Register = () => {
 						onChange={(e) => setEmail(e.target.value)}
 				/>
 				<input 	type="password"
+						required
 						placeholder="password"
 						autoComplete="new-password"
 						className='border-2 border-black px-1 rounded w-auto focus:outline-none'
