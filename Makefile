@@ -33,7 +33,7 @@ ssl_cert:
 
 build-frontend:
 	cd frontend && npm install && npm run build
-	mv frontend/dist backend/api/frontend/dist
+	mv frontend/dist backend/api/dist
 
 up:
 	@echo "$(YELLOW)Building docker images...$(RESET)"
@@ -51,7 +51,7 @@ clean: down
 	@docker system prune -af
 	@echo "$(GREEN)Docker images removed.$(RESET)"
 	rm -rf ./frontend/dist
-	rm -rf ./backend/api/frontend
+	rm -rf ./backend/api/dist
 
 logs:
 	@echo "$(YELLOW)Container logs:$(RESET)"

@@ -14,7 +14,7 @@ fastify.register(helmet);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 fastify.register(fastifyStatic, {
-	root: path.join(__dirname, "frontend/dist"),
+	root: path.join(__dirname, "dist"),
 	prefix: "/",
 });
 
