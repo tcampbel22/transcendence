@@ -16,7 +16,7 @@ datasource db {
 // Users Table - Stores user info
 model User {
   id       Int      @id @default(autoincrement())
-  alias    String   @unique
+  username String   @unique
   email    String
   password String
   picture  String   @default("default.png") // Enforce PNG/JPG in validation

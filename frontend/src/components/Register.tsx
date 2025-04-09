@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 const Register = () => {
-	const baseAddress = "http://127.0.0.1:3000";
+	const baseAddress = "https://localhost:4433";
 	const [username, setUsername] = useState('')
   	const [password, setPassword] = useState('')
 	const [email, setEmail] = useState('')
