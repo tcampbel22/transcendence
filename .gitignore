@@ -4,3 +4,4 @@ ssl/
 *.pem
 *.db
 *.db-journal
+.env

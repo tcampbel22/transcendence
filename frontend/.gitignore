@@ -1,0 +1,7 @@
+LICENSE
+node_modules
+ssl/
+*.pem
+*.db
+*.db-journal
+.env

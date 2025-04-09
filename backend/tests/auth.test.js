@@ -1,6 +1,6 @@
 import Fastify from "fastify";
-import authRoute from "../api/routes/auth.js";
-import registerRoute from "../api/routes/register.js";
+import authRoute from "../fastify/api/routes/auth.js";
+import registerRoute from "../fastify/api/routes/register.js";
 import supertest from "supertest";
 
 describe("Backend API Tests", () => {
