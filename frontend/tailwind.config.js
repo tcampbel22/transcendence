@@ -16,8 +16,14 @@ module.exports = {
 		  'bg-pan': 'bg-pan 20s ease infinite',
 		  'slide-in': 'slideIn 0.6s ease-out forwards',
 		  'fade-in': 'fadeIn 1s ease-in forwards',
+		  'pop': 'pop 0.3s ease-out forwards',
 		},
 		keyframes: {
+			pop: {
+				'0%': { transform: 'scale(1)' },
+				'50%': { transform: 'scale(1.1)' },
+				'100%': { transform: 'scale(1.03)' },
+			},
 		  'bg-pan': {
 			'0%':   { backgroundPosition: '0% 50%' },
 			'50%':  { backgroundPosition: '100% 50%' },
@@ -44,6 +50,7 @@ module.exports = {
 	  },
 	},
 	plugins: [],
+	"purge": false
   }
 
 // style={{ textAlign: "center", marginTop: "50px" }}
