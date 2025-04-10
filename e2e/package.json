@@ -1,0 +1,16 @@
+{
+  "type": "module",
+  "name": "e2e",
+  "version": "1.0.0",
+  "main": "app.e2e.test.js",
+  "scripts": {
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
