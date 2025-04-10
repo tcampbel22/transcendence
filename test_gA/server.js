@@ -22,7 +22,7 @@ passport.use(new GoogleStrategy({
   clientSecret: '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',
   callbackURL: 'http://localhost:3000/auth/google/callback'
 }, (accessToken, refreshToken, profile, done) => {
-  console.log("Perfil de usuario:", profile);
+  console.log("Perfil de usuario:", profile);//logs for database
   return done(null, profile);
 }));
 
@@ -41,7 +41,7 @@ app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'em
 app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
-    res.send('Inicio de sesión exitoso con Google!');
+    res.redirect('http://localhost:5173/play/1v1')
   }
 );
 
