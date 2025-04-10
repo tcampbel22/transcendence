@@ -53,5 +53,5 @@ jobs:
             sleep 5
           done
     
-      - name:: Run E2E Tests
+      - name: Run E2E Tests
         run: cd e2e && npm test
