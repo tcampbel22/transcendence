@@ -10,14 +10,20 @@ module.exports = {
 		  beige: "#f5f5dc",
 		},
 		backgroundImage: {
-		  'gradient-moving': 'linear-gradient(270deg, #ffecd2, #fcb69f, #a1c4fd, #c2e9fb)',
+		  'gradient-moving': 'linear-gradient(270deg, #ffffff, #94a3b8, #3b82f6)',
 		},
 		animation: {
 		  'bg-pan': 'bg-pan 20s ease infinite',
 		  'slide-in': 'slideIn 0.6s ease-out forwards',
 		  'fade-in': 'fadeIn 1s ease-in forwards',
+		  'pop': 'pop 0.3s ease-out forwards',
 		},
 		keyframes: {
+			pop: {
+				'0%': { transform: 'scale(1)' },
+				'50%': { transform: 'scale(1.1)' },
+				'100%': { transform: 'scale(1.03)' },
+			},
 		  'bg-pan': {
 			'0%':   { backgroundPosition: '0% 50%' },
 			'50%':  { backgroundPosition: '100% 50%' },
@@ -44,6 +50,7 @@ module.exports = {
 	  },
 	},
 	plugins: [],
+	"purge": false
   }
 
 // style={{ textAlign: "center", marginTop: "50px" }}

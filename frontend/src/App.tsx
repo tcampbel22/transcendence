@@ -10,12 +10,16 @@ import AppRoutes from "./components/AppRoutes";
 
 
 const App: React.FC = () => {
-  const buttons = ["1v1", "Tournament"]
+  
 
     return (
-	<div className="min-h-screen text-center bg-gradient-moving bg-[length:200%_200%] animate-bg-pan">
+	<div 	className="min-h-screen text-center"
+			style={{
+				backgroundImage: 'url("/images/epic_background.png")',
+				
+			}}
+	>
 		<AppRoutes />
-		<Button buttons={buttons}/>
 	</div>
     );
 };
