@@ -2,9 +2,11 @@ import Fastify from "fastify";
 import authRoute from "../fastify/api/routes/auth.js";
 import registerRoute from "../fastify/api/routes/register.js";
 import supertest from "supertest";
+import { PrismaClient } from "@prisma/client";
 
 describe("Backend API Tests", () => {
   let app;
+  const prisma = new PrismaClient();
 
   beforeAll(async () => {
     app = Fastify();
@@ -14,7 +16,12 @@ describe("Backend API Tests", () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    if (app) {
+      await app.close(); // Close Fastify server
+    }
+    if (prisma) {
+      await prisma.$disconnect(); // Disconnect Prisma Client
+    }
   });
 
   it("should return 200 and success message for valid login", async () => {
