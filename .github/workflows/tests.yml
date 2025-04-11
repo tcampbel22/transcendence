@@ -18,7 +18,10 @@ jobs:
           cache: npm
           cache-dependency-path: backend/tests/package.json
 
-      - name: Install Backend Dependencies
+      - name: Install backend Dependencies
+        run: cd backend && npm install
+
+      - name: Install test Dependencies
         run: cd backend/tests && npm install
 
       - name: Run Tests
