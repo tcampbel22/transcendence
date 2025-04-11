@@ -40,7 +40,7 @@ jobs:
       - name: Debug Directory Structure
         run: ls
       - name: Create .env file
-        run:  cd /backend/fastify; echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+        run:  cd ../backend/fastify; echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
       - name: Checkout Code
         uses: actions/checkout@v4
 
