@@ -38,9 +38,7 @@ jobs:
     steps:
 
       - name: Debug Directory Structure
-        run: |
-          pwd
-          ls -R
+        run: ls
       - name: Create .env file
         run:  cd /backend/fastify; echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
       - name: Checkout Code
