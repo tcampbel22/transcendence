@@ -1,8 +1,15 @@
 {
   "dependencies": {
     "@prisma/client": "^6.5.0",
+    "@types/express": "^5.0.1",
+    "@types/express-session": "^1.18.1",
+    "@types/passport": "^1.0.17",
     "argon2": "^0.41.1",
     "better-sqlite3": "^11.9.1",
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
     "prisma": "^6.5.0"
   },
   "devDependencies": {

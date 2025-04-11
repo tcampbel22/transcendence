@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import authRoute from "./routes/auth.js";
 import registerRoute from "./routes/register.js";
 import { testConnection } from "../database/db.js";
+import googleAuth from "./routes/googleAuth.js";
 
 const fastify = Fastify({ logger: true });
 
@@ -22,6 +23,7 @@ fastify.register(fastifyStatic, {
 try {
 	fastify.register(authRoute) 
 	fastify.register(registerRoute)
+	fastify.register(googleAuth);
 	// await fastify.register(cors)
 } catch (err) {
 	fastify.log.error(err);

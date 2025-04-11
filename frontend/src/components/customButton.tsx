@@ -1,22 +1,27 @@
 import React from "react";
+import axios from "axios";
 
-type CustomButtonProps = {
+interface CustomButtonProps {
   label: string;
-  authUrl: string; // URL para la autenticación con Google
-  className?: string; // Permite personalizar estilos
-};
+  authUrl: string;
+  className?: string;
+}
 
 const CustomButton: React.FC<CustomButtonProps> = ({ label, authUrl, className }) => {
-  const handleClick = () => {
-    console.log("Redirigiendo a la autenticación con Google...");
-    window.location.href = authUrl; // Redirige al usuario a la URL de autenticación
+  const handleLogin = async (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.get(authUrl, { withCredentials: true });
+      console.log("Usuario autenticado:", response.data);
+
+    } catch (error) {
+      console.error("Error al autenticar:", error);
+    }
   };
 
   return (
-    <button
-      onClick={handleClick}
-      className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${className}`}
-    >
+    <button onClick={handleLogin} className={`border-2 border-black font-bold rounded px-2 hover:shadow-lg ${className}`}>
       {label}
     </button>
   );

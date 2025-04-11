@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import CustomButton from "./customButton";
 
 const Login = () => {
 	const API_URL = "https://localhost:4433"
@@ -62,6 +63,11 @@ const Login = () => {
 			)}
 			<p>Don't have an account? <Link to="/register" className="text-blue-600 hover:underline">Register</Link></p>
 			<p>Forgot your password? <Link to="/restore_password" className="text-blue-600 hover:underline">Reset Password</Link></p>
+			<CustomButton 
+				label="Sign in with Google" 
+				authUrl={`${API_URL}/auth/google`} 
+				className="mt-4" 
+			/>
 			</div>
 		</div>
   	);

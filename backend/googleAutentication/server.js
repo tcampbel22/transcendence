@@ -22,7 +22,7 @@ passport.use(new GoogleStrategy({
   clientSecret: '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',
   callbackURL: 'http://localhost:3000/auth/google/callback'
 }, (accessToken, refreshToken, profile, done) => {
-  console.log("Perfil de usuario:", profile);//logs for database
+  console.log("Perfil de usuario:", profile);
   return done(null, profile);
 }));
 
@@ -35,13 +35,14 @@ passport.deserializeUser((user, done) => {
 });
 
 // Ruta para iniciar sesión con Google
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'], prompt: 'select_account' }));
+
 
 // Ruta de callback después de autenticar con Google
 app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect('http://localhost:5173/play/1v1')
+    res.redirect('https://localhost:4433')
   }
 );
 
