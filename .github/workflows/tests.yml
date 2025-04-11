@@ -36,6 +36,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: unit-test
     steps:
+
+      - name: Debug Directory Structure
+        run: |
+        pwd
+        ls -R
       - name: Create .env file
         run:  cd backend/fastify; echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
       - name: Checkout Code
