@@ -9,8 +9,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: debug
-        run: ls
       - name: Set DATABASE_URL environment variable
         run:  echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
 
@@ -40,6 +38,9 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: debus
+        run:  ls
       - name: Create .env file
         run:  echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> /backend/fastify/.env
 
