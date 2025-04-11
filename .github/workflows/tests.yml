@@ -37,7 +37,7 @@ jobs:
     needs: unit-test
     steps:
       - name: Create .env file
-        run: cd; echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> backend/fastify/.env
+        run: cd../fastify; echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
       - name: Checkout Code
         uses: actions/checkout@v4
 
