@@ -2,13 +2,16 @@ import Fastify from "fastify";
 import authRoute from "../fastify/api/routes/auth.js";
 import registerRoute from "../fastify/api/routes/register.js";
 import supertest from "supertest";
-import { PrismaClient } from "@prisma/client";
+import { prisma, testConnection } from "../fastify/database/db.js";
 
 describe("Backend API Tests", () => {
   let app;
-  const prisma = new PrismaClient();
 
   beforeAll(async () => {
+    const dbConnected = await testConnection();
+    if (!dbConnected) {
+      throw new Error("Failed to connect to the database");
+    }
     app = Fastify();
     app.register(authRoute);
     app.register(registerRoute);
@@ -42,11 +45,11 @@ describe("Backend API Tests", () => {
     expect(response.body.message).toBe("Invalid credentials");
   });
 
-  it("should return 200", async () => {
+  it("should return 201", async () => {
     const response = await supertest(app.server)
       .post("/api/register")
       .send({ username: "testuser", email: "haha@gmail.com", password: "kissa" }); // Missing email and password
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(201);
   });
 });
