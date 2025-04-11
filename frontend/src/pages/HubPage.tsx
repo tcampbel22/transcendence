@@ -1,10 +1,16 @@
 import React from "react"
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 
 const Hub = () => {
-    const baseCardClass = "w-60 h-72 bg-cover bg-center rounded-lg shadow-lg p-1 transform hover:scale-110 transition-all duration-300 ease-in-out relative hover:shadow-xl hover:rotate-1";
-    return (
+    const location = useLocation()
+	const userId = location.state
+	console.log("userid is:", userId)
+	const baseCardClass = "w-60 h-72 bg-cover bg-center rounded-lg shadow-lg p-1 transform hover:scale-110 transition-all duration-300 ease-in-out relative hover:shadow-xl hover:rotate-1";
+    
+	
+	
+	return (
         <div style={{
                     backgroundImage: 'url("/images/epic_background.png")',
                 }}
