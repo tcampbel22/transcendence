@@ -4,6 +4,7 @@ on: [push, pull_request]  # Runs on every push & PR
 
 jobs:
   unit-test:
+    runs-on: ubuntu-latest
     steps:
       - name: Create .env file
         run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
@@ -28,6 +29,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: unit-test
     steps:
+      - name: Create .env file
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
       - name: Checkout Code
         uses: actions/checkout@v4
 
