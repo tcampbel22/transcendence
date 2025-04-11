@@ -6,10 +6,11 @@ jobs:
   unit-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Create environment variable
-        run: export DATABASE_URL="${{ secrets.DATABASE_URL }}"
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Set DATABASE_URL environment variable
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
 
       - name: Set Up Node.js
         uses: actions/setup-node@v4
