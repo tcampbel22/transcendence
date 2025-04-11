@@ -6,8 +6,8 @@ jobs:
   unit-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Create .env file
-        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+      - name: Create environment variable
+        run: export DATABASE_URL="${{ secrets.DATABASE_URL }}"
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -25,7 +25,7 @@ jobs:
         run: cd backend/tests && npm install
 
       - name: Init database
-        run: cd backend/fastify && bash database/entrypoint.sh
+        run: cd backend/fastify && bash database/db_entrypoint.sh
 
       - name: Run Tests
         run: cd backend/tests && npm test
