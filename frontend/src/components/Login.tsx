@@ -24,7 +24,7 @@ const Login = () => {
 			//uncomment these when database is connected to the frontend
 			const response = await axios.post(`${API_URL}/api/login`, loginInput)
 			console.log("logged in succesfully", response.data)
-			navigate('/hub')
+			navigate('/hub', {state: response.data})
 		} catch (error: any) {
 			console.error("Error:", error.response?.data || error.message);
 			setLoginError("invalid username or password")
