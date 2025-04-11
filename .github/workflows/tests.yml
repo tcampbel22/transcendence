@@ -24,6 +24,9 @@ jobs:
       - name: Install test Dependencies
         run: cd backend/tests && npm install
 
+      - name: Init database
+        run: cd backend/fastify && bash database/entrypoint.sh
+
       - name: Run Tests
         run: cd backend/tests && npm test
 
