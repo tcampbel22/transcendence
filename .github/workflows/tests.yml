@@ -57,6 +57,7 @@ jobs:
       - name: Install Dependencies
         run: cd e2e && npm install
 
-    
+      - name: wait server to run
+        run: sleep 10
       - name: Run E2E Tests
         run: cd e2e && npm test
