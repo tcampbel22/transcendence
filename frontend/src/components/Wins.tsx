@@ -8,8 +8,8 @@ type Win = {
 
 const Wins = ({victories} : Win) => {
 	return (
-		<div className="grid grid-cols-4 sm:grid-rows-1 gap-2 p-4">
-			<div 	className="text-white text-center p-6 rounded-lg shadow-md h-80 bg-cover "
+		<div className="gap-2 mb-8 p-4">
+			<div 	className="text-white text-center p-6 rounded-lg h-80 shadow-md bg-contain bg-center"
 					style={{
 						backgroundImage:'url(images/victory.png)',
 					}}
