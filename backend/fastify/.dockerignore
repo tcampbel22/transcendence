@@ -1,2 +1,2 @@
-/backend/fastify/database/data/soyboys.db
+/backend/fastify/database/data/*.db
 node_modules

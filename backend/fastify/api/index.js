@@ -1,11 +1,11 @@
 import Fastify from "fastify";
 import helmet from "@fastify/helmet";
-// import cors from "@fastify/cors";
+import cors from "@fastify/cors";
 import fastifyStatic from "@fastify/static";
 import path from "path";
 import { fileURLToPath } from "url";
-import authRoute from "./routes/auth.js";
-import registerRoute from "./routes/register.js";
+import authRoute from "./routes/auth.routes.js";
+import registerRoute from "./routes/register.routes.js";
 import { testConnection } from "../database/db.js";
 
 const fastify = Fastify({ logger: true });
@@ -20,20 +20,17 @@ fastify.register(fastifyStatic, {
 	prefix: "/",
 });
 try {
-	fastify.register(authRoute) 
-	fastify.register(registerRoute)
-	// await fastify.register(cors)
+	fastify.register(authRoute);
+	fastify.register(registerRoute);
+	// fastify.register(gameRoutes);
+	fastify.register(cors, {
+  		origin: '*',
+  		methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  		allowedHeaders: ['Content-Type', 'Authorization'],
+	});
 } catch (err) {
 	fastify.log.error(err);
 }
-// Register routes so ther is a route for each reqeuest which are registered here
-
-/*
-fastify.get("/", async (request, reply) => {
-	console.log("GET /");
-	reply.status(200).send("hello from backend");
-	// This is just for testing purposes I guess
-})*/
 
 // Start the server
 const start = async () => {
