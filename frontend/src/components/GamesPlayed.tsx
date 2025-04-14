@@ -1,10 +1,10 @@
 
-const Avatar = () => {
+const GamesPlayed = () => {
     return (
-        <div>
-            <h1>Avatar</h1>
+        <div className="bg-black col-span-2">
+            <h1 className="text-white">Games Played</h1>
         </div>
     )
 }
 
-export default Avatar;
+export default GamesPlayed;

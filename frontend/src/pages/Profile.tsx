@@ -4,6 +4,7 @@ import Losses from "../components/Losses";
 import axios from "axios";
 import ProfileBlock from "../components/ProfileBlock";
 import Avatar from "../components/Avatar";
+import GamesPlayed from "../components/GamesPlayed";
 
 
 const Profile = () => {
@@ -29,27 +30,13 @@ const Profile = () => {
 
 	//avatar component for the profile picture, not sure if this is the place to extract user info and send it to the component or just user id there
 	return (
-	<div className="max-w-screen-sm mx-auto p-4">
-      	<h1 className="font-bold text-2xl text-white mb-4">My Stats</h1>
-		<div className="grid grid-cols-2 gap-4">
-			<ProfileBlock title="Avatar">
-				<Avatar  />
-			</ProfileBlock>
-
-			{/* <ProfileBlock title="Games Played">
-				<GamesPlayed total={gamesPlayed} />
-			</ProfileBlock> */}
-
-			<ProfileBlock title="Wins">
-				<Wins victories={victories} />
-			</ProfileBlock>
-
-			<ProfileBlock title="Losses">
-				<Losses losses={losses} />
-			</ProfileBlock>
+		<div className="grid grid-cols-3 gap-4 p-6">
+			<Avatar />
+			<GamesPlayed />
+			<Wins victories={victories} />
+			<Losses losses={losses} />
 		</div>
-	</div>
-    )
+	)
 }
 
 export default Profile

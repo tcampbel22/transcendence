@@ -7,7 +7,7 @@ interface ProfileBlockProps {
 
 const ProfileBlock: React.FC<ProfileBlockProps> = ({ title, children }) => {
   return (
-    <div className="bg-black p-4 rounded-2xl shadow mb-4">
+    <div className="bg-black p-4 rounded-2xl shadow mb-4 border border-white">
       <h2 className="text-lg font-semibold text-white mb-2 ">{title}</h2>
       <div>{children}</div>
     </div>
