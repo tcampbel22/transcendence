@@ -65,7 +65,7 @@ const Login = () => {
 			<p>Forgot your password? <Link to="/restore_password" className="text-blue-600 hover:underline">Reset Password</Link></p>
 			<CustomButton 
 				label="Sign in with Google" 
-				authUrl={`${API_URL}/auth/google`} 
+				authUrl={`http://localhost:3000/auth/google`} 
 				className="mt-4" 
 			/>
 			</div>

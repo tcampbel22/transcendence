@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 import authRoute from "./routes/auth.js";
 import registerRoute from "./routes/register.js";
 import { testConnection } from "../database/db.js";
-import googleAuth from "./routes/googleAuth.js";
+//import { googleAuth } from "./routes/googleAuth.js"; // Import the googleAuth function
 
 const fastify = Fastify({ logger: true });
 
@@ -17,37 +17,30 @@ fastify.register(helmet);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 fastify.register(fastifyStatic, {
-	root: path.join(__dirname, "dist"),
-	prefix: "/",
+  root: path.join(__dirname, "dist"),
+  prefix: "/",
 });
-try {
-	fastify.register(authRoute) 
-	fastify.register(registerRoute)
-	fastify.register(googleAuth);
-	// await fastify.register(cors)
-} catch (err) {
-	fastify.log.error(err);
-}
-// Register routes so ther is a route for each reqeuest which are registered here
 
-/*
-fastify.get("/", async (request, reply) => {
-	console.log("GET /");
-	reply.status(200).send("hello from backend");
-	// This is just for testing purposes I guess
-})*/
+try {
+  fastify.register(authRoute);
+  fastify.register(registerRoute);
+ // fastify.register(googleAuth); // Register the googleAuth routes
+  // await fastify.register(cors)
+} catch (err) {
+  fastify.log.error(err);
+}
 
 // Start the server
 const start = async () => {
-	try {
-		const dbConnected = await testConnection();
-		if (!dbConnected) {
-		  throw new Error('Failed to connect to the database');
-		}
-		await fastify.listen({ port: 3000, host: "0.0.0.0" });
-	} catch (err) {
-		fastify.log.error(err);
-		process.exit(1);
-	}
+  try {
+    const dbConnected = await testConnection();
+    if (!dbConnected) {
+      throw new Error("Failed to connect to the database");
+    }
+    await fastify.listen({ port: 3000, host: "0.0.0.0" });
+  } catch (err) {
+    fastify.log.error(err);
+    process.exit(1);
+  }
 };
 start();
