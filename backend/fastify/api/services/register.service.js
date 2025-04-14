@@ -5,7 +5,7 @@ export const registerService = {
 
 	async registerUser(userData) {
 		
-		const { username, email, password } = userData;
+		const { username, email, password, picture } = userData;
 		const hashedPassword = await argon2.hash(password);
 		
 		const user = await prisma.user.create({
@@ -13,6 +13,7 @@ export const registerService = {
 				username,
 				email,
 				password: hashedPassword,
+				picture,
 			},
 		});
 

@@ -1,10 +1,20 @@
 import { registerService } from "../services/register.service.js";
+import { normalize } from "../utils/normalize.js";
+import { checkForExistingUser } from "../utils/checkForExisting.js";
 
 export const registerController = {
 
 	async registerUser(request, reply) {
 		try {
-			const { username, email, password, picture } = request.body;
+			const { username, email, password, picture } = normalize(request.body);
+			if (password.toLowerCase().includes(username.toLowerCase())) {
+				console.log("WE GOT HERE 1");
+				return reply.code(400).send({ message: "Password cannot contain username or vice versa" });
+			}
+			const existingUser = await checkForExistingUser(prisma, username);
+			if (existingUser) {
+				return reply.code(409).send({ message: "Username or email already taken" });
+			}
 			const user = await registerService.registerUser({ username, email, password, picture });
 			reply.code(201).send({
 				message: "User registered successfully",
@@ -12,9 +22,6 @@ export const registerController = {
 				username: user.username}); 
 		} catch (err) {
 			request.log.error(err);
-			if (err.code === 'P2002' && err.meta?.target?.includes('username')) {
-				return reply.code(409).send({ message: "Username already taken" });
-			  }
 			return reply.code(500).send({message: "Internal server error"});
 		}
 	},

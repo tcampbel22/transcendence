@@ -32,6 +32,15 @@ try {
 	fastify.log.error(err);
 }
 
+// fastify.register(fastifyCors, {
+// 	origin: ['http://localhost:5173'],  // Allow requests only from your frontend
+// 	methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific methods
+// 	allowedHeaders: ['Content-Type'],  // Allow specific headers if needed
+//   });
+
+// fastify.register(authRoute) 
+// fastify.register(registerRoute)
+
 // Start the server
 const start = async () => {
 	try {
