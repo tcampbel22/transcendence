@@ -10,12 +10,12 @@ export default async function authRoute(fastify, options) {
 		if (user) {
 			const isMatch = await argon2.verify(user.password, password);
 			if (!isMatch)
-				return reply.status(401).send({message: 'invalid usermane or password'});
+				return reply.status(401).send({message: 'invalid username or password'});
 			reply.status(200).send(user.id);
 		}
        
         else {
-            return reply.status(401).send({ message: "nvalid usermane or password" });
+            return reply.status(401).send({ message: "invalid username or password" });
         }
     });
 }
