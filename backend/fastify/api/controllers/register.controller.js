@@ -9,7 +9,6 @@ export const registerController = {
 		try {
 			const { username, email, password, picture } = normalize(request.body);
 			if (password.toLowerCase().includes(username.toLowerCase())) {
-				console.log("WE GOT HERE 1");
 				return reply.code(400).send({ message: "Password cannot contain username or vice versa" });
 			}
 			const existingUser = await checkForExistingUser(prisma, username);
@@ -23,7 +22,7 @@ export const registerController = {
 				username: user.username}); 
 		} catch (err) {
 			request.log.error(err);
-			return reply.code(500).send({message: "Internal server error"});
+			return reply.code(500).send({ message: "Internal server error" });
 		}
 	},
 	async getAllUsers(request, reply) {
@@ -32,7 +31,7 @@ export const registerController = {
 			return reply.code(200).send(users);
 		} catch (err) {
 			request.log.error(err);
-			return reply.code(500).send({message: "Failed to fetch users"});
+			return reply.code(500).send({ message: "Failed to fetch users" });
 		}
 	}
 }

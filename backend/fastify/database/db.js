@@ -1,7 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 
-// Create a singleton Prisma client instance
-const prisma = new PrismaClient();
+// Create a singleton Prisma client instance, logs all db interactions
+const prisma = new PrismaClient({ 
+	log: ['query', 'info', 'warn'],
+});
 
 // Test the database connection
 async function testConnection() {
