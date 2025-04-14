@@ -1,4 +1,4 @@
-/*import fastifySecureSession from '@fastify/secure-session';
+import fastifySecureSession from '@fastify/secure-session';
 import fastifyPassport from '@fastify/passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
@@ -50,4 +50,4 @@ export async function googleAuth(fastify, options) {
       reply.redirect('https://localhost:4433');
     }
   );
-}*/
+}
