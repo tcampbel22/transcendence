@@ -1,5 +1,5 @@
 import Fastify from "fastify";
-import authRoute from "../fastify/api/routes/auth.js";
+import authRoute from "../fastify/api/routes/auth.routes.js";
 import registerRoute from "../fastify/api/routes/register.js";
 import supertest from "supertest";
 import { prisma, testConnection } from "../fastify/database/db.js";
