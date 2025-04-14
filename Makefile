@@ -39,7 +39,7 @@ build-frontend:
 
 up:
 	@echo "$(YELLOW)Building docker images...$(RESET)"
-	@docker-compose -f $(DOCKER_COMPOSE_FILE) up -d
+	@docker compose -f $(DOCKER_COMPOSE_FILE) up -d
 	@echo "$(GREEN)Docker images built.$(RESET)"
 
 down:
