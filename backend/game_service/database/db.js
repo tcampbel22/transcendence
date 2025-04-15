@@ -9,10 +9,10 @@ const prisma = new PrismaClient({
 async function testConnection() {
   try {
     await prisma.$connect();
-    console.log('Database connection established successfully.');
+    console.log('Game database connection established successfully.');
     return true;
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    console.error('Unable to connect to the game database:', error);
     return false;
   }
 }

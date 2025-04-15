@@ -1,0 +1,22 @@
+{
+  "name": "game_service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@fastify/env": "^5.0.2",
+    "@prisma/client": "^6.6.0",
+    "fastify": "^5.3.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.6.0"
+  }
+}

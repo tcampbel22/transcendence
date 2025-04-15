@@ -1,17 +1,23 @@
 FROM node:23-alpine
 
 #Create api and database directories
-RUN mkdir api database
+RUN mkdir -p api database
 
 WORKDIR /app/
 
 COPY package*.json /app/
-RUN npm install --production
+RUN npm install
 
+
+COPY index.js /app/
 COPY ./api /app/api/
 COPY ./database/ /app/database/
+
+WORKDIR /app/database
+RUN npx prisma generate
+WORKDIR /app
 
 RUN chmod +x /app/database/db_entrypoint.sh
 ENTRYPOINT ["/bin/sh", "/app/database/db_entrypoint.sh"]
 
-CMD [ "node", "/app/api/index.js" ]
+CMD [ "node", "/app/index.js" ]
