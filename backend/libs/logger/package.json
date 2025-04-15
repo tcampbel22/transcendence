@@ -1,0 +1,16 @@
+{
+  "name": "@ft_transcendence/logger",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "logger.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "pino": "^9.6.0"
+  }
+}
