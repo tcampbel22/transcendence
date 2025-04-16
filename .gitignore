@@ -5,3 +5,4 @@ ssl/
 *.db
 *.db-journal
 .env
+*.log
