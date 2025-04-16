@@ -1,11 +1,11 @@
 import React from "react"
 import { Link, useLocation } from "react-router-dom";
+import { userIdFromState } from "../hooks/userIdFromState";
 
 
 const Hub = () => {
-    const location = useLocation()
-	const userId = location.state
-	console.log("userid is:", userId)
+	const userId = userIdFromState();
+	console.log("userid is:", userId);
 	const baseCardClass = "w-60 h-72 bg-cover bg-center rounded-lg shadow-lg p-1 transform hover:scale-110 transition-all duration-300 ease-in-out relative hover:shadow-xl hover:rotate-1";
     
 	
@@ -24,7 +24,8 @@ const Hub = () => {
                         }}
                     >
                     <Link 
-                        to="/play/1v1" 
+                        to="/play/1v1"
+						state={userId} 
                         className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">    
                     </Link>
                 </div>
@@ -35,7 +36,8 @@ const Hub = () => {
                         }}
                     >
                     <Link 
-                        to="/play/tournament" 
+                        to="/play/tournament"
+						state={userId} 
                         className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">
                     </Link>
                 </div>
@@ -46,8 +48,10 @@ const Hub = () => {
                         }}
                     >
                     <Link 
-                        to="/profile" 
-                        className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">     
+                        to="/profile"
+						state={userId}
+                        className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">
+						   
                     </Link>
                 </div>
                 
@@ -58,6 +62,7 @@ const Hub = () => {
                     >
                     <Link 
                         to="/settings" 
+						state={userId}
                         className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">    
                     </Link>
                 </div>
