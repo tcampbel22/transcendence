@@ -48,6 +48,11 @@ down:
 #	@docker compose -f $(DOCKER_COMPOSE_FILE) down setup
 	@echo "$(GREEN)Docker containers stopped.$(RESET)"
 
+basic: ssl_cert build-frontend
+		@echo "$(YELLOW)Building docker images...$(RESET)"
+	@docker compose -f $(DOCKER_COMPOSE_FILE) up nginx nodejs -d
+	@echo "$(GREEN)Docker images built.$(RESET)"
+
 clean: down
 	@echo "$(YELLOW)Removing docker images...$(RESET)"
 	@docker system prune -af
