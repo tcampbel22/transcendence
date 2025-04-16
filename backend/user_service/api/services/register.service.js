@@ -17,6 +17,12 @@ export const registerService = {
 					password: hashedPassword,
 					picture,
 				},
+				select: {
+					id: true,
+					username: true,
+					email: true,
+					picture: true,
+				}
 			});
 			//Creates a new row in the userstats table assigned to the newly created user
 			await tx.userStats.create({
@@ -29,10 +35,9 @@ export const registerService = {
 			});
 			return user;
 		});
-		const { password: _, ...userNoPassword } = result;
-		return userNoPassword;
+		return result;
 	},
-	//Returns all the users info excluding the password ***VERY UNSAFE***
+	//Returns all the users info excluding the password ***FOR TESTING ONLY DELETE FOR PROD***
 	async getAllUsers() {
 		const users = await prisma.user.findMany({
 			select: {

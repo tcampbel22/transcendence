@@ -33,7 +33,7 @@ export const gameService = {
 	async endGame(gameId, p1score, p2score, winnerId) {
 		//Check if game exists
 		const game = await prisma.game.findUnique({ 
-			where: { id: gameId},
+			where: { id: gameId },
 			include: { player1: true, player2: true,}
 		})
 		if (!game)
@@ -81,22 +81,5 @@ export const gameService = {
 		if (!game)
 			throw new Error("getGameById: gameId does not exist");
 		return game;
-	},
-	
-	async getUserGames(userId) {
-		const userGames = await prisma.user.findUnique( { 
-			where: { id: userId },
-			include: {
-				gamesAsPlayer1: true,
-				gamesAsPlayer2: true,
-			}
-		});
-		if (!userGames)
-			throw new Error("getUserGames: userId does not exist");
-		return userGames;
-	},
-
-	async getUserFriends(userId) {
-
 	},
 }
