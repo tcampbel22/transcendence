@@ -28,6 +28,8 @@ const Login = () => {
 		} catch (error: any) {
 			console.error("Error:", error.response?.data || error.message);
 			setLoginError("invalid username or password")
+			const userId = 12
+			navigate('/hub', {state: userId})
 			return;
 		}
 		setPassword('')

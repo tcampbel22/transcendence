@@ -6,14 +6,9 @@ type Loss = {
 
 const Losses = ({losses}: Loss) => {
 	return (
-		<div 	className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 p-4">
-			<div 	className="text-white text-center p-4 rounded-lg shadow-md h-80 bg-cover bg-center"
-					style={{
-						backgroundImage:'url(images/Loss.png)',
-					}}
-			>
+		<div 	className="bg-beige col-span-1 rounded items-center border border-white shadow-md">
+				<h1 className="text-black font-bold text-2xl">losses</h1>
 				<p className="text-7xl font-semibold text-red-500 m-10 p-7">{losses}</p>
-			</div>
 		</div>
 	)
 }

@@ -1,6 +1,3 @@
-
-
-
 type Win = {
 	victories: number
 }
@@ -8,16 +5,11 @@ type Win = {
 
 const Wins = ({victories} : Win) => {
 	return (
-		<div className="grid grid-cols-4 sm:grid-rows-1 gap-2 p-4">
-			<div 	className="text-white text-center p-6 rounded-lg shadow-md h-80 bg-cover "
-					style={{
-						backgroundImage:'url(images/victory.png)',
-					}}
-			>
-				<p className="text-7xl font-semibold text-green-400 m-10 p-7">{victories}</p>
-			</div>
+		<div className="bg-beige col-span-1 rounded items-center border border-white shadow-md">
+				<h1 className="text-black font-bold text-2xl">victories</h1>
+				<p className="text-7xl font-semibold text-green-400 m-10 p-7 items-center">{victories}</p>
 		</div>
 	)
 }
 
-export default Wins
+export default Wins;
