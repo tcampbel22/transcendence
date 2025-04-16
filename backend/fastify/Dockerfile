@@ -10,6 +10,7 @@ RUN npm install --production
 
 COPY ./api /app/api/
 COPY ./database/ /app/database/
+COPY ./logs /app/logs/
 
 RUN chmod +x /app/database/db_entrypoint.sh
 ENTRYPOINT ["/bin/sh", "/app/database/db_entrypoint.sh"]
