@@ -52,10 +52,15 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: debus
+      - name: game
         run: cd backend; ls
       - name: Create .env file
-        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> backend/file_service/.env
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> backend/game_service/.env
+
+      - name: user
+        run: cd backend; ls
+      - name: Create .env file
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> backend/user_service/.env
 
       - name: Create complete .env file
         run: |
