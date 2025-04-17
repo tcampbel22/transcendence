@@ -8,6 +8,7 @@ import authRoute from "./routes/auth.js";
 import registerRoute from "./routes/register.js";
 // import fastifyCors from "@fastify/cors";
 import { testConnection } from "../database/db.js";
+import logger from "@eleekku/logger";
 
 const fastify = Fastify({ logger: true });
 
@@ -34,7 +35,7 @@ try {
 	fastify.register(registerRoute)
 	// await fastify.register(cors)
 } catch (err) {
-	fastify.log.error(err);
+	logger.error("Error registering routes:", err);
 }
 // Register routes so ther is a route for each reqeuest which are registered here
 
@@ -54,7 +55,7 @@ const start = async () => {
 		}
 		await fastify.listen({ port: 3000, host: "0.0.0.0" });
 	} catch (err) {
-		fastify.log.error(err);
+		logger.error('Error starting server:', err);
 		process.exit(1);
 	}
 };

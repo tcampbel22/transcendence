@@ -15,7 +15,6 @@ export default async function registerRoute(fastify, options) {
 			const { username, email, password } = normalize(request.body);
 			if (password.toLowerCase().includes(username.toLowerCase())) {
 				reply.code(400).send({message: "Password can't contain username or vise versa"});
-				console.log("WE GOT HERE 1");
 				return;
 			}
 			console.log("WE GOT HERE");
@@ -37,7 +36,7 @@ export default async function registerRoute(fastify, options) {
 			});
 			reply.code(201).send(user);
 		} catch (error) {
-			console.log("WE GOT HERE FROM SOME RANDOM THROW")
+			logger.error("Error during registration:", error);
 			reply.status(500).send({ message: "Internal server error" });
 			return;
 		}
@@ -50,6 +49,7 @@ export default async function registerRoute(fastify, options) {
 		  const users = await prisma.user.findMany();
 		  reply.send(users);
 		} catch (error) {
+		  logger.error("Error fetching users:", error);
 		  console.error("Error fetching users:", error);
 		  reply.code(500).send({ error: "Failed to fetch users" });
 		}
