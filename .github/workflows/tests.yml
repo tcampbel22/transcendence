@@ -55,7 +55,7 @@ jobs:
       - name: debus
         run: cd backend; ls
       - name: Create .env file
-        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> backend/fastify/.env
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> backend/file_service/.env
 
       - name: Create complete .env file
         run: |
