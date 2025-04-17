@@ -48,7 +48,7 @@ export const gameController = {
 		}
 
 	},
-	async getMatchHistory(request, reply) {
+	async getUserGames(request, reply) {
 
 	},
 }

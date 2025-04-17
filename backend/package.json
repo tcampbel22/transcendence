@@ -5,6 +5,10 @@
     "prisma": "^6.5.0"
   },
   "dependencies": {
+    "@fastify/env": "^5.0.2",
+    "@prisma/client": "^6.6.0",
+    "fastify": "^5.3.0",
+    "uuid": "^11.1.0"	
   },
   "engines": {
     "node": ">=18.0.0"

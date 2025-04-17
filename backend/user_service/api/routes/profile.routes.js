@@ -1,7 +1,7 @@
-import { profileRoutes } from "../controllers/profile.controller.js"
+import { profileController } from "../controllers/profile.controller.js"
 
 // Get profile page 
-export default async function registerProfile(fastify, options) {
+export default async function profileRoutes(fastify, options) {
 	//Get user profile
 	fastify.get("/api/user/:id", profileController.getUser);
 	//Update user name
@@ -13,7 +13,7 @@ export default async function registerProfile(fastify, options) {
 	//Get stats (Wins, losses, matches played)
 	fastify.get("/api/:id/stats", profileController.getStats);
 	//Get match history
-	fastify.get("/api/:id/match-history", profileController.getMatchHistory);
+	// fastify.get("/api/:id/match-history", profileController.getMatchHistory);
 	//Delete account
-	fastify.delete("/api/:id/kill-user", profileController.deleteUser);
+	// fastify.delete("/api/:id/kill-user", profileController.deleteUser);
 }

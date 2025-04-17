@@ -1,5 +1,5 @@
-import { prisma } from "../../database/db";
-import argon2  from "argon"
+import { prisma } from "../../database/db.js";
+import argon2  from "argon2"
 
 export const profileService = {
 	async getUser(userId) {

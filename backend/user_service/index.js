@@ -1,11 +1,15 @@
 import Fastify from "fastify";
 import { testConnection } from "./database/db.js";
-import  userRoutes  from "./api/routes/user.routes.js"
+import  loginRoutes  from "./api/routes/login.routes.js"
+import registerRoutes from "./api/routes/register.routes.js";
+import profileRoutes from "./api/routes/profile.routes.js";
 
 const fastify = Fastify({ logger: true });
 
 try {
-	fastify.register(userRoutes);
+	fastify.register(loginRoutes);
+	fastify.register(registerRoutes);
+	fastify.register(profileRoutes);
 } catch (err) {
 	fastify.log.error(err);
 }
