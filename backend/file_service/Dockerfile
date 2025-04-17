@@ -11,5 +11,6 @@ RUN npm install --production
 
 COPY /dist /app/dist/
 COPY ./api /app/api/
+COPY ./logs /app/logs/
 
 CMD [ "node", "/app/index.js" ]
