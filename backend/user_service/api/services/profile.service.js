@@ -1,5 +1,8 @@
 import { prisma } from "../../database/db.js";
-import argon2  from "argon2"
+import argon2  from "argon2";
+import axios from "axios";
+import logger from "@eleekku/logger";
+
 
 export const profileService = {
 	async getUser(userId) {
@@ -97,5 +100,33 @@ export const profileService = {
 		if (!user)
 			throw new Error(`getStats: User ${userId} cannot be found`);
 		return user;
+	},
+	async getMatchHistory(userId) {
+		const user = await prisma.user.findUnique( {where: {id: userId}, select: {id: true} } );
+		if (!user)
+			throw new Error(`getMatchHistory: User ${userId} cannot be found`);
+		try {
+			const response = await axios.get(`http://game_service:3001/api/user/${userId}/game`);
+			if (response.status !== 200)
+				throw new Error(`Error retrieving match history ${response.statusText}`);
+
+			const games = response.data.map(game => {
+				const isPlayer1 = game.player1Id === userId;
+				return {
+					gameId: game.id,
+					date: game.createdAt,
+					score: `${game.player1Score} - ${game.player2Score}`,
+					result: game.winnerId === userId ? "Won" : "Lost",
+					opponentId: isPlayer1 ? game.player2Id : game.player1Id, 
+				}
+			});
+			console.log(games);
+
+		} catch (err) {
+			logger.error("getMatchHistory: Failed to retrieve match history");
+			throw new Error("Failed to retrieve match history");
+			
+		}
+			
 	}
 }

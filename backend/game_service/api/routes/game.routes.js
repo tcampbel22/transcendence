@@ -9,5 +9,5 @@ export default async function gameRoutes(fastify, options) {
 	//Get game info (id of game in game table)
 	fastify.get("/api/game/:id", gameController.getGame);
 	//Get a user's match history (id of user)
-	// fastify.get("/api/user/:id/game", gameController.getMatchHistory)
+	fastify.get("/api/user/:id/game", gameController.playerGames);
 }
