@@ -6,7 +6,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import authRoute from "./routes/auth.js";
 import registerRoute from "./routes/register.js";
-// import fastifyCors from "@fastify/cors";
+import fastifyCors from "@fastify/cors";
 import { testConnection } from "../database/db.js";
 
 const fastify = Fastify({ logger: true });
@@ -21,11 +21,11 @@ fastify.register(fastifyStatic, {
 	prefix: "/",
 });
 
-// fastify.register(fastifyCors, {
-// 	origin: ['http://localhost:5173'],  // Allow requests only from your frontend
-// 	methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific methods
-// 	allowedHeaders: ['Content-Type'],  // Allow specific headers if needed
-//   });
+fastify.register(fastifyCors, {
+	origin: ['http://localhost:5173'],  // Allow requests only from your frontend
+	methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific methods
+	allowedHeaders: ['Content-Type'],  // Allow specific headers if needed
+  });
 
 // fastify.register(authRoute) 
 // fastify.register(registerRoute)

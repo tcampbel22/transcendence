@@ -15,7 +15,7 @@ export default async function authRoute(fastify, options) {
 		}
        
         else {
-            return reply.status(401).send({ message: "nvalid usermane or password" });
+            return reply.status(401).send({ message: "invalid usermane or password" });
         }
     });
 }
