@@ -33,8 +33,8 @@ ssl_cert:
 
 build-frontend:
 	cd frontend && npm install && npm run build
-	@if [ ! -d backend/fastify/api/dist ]; then \
-		mv frontend/dist backend/fastify/api/; \
+	@if [ ! -d backend/file_service/dist ]; then \
+		mv frontend/dist backend/file_service/; \
 	fi
 
 up:
@@ -60,15 +60,16 @@ clean: down
 	@if [ -d /frontend/dist ]; then \
 		rm -rf ./frontend/dist; \
 	fi
-	@rm -rf ./backend/fastify/api/dist
+	@rm -rf ./backend/file_service/dist
 
 #WARNING!! THIS WILL PERMANTLY REMOVE THE DB, ONLY USE IN TESTING ENV
 db_clean: down
-	@read -p "⚠️ $(RED) Are you sure you want to permanently delete the DB file? $(RESET)(y/N): " confirm; \
+	@read -p "⚠️ $(RED) Are you sure you want to permanently delete the DB files? $(RESET)(y/N): " confirm; \
 	if [ "$$confirm" = "y" ] || [ "$$confirm" = "Y" ]; then \
-		echo "🗑️ $(YELLOW) Deleting database...  $(RESET)"; \
-		rm -rf ./backend/fastify/database/data/soyboys.db; \
-		echo "🗑️ $(GREEN) database deleted...  $(RESET)"; \
+		echo "🗑️ $(YELLOW) Deleting databases...  $(RESET)"; \
+		rm -rf ./backend/game_service/database/data/game.db; \
+		rm -rf ./backend/user_service/database/data/user.db; \
+		echo "🗑️ $(GREEN) databases deleted...  $(RESET)"; \
 	else \
 		echo "❌ $(GREEN)Aborted. Database not deleted.$(RESET)"; \
 	fi

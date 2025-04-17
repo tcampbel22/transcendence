@@ -125,7 +125,7 @@ services:
       - "4433:4433"
       - "8080:8080"
     depends_on:
-      - nodejs
+      - game_service
     container_name: nginx
     volumes:
       - ./backend/nginx/log:/var/log/nginx
@@ -138,18 +138,50 @@ services:
         max-file: "3"
     restart: unless-stopped
 
-  nodejs:
+  game_service:
     build:
-      context: ./backend/fastify
+      context: ./backend/game_service
       dockerfile: Dockerfile
-    container_name: nodejs
+    container_name: game_service
     volumes:
-      - ./backend/fastify/database/data:/app/database/data
+      - ./backend/game_service/database/data:/app/database/data
     env_file:
-      - backend/fastify/.env
+        - ./backend/game_service/.env
     networks:
       - app_network
     restart: unless-stopped
+  
+  file_service:
+    build:
+      context: ./backend/file_service
+      dockerfile: Dockerfile
+    container_name: file_service
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  user_service:
+    build:
+      context: ./backend/user_service
+      dockerfile: Dockerfile
+    container_name: user_service
+    volumes:
+      - ./backend/user_service/database/data:/app/database/data
+    env_file:
+      - ./backend/user_service/.env
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  # auth_service:
+  #   build:
+  #     context: ./backend/auth_service
+  #     dockerfile: Dockerfile
+  #   container_name: auth_service
+  #   networks:
+  #     - app_network
+  #   restart: unless-stopped
+
 
 networks:
   app_network:
