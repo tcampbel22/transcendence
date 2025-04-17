@@ -22,28 +22,9 @@ model User {
   picture  String   @default("default.png") // Enforce PNG/JPG in validation
 
   // Relations
-  gamesAsPlayer1 Game[] @relation("Player1") //relation to games where user is player1 (1 to many)
-  gamesAsPlayer2 Game[] @relation("Player2") //relation to games where user is player2 (1 to many)
-  gamesWon       Game[] @relation("Winner") // relation to game tables the player has won (1 to many)
   friends        Friend[]      @relation("UserFriends") //other users that are friends with the current user (1 to many) 
   friendOf       Friend[]      @relation("FriendOf") //users where the current user is frends with (1 to many)
   stats          UserStats?     // relation to the current users stats table (1 to 1)
-}
-
-// Game Table - Tracks individual games
-model Game {
-  id           Int      @id @default(autoincrement())
-  player1Id    Int
-  player2Id    Int? //Can be nullable as opponent can be ai
-  player1Score Int
-  player2Score Int
-  winnerId     Int //id of winner
-  createdAt    DateTime @default(now())
-
-  // Relations
-  player1 User @relation("Player1", fields: [player1Id], references: [id])
-  player2 User? @relation("Player2", fields: [player2Id], references: [id])
-  winner  User @relation("Winner", fields: [winnerId], references: [id])
 }
 
 // User Stats Table - Tracks overall performance
