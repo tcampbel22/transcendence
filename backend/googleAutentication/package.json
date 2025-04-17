@@ -1,0 +1,18 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "main": "serverFas.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@fastify/passport": "^3.0.2",
+    "@fastify/secure-session": "^8.2.0",
+    "fastify": "^5.3.0",
+    "passport-google-oauth20": "^2.0.0"
+  }
+}

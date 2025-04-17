@@ -1,4 +1,4 @@
-import React from "react";
+/*import React from "react";
 import axios from "axios";
 
 interface CustomButtonProps {
@@ -27,9 +27,9 @@ const CustomButton: React.FC<CustomButtonProps> = ({ label, authUrl, className }
   );
 };
 
-export default CustomButton;
+export default CustomButton;*/
 
-/*import React from "react";
+import React from "react";
 
 interface CustomButtonProps {
   label: string;
@@ -50,4 +50,4 @@ const CustomButton: React.FC<CustomButtonProps> = ({ label, authUrl, className }
   );
 };
 
-export default CustomButton;*/
+export default CustomButton;
