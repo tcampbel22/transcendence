@@ -27,9 +27,8 @@ const Register = () => {
 			password,
 		};
 
-		// const response = await axios.post(`${API_URL}/api/register`, payload)
-		const response = await axios.post(`${API_DEV_URL}/api/register`, payload)
-		const response = await axios.post(`${baseAddress}/user/api/register`, payload)
+		const response = await axios.post(`${API_DEV_URL}/user/api/register`, payload)
+		// const response = await axios.post(`${API_URL}/user/api/register`, payload) //product
 		return response.data
 	}
 
@@ -39,9 +38,8 @@ const Register = () => {
 		formData.append("image", image)
 
 		try {
-			// const response = await axios.post(`${API_URL}/api/users/${userId}/image`, image) //the post location might change
-			const response = await axios.post(`${API_DEV_URL}/api/users/${userId}/image`, image)
-			const response = await axios.post(`${baseAddress}/user/api/${userId}/picture`, image) //the post location might change
+			const response = await axios.post(`${API_DEV_URL}/user/api/${userId}/picture`, image)
+			// const response = await axios.post(`${API_URL}/user/api/${userId}/picture`, image) //the post location might change
 			console.log("Profile image uploaded:", response.data);
 			
 		} catch (error: any) {
