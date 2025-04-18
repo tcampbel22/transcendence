@@ -38,7 +38,7 @@ describe("Backend API Tests", () => {
 */
   it("should return 401 for invalid login", async () => {
     const response = await supertest(app.server)
-      .post("/users/login")
+      .post("/api/login")
       .send({ username: "wrong", password: "wrong" });
 
     expect(response.status).toBe(401);
@@ -46,7 +46,7 @@ describe("Backend API Tests", () => {
 
   it("should return 201", async () => {
     const response = await supertest(app.server)
-      .post("/users/register")
+      .post("/api/register")
       .send({ username: "testuser", email: "haha@gmail.com", password: "kissa" }); // Missing email and password
 
     expect(response.status).toBe(201);
