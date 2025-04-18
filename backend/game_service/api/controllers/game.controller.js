@@ -1,4 +1,4 @@
-import { gameService } from "../services/game.service.js"
+import { gameService } from `../services/game.service.js`
 
 export const gameController = {
 
@@ -7,13 +7,13 @@ export const gameController = {
 			const { player1Id, Player2Id = null } = request.body;
 			const game = await gameService.startGame(player1Id, Player2Id);
 			reply.code(201).send({
-				message: "Game started successfully",
+				message: `Game ${game.id} started successfully`,
 				gameId: game.id,
 				time: game.createdAt,
 			});
 		} catch (err) {
-			console.log("createGame: failed to create game");
-			return reply.code(500).send("Failed to start the game");
+			console.log(`createGame: failed to create game ${gameId}`);
+			return reply.code(500).send(`Failed to start the game ${gameId}`);
 		}
 
 	},
@@ -22,14 +22,14 @@ export const gameController = {
 			const { gameId, p1score, p2score, winnerId } = request.body;
 			const game = await gameService( {gameId, p1score, p2score, winnerId});
 			return reply.code(201).send({
-				message: "Game finished",
+				message: `Game finished`,
 				gameId: game.id,
 				// winnerId: game.winnerId,
 				time: game.createdAt,
 		})
 		} catch (err) {
-			console.log("finishGame: failed to update finished game");
-			return reply.code(500).send({ message: "Failed to update finished game" });
+			console.log(`finishGame: failed to update finished game user ${gameId}`);
+			return reply.code(500).send({ message: `Failed to update finished game ${gameId}` });
 		}
 	},
 	async getGame(request, reply) {
@@ -37,18 +37,28 @@ export const gameController = {
 			const	{ gameId } = request.body;
 			const game = await gameService.getGameById({ gameId });
 			reply.code(200).send({
-				message: "Game fetched successfully",
+				message: `Game ${gameId} fetched successfully`,
 				gameId: game.id,
 				// winner: winnerId,
 			})
 			
 		} catch(err) {
-			console.log("getGame: failed to fetch game");
-			return reply.code(500).send({ message: "Failed to fetch game"});
+			console.log(`getGame: failed to fetch game ${gameId}`);
+			return reply.code(500).send({ message: `Failed to fetch game ${gameId}`});
 		}
 
 	},
 	async getUserGames(request, reply) {
-
+		try {
+			const { userId } = request.params;
+			const userGames = await gameService.getUserGames( { userId } );
+			reply.code(200),send({
+				message: `User ${userId}'s games fetched successfully`,
+				userGames,
+			});
+		} catch (err) {
+			console.log(`getGame: failed to fetch user ${userId}'s games`);
+			return reply.code(500).send({ message: `Failed to fetch user ${userId}'s games`});
+		}
 	},
 }
