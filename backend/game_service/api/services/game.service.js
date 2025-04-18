@@ -91,7 +91,7 @@ export const gameService = {
 					{ player2Id: parseInt(userId) },
 				],
 			},
-			orderby: { createdAt: 'desc' },
+			orderBy: { createdAt: 'desc' },
 		});
 		if (!games || games.length === 0)
 			throw new Error(`getUserGames: user ${userId} does not have a game history`);
