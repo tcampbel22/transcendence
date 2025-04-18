@@ -10,7 +10,6 @@ COPY index.js /app/
 RUN npm install --production
 
 COPY /dist /app/dist/
-COPY ./api /app/api/
-COPY ./logs /app/logs/
+COPY /logs /app/logs/
 
 CMD [ "node", "/app/index.js" ]

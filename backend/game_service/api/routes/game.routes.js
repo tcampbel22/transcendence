@@ -8,6 +8,6 @@ export default async function gameRoutes(fastify, options) {
 	fastify.patch("/api/:id/finish-game", gameController.finishGame);
 	//Get game info (id of game in game table)
 	fastify.get("/api/:id", gameController.getGame);
-	//Get a user's match history (id of user)
+	//Get a user's match history
 	fastify.get("/api/user/:id", gameController.getUserGames);
 }

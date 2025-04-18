@@ -1,4 +1,4 @@
-import { gameService } from `../services/game.service.js`
+import { gameService } from "../services/game.service.js"
 
 export const gameController = {
 
@@ -50,10 +50,11 @@ export const gameController = {
 	},
 	async getUserGames(request, reply) {
 		try {
-			const { userId } = request.params;
+			const { id: userId } = request.params;
 			const userGames = await gameService.getUserGames( { userId } );
 			reply.code(200),send({
 				message: `User ${userId}'s games fetched successfully`,
+				userId,
 				userGames,
 			});
 		} catch (err) {

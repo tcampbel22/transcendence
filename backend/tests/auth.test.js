@@ -1,8 +1,8 @@
 import Fastify from "fastify";
-import authRoute from "../fastify/api/routes/auth.routes.js";
-import registerRoute from "../fastify/api/routes/register.routes.js";
+import loginRoute from "../user_service/api/routes/login.routes.js";
+import registerRoute from "../user_service/api/routes/register.routes.js";
 import supertest from "supertest";
-import { prisma, testConnection } from "../fastify/database/db.js";
+import { prisma, testConnection } from "../user_service/database/db.js";
 
 describe("Backend API Tests", () => {
   let app;
@@ -13,7 +13,7 @@ describe("Backend API Tests", () => {
       throw new Error("Failed to connect to the database");
     }
     app = Fastify();
-    app.register(authRoute);
+    app.register(loginRoute);
     app.register(registerRoute);
     await app.ready();
   });
@@ -38,7 +38,7 @@ describe("Backend API Tests", () => {
 */
   it("should return 401 for invalid login", async () => {
     const response = await supertest(app.server)
-      .post("/api/login")
+      .post("/users/login")
       .send({ username: "wrong", password: "wrong" });
 
     expect(response.status).toBe(401);
@@ -46,7 +46,7 @@ describe("Backend API Tests", () => {
 
   it("should return 201", async () => {
     const response = await supertest(app.server)
-      .post("/api/register")
+      .post("/users/register")
       .send({ username: "testuser", email: "haha@gmail.com", password: "kissa" }); // Missing email and password
 
     expect(response.status).toBe(201);
