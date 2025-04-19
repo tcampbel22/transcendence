@@ -1,5 +1,4 @@
 import { loginService } from "../services/login.service.js";
-import logger from "@eleekku/logger"
 
 export const loginController = {
 
