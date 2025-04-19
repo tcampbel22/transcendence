@@ -1,4 +1,5 @@
 import { profileService } from "../services/profile.service.js"
+import logger from "@eleekku/logger"
 
 export const profileController = {
 	async getUser(request, reply){

@@ -2,6 +2,7 @@ import { registerService } from "../services/register.service.js";
 import { normalize } from "../utils/normalize.js";
 import { checkForExistingUser } from "../utils/checkForExisting.js";
 import { prisma } from "../../database/db.js";
+import logger from "@eleekku/logger";
 
 export const registerController = {
 
