@@ -1,6 +1,0 @@
-{
-	"watch": ["fastify/api"],
-	"ext": "js,json",
-	"ignore": ["node_modules"],
-	"exec": "node fastify/api/index.js"
-}  
