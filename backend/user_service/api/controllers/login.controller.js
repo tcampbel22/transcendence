@@ -1,4 +1,5 @@
 import { loginService } from "../services/login.service.js";
+import logger from "@eleekku/logger"
 
 export const loginController = {
 
@@ -10,8 +11,10 @@ export const loginController = {
 				return reply.status(401).send({message: 'invalid username'});
 			if (!login.isMatch)
 				return reply.status(401).send({ message: "invalid username or password" });
+			logger.info(`User logged in: ${login.user.username}, ID: ${login.user.id}`);
 			reply.status(200).send(login.user.id);  
 		} catch (err) {
+			logger.error(`Error logging in user: ${err.message}`);
 			request.log.error(err);
 			reply.status(500).send({ message: "loginUser: Internal server error" });
 		}
