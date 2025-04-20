@@ -1,6 +1,6 @@
 import Fastify from "fastify";
 import helmet from "@fastify/helmet";
-// import cors from "@fastify/cors";
+//import fastifyCors from "@fastify/cors";
 import fastifyStatic from "@fastify/static";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -12,7 +12,14 @@ import { testConnection } from "../database/db.js";
 const fastify = Fastify({ logger: true });
 
 // Register helmet for security headers
-fastify.register(helmet);
+fastify.register(helmet, {
+  contentSecurityPolicy: false, // Desactiva el encabezado CSP en Fastify
+});
+
+/*fastify.register(fastifyCors, {
+  origin: "http://localhost:3000", // Cambia esto al dominio de tu frontend
+  credentials: true, // Permitir cookies y encabezados de autenticación
+});*/
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

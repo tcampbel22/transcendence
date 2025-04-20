@@ -22,9 +22,9 @@ fastifyPassport.use(
   'google',
   new GoogleStrategy(
     {
-      clientID: '626578837925-680bd28nejok4m6v9m5qrfqaolf1tnll.apps.googleusercontent.com',
-      clientSecret: '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',
-      callbackURL: 'http://localhost:3003/auth/google/callback',
+      clientID: '626578837925-d6ql0k67ih2bo53oekrmm612keue64f4.apps.googleusercontent.com',
+      clientSecret: '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',
+      callbackURL: 'https://localhost:4433/auth/google/callback',
     },
     async (accessToken, refreshToken, profile, done) => {
       return done(null, profile);
@@ -47,6 +47,10 @@ fastify.get(
   '/auth/google/callback',
   { preValidation: fastifyPassport.authenticate('google', { failureRedirect: '/' }) },
   async (req, reply) => {
+    const profile = req.user;
+    console.log('mail:', profile.emails[0].value);
+    console.log('profile:', profile.displayName);
+    console.log('profile:', profile.photos[0].value);
     reply.redirect('https://localhost:4433?authenticated=true');
   }
 );
