@@ -40,7 +40,7 @@ jobs:
         run: cd backend/tests && npm install
 
       - name: Init database
-        run: cd backend/fastify && bash database/db_entrypoint.sh
+        run: cd backend/user_service && bash database/db_entrypoint.sh
 
       - name: Run Tests
         run: cd backend/tests && npm test

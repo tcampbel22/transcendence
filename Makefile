@@ -57,9 +57,7 @@ clean: down
 	@echo "$(YELLOW)Removing docker images...$(RESET)"
 	@docker system prune -af
 	@echo "$(GREEN)Docker images removed.$(RESET)"
-	@if [ -d /frontend/dist ]; then \
-		rm -rf ./frontend/dist; \
-	fi
+	@rm -rf ./frontend/dist
 	@rm -rf ./backend/file_service/dist
 
 #WARNING!! THIS WILL PERMANTLY REMOVE THE DB, ONLY USE IN TESTING ENV

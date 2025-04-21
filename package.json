@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "axios": "^1.8.4"
+  },
+  "dependencies": {
+    "@eleekku/logger": "^1.0.0"
   }
 }
