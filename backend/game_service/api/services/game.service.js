@@ -3,14 +3,14 @@ import { prisma } from "../../database/db.js";
 export const gameService = {
 
 	async startGame(player1Id, player2Id = null) {
-		const player1 = await prisma.user.findUnique({ where: { id: player1Id} });
+		const player1 = await prisma.user.findUnique({ where: { id: parseInt(player1Id)} });
 		if (!player1) {
-			throw new Error("Player 1 not found");
+			throw new Error(`Player 1 not found`);
 		}
 		if (player2Id) {
-			const player2 = await prisma.user.findUnique({ where: { id: player2Id} });
+			const player2 = await prisma.user.findUnique({ where: { id: parseInt(player2Id)} });
 			if (!player2) {
-			throw new Error("Player 2 not found");
+			throw new Error(`Player 2 not found`);
 		}
 	}
 	//Create default game row
@@ -30,14 +30,14 @@ export const gameService = {
 		return newGame;
 	},
 	
-	async endGame(gameId, p1score, p2score, winnerId) {
+	async finishGame(gameId, p1score, p2score, winnerId) {
 		//Check if game exists
 		const game = await prisma.game.findUnique({ 
-			where: { id: gameId },
+			where: { id: parseInt(gameId) },
 			include: { player1: true, player2: true,}
 		})
 		if (!game)
-			throw new Error("Game not found");
+			throw new Error(`Game not found`);
 		//Update game and userStats tables of each player, use transaction to ensure the updates are atomic
 		const updatedGame = await prisma.$transaction(async (tx) => {
 			//Update game
@@ -75,11 +75,27 @@ export const gameService = {
 		});
 		return updatedGame;
 	},
-	
+	// Fetches a specific game by id
 	async getGameById(gameId) {
-		const game = await prisma.game.findUnique({ where: { id: gameId }})
+		const game = await prisma.game.findUnique({ where: { id: parseInt(gameId) }})
 		if (!game)
-			throw new Error("getGameById: gameId does not exist");
+			throw new Error(`getGameById: gameId does not exist`);
 		return game;
+	},
+    // Fetches all games a user has played in
+	async getUserGames(userId) {
+		const games = await prisma.game.findMany(
+			{ where: {
+				OR: [
+					{ player1Id: parseInt(userId) },
+					{ player2Id: parseInt(userId) },
+				],
+			},
+			orderBy: { createdAt: 'desc' },
+		});
+		if (!games || games.length === 0)
+			throw new Error(`getUserGames: user ${userId} does not have a game history`);
+		return games;
+
 	},
 }
