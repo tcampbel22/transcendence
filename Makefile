@@ -44,7 +44,7 @@ up:
 
 down:
 	@echo "$(YELLOW)Stopping docker containers...$(RESET)"
-	@docker compose -f $(DOCKER_COMPOSE_FILE) down
+	@docker-compose -f $(DOCKER_COMPOSE_FILE) down
 #	@docker compose -f $(DOCKER_COMPOSE_FILE) down setup
 	@echo "$(GREEN)Docker containers stopped.$(RESET)"
 
