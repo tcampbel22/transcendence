@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app/
 
 COPY package*.json /app/
+COPY .env /app/
 RUN npm install --production
 
 COPY googleAuth.js /app/

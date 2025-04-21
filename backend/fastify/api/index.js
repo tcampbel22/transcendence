@@ -7,19 +7,13 @@ import { fileURLToPath } from "url";
 import authRoute from "./routes/auth.js";
 import registerRoute from "./routes/register.js";
 import { testConnection } from "../database/db.js";
-//import { googleAuth } from "./routes/googleAuth.js"; // Import the googleAuth function
 
 const fastify = Fastify({ logger: true });
 
 // Register helmet for security headers
 fastify.register(helmet, {
-  contentSecurityPolicy: false, // Desactiva el encabezado CSP en Fastify
+  contentSecurityPolicy: false,
 });
-
-/*fastify.register(fastifyCors, {
-  origin: "http://localhost:3000", // Cambia esto al dominio de tu frontend
-  credentials: true, // Permitir cookies y encabezados de autenticación
-});*/
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,7 +25,6 @@ fastify.register(fastifyStatic, {
 try {
   fastify.register(authRoute);
   fastify.register(registerRoute);
-  //fastify.register(googleAuth); // Register the googleAuth routes
   // await fastify.register(cors)
 } catch (err) {
   fastify.log.error(err);

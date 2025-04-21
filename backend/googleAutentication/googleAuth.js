@@ -2,10 +2,11 @@ const fastify = require('fastify')({ logger: true });
 const fastifySecureSession = require('@fastify/secure-session');
 const fastifyPassport = require('@fastify/passport');
 const { Strategy: GoogleStrategy } = require('passport-google-oauth20');
+require('dotenv').config();
 
 // Register secure-session plugin
 fastify.register(fastifySecureSession, {
-  secret: Buffer.from('96e86052a27b52b634bba5415dcf80909d4c0d14a7e44826ccb4762ac4f4b656'),
+  secret: Buffer.from(process.env.FASTIFY_SECURE_SECRET),
   cookie: {
     path: '/',
     httpOnly: true,
@@ -22,9 +23,9 @@ fastifyPassport.use(
   'google',
   new GoogleStrategy(
     {
-      clientID: '626578837925-d6ql0k67ih2bo53oekrmm612keue64f4.apps.googleusercontent.com',
-      clientSecret: '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',
-      callbackURL: 'https://localhost:4433/auth/google/callback',
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,
     },
     async (accessToken, refreshToken, profile, done) => {
       return done(null, profile);
