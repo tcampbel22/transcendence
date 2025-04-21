@@ -10,6 +10,7 @@ const Register = () => {
 	const [registered, setRegistered] = useState(false)
 	const [image, setImage] = useState<File | null>(null)
 	const [preview, setPreview] = useState<string | null>(null)
+	const [loginError, setError] = useState('')
 	const navigate = useNavigate();
 
 	const registerUser = async () => {
@@ -25,8 +26,8 @@ const Register = () => {
 			password,
 		};
 
-		const response = await axios.post(`${baseAddress}/api/register`, payload)
-		return response.data.userId
+		const response = await axios.post(`${baseAddress}/users/register`, payload)
+		return response.data
 	}
 
 	const uploadProfileImage = async (userId: string) => {
@@ -35,7 +36,7 @@ const Register = () => {
 		formData.append("image", image)
 
 		try {
-			const response = await axios.post(`${baseAddress}/api/users/userId/image`, image) //the post location might change
+			const response = await axios.post(`${baseAddress}/users/${userId}/picture`, image) //the post location might change
 			console.log("Profile image uploaded:", response.data);
 			
 		} catch (error: any) {
@@ -45,7 +46,7 @@ const Register = () => {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
-
+		setError('')
 		
 		try {
 			const userId = await registerUser()
@@ -59,14 +60,15 @@ const Register = () => {
 			  navigate('/');
 			}, 1500);
 		} catch (error: any) {
-			// console.error("Error:", error.response?.data || error.message);
-			navigate('/');
+			console.error("Error:", error.response?.data || error.message);
+			setError(error.response?.data?.message || 'Registration failed')
 		}
 	}
 
 	return (
 	<div className="flex flex-col justify-center items-center gap-4 min-h-screen">
-		<h1 className="text-3xl m-1 items-center opacity-0 animate-fade-in delay-700 font-semibold">Register</h1>
+		<div className='bg-beige p-10 rounded border-2 border-black'>
+		<h1 className="text-3xl m-5 items-center opacity-0 animate-fade-in delay-700 font-semibold">Register</h1>
 		<div className='animate-slide-in'>
 			<form className="flex flex-col items-center gap-4" onSubmit={handleSubmit}>
 				<input 	type="text"
@@ -114,13 +116,18 @@ const Register = () => {
 						
 				/>
 				<button  type="submit" className='border-2 border-black font-bold rounded px-1 hover:shadow-lg '>Register</button>
+				{loginError && 
+			(
+				<p className="text-red-600 font-semibold text-center my-2"> {loginError} </p>
+			)}
 				{registered && (
-					<p className="transition-opacity duration-600 opacity-100 text-black font-semibold mt-4">
+					<p className="transition-opacity duration-600 opacity-100 text-black font-semibold mt-4 animate-slide-in">
 							✅ Registration successful! You can now log in. ✅
 					</p>
 	)}
 			</form>
 		</div>
+	</div>
 	</div>
   );
 }

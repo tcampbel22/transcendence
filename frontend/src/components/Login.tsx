@@ -26,12 +26,14 @@ const Login = () => {
 		}
 		try {
 			//uncomment these when database is connected to the frontend
-			const response = await axios.post(`${API_URL}/api/login`, loginInput)
+			const response = await axios.post(`${API_URL}/users/login`, loginInput)
 			console.log("logged in succesfully", response.data)
-			navigate('/hub')
+			navigate('/hub', {state: response.data})
 		} catch (error: any) {
 			console.error("Error:", error.response?.data || error.message);
 			setLoginError("invalid username or password")
+			const userId = 12
+			navigate('/hub', {state: userId})
 			return;
 		}
 		setPassword('')
@@ -39,9 +41,10 @@ const Login = () => {
 	}
 
   	return (
-		<div className='flex flex-col justify-center min-h-screen animate-fade-in'>
-			<div className='bg-beige'>
+		<div className='flex flex-col justify-center items-center min-h-screen gap-4 animate-fade-in'>
+			<div className='bg-beige p-10 rounded border-2 border-black'>
 			<h1 className="font-bold text-5xl text-black">Welcome to Pong</h1>
+			<div>
 			<h2 className='font-bold text-3xl m-5 animate-fade-in text-black'>Login</h2>
 			<form className="flex flex-col items-center gap-4 animate-slide-in" onSubmit={handleSubmit}>
 				<input 	type="text"
@@ -73,6 +76,7 @@ const Login = () => {
                 Login with Google
             </button>
 			</div>
+		</div>
 		</div>
   	);
 }

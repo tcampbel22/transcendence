@@ -1,0 +1,101 @@
+import { prisma } from "../../database/db.js";
+
+export const gameService = {
+
+	async startGame(player1Id, player2Id = null) {
+		const player1 = await prisma.user.findUnique({ where: { id: parseInt(player1Id)} });
+		if (!player1) {
+			throw new Error(`Player 1 not found`);
+		}
+		if (player2Id) {
+			const player2 = await prisma.user.findUnique({ where: { id: parseInt(player2Id)} });
+			if (!player2) {
+			throw new Error(`Player 2 not found`);
+		}
+	}
+	//Create default game row
+	const newGame = await prisma.game.create({
+		data: {
+			player1Id: player1Id,
+			player2Id: player2Id,
+			player1Score: 0,
+			player2Score: 0,
+			winnerId: player1Id,
+		},
+		include: {
+			player1: true,
+			player2: true
+		}
+		});
+		return newGame;
+	},
+	
+	async finishGame(gameId, p1score, p2score, winnerId) {
+		//Check if game exists
+		const game = await prisma.game.findUnique({ 
+			where: { id: parseInt(gameId) },
+			include: { player1: true, player2: true,}
+		})
+		if (!game)
+			throw new Error(`Game not found`);
+		//Update game and userStats tables of each player, use transaction to ensure the updates are atomic
+		const updatedGame = await prisma.$transaction(async (tx) => {
+			//Update game
+			const tempGame = await tx.game.update(
+			{
+				where: { id: gameId },
+				data: {
+					player1Score: p1score,
+					player2Score: p2score,
+					winnerId: winnerId,
+				}
+			});
+			//Update P1 userstats
+			await tx.userStats.update(
+			{
+				where: { userId: game.player1Id },
+				data: {
+					matchesPlayed: { increment: 1},
+					wins: winnerId === game.player1Id ? { increment: 1} : undefined,
+					losses: winnerId !== game.player1Id ? { increment: 1} : undefined,
+				}
+			});
+			//Update P2 userstats, if it exists
+			if (game.player2Id) {
+				await tx.userStats.update({
+					where: { userId: game.player2Id },
+					data: {
+						matchesPlayed: { increment: 1},
+						wins: winnerId === game.player2Id ? { increment: 1} : undefined,
+						losses: winnerId !== game.player2Id ? { increment: 1} : undefined,
+					}
+				});
+			}
+			return tempGame;
+		});
+		return updatedGame;
+	},
+	// Fetches a specific game by id
+	async getGameById(gameId) {
+		const game = await prisma.game.findUnique({ where: { id: parseInt(gameId) }})
+		if (!game)
+			throw new Error(`getGameById: gameId does not exist`);
+		return game;
+	},
+    // Fetches all games a user has played in
+	async getUserGames(userId) {
+		const games = await prisma.game.findMany(
+			{ where: {
+				OR: [
+					{ player1Id: parseInt(userId) },
+					{ player2Id: parseInt(userId) },
+				],
+			},
+			orderBy: { createdAt: 'desc' },
+		});
+		if (!games || games.length === 0)
+			throw new Error(`getUserGames: user ${userId} does not have a game history`);
+		return games;
+
+	},
+}

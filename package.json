@@ -1,9 +1,8 @@
 {
   "devDependencies": {
-    "jest": "^29.7.0",
-    "sqlite3": "^5.1.7"
+    "axios": "^1.8.4"
   },
-  "scripts": {
-    "test": "cd backend && npm test"
+  "dependencies": {
+    "@eleekku/logger": "^1.0.0"
   }
 }
