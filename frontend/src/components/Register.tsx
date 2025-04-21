@@ -4,7 +4,7 @@ import axios from 'axios'
 
 const Register = () => {
 	// const API_URL = "https://localhost:4433";
-	const API_DEV_URL = "http://localhost:3000"
+	const API_DEV_URL = "http://localhost:3002"
 	const [username, setUsername] = useState('')
   	const [password, setPassword] = useState('')
 	const [email, setEmail] = useState('')
@@ -27,7 +27,7 @@ const Register = () => {
 			password,
 		};
 
-		const response = await axios.post(`${API_DEV_URL}/user/api/register`, payload)
+		const response = await axios.post(`${API_DEV_URL}/api/register`, payload)
 		// const response = await axios.post(`${API_URL}/user/api/register`, payload) //product
 		return response.data
 	}
