@@ -1,24 +1,23 @@
-const fastify = require('fastify')({ logger: true });
-const fastifySecureSession = require('@fastify/secure-session');
-const fastifyPassport = require('@fastify/passport');
-const { Strategy: GoogleStrategy } = require('passport-google-oauth20');
-require('dotenv').config();
+import Fastify from 'fastify';
+import fastifySecureSession from '@fastify/secure-session';
+import fastifyPassport from '@fastify/passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import 'dotenv/config';
 
-// Register secure-session plugin
+const fastify = Fastify({ logger: true });
+
 fastify.register(fastifySecureSession, {
   secret: Buffer.from(process.env.FASTIFY_SECURE_SECRET),
   cookie: {
     path: '/',
     httpOnly: true,
-    secure: false // Change to true in production with HTTPS
+    secure: false,
   },
 });
 
-// Register and initialize Passport
 fastify.register(fastifyPassport.initialize());
 fastify.register(fastifyPassport.secureSession());
 
-// Configure Google OAuth Strategy
 fastifyPassport.use(
   'google',
   new GoogleStrategy(
@@ -33,34 +32,41 @@ fastifyPassport.use(
   )
 );
 
-// Serialize and deserialize user
 fastifyPassport.registerUserSerializer(async (user, request) => user);
 fastifyPassport.registerUserDeserializer(async (user, request) => user);
 
-// Routes
 fastify.get(
   '/auth/google',
-  { preValidation: fastifyPassport.authenticate('google', { scope: ['profile', 'email'], prompt: 'select_account' }) },
+  {
+    preValidation: fastifyPassport.authenticate('google', {
+      scope: ['profile', 'email'],
+      prompt: 'select_account',
+    }),
+  },
   async (req, reply) => {}
 );
 
 fastify.get(
   '/auth/google/callback',
-  { preValidation: fastifyPassport.authenticate('google', { failureRedirect: '/' }) },
+  {
+    preValidation: fastifyPassport.authenticate('google', {
+      failureRedirect: '/',
+    }),
+  },
   async (req, reply) => {
     const profile = req.user;
     console.log('mail:', profile.emails[0].value);
-    console.log('profile:', profile.displayName);
-    console.log('profile:', profile.photos[0].value);
+    console.log('name:', profile.displayName);
+    console.log('photo:', profile.photos[0].value);
+    console.log('photo:', profile.id);
     reply.redirect('https://localhost:4433?authenticated=true');
   }
 );
 
-// Start the server
 fastify.listen({ port: 3003, host: '0.0.0.0' }, (err, address) => {
   if (err) {
     fastify.log.error(err);
     process.exit(1);
   }
-  console.log(`Servidor ejecutándose en ${address}`);
+  console.log(`Server running in ${address}`);
 });
