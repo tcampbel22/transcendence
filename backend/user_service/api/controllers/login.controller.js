@@ -12,7 +12,11 @@ export const loginController = {
 			if (!login.isMatch)
 				return reply.status(401).send({ message: "invalid username or password" });
 			logger.info(`User logged in: ${login.user.username}, ID: ${login.user.id}`);
-			reply.status(200).send(login.user.id);  
+			reply.status(200).send({
+				userId: login.user.id,
+				username: login.user.username,
+				token: login.token
+			});  
 		} catch (err) {
 			logger.error(`Error logging in user: ${err.message}`);
 			request.log.error(err);
