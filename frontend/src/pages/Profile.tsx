@@ -9,7 +9,8 @@ import {userIdFromState} from "../hooks/userIdFromState"
 
 const Profile = () => {
 	const userId = userIdFromState();
-	const API_URL = "https://localhost:4433"
+	// const API_URL = "https://localhost:4433"
+	const API_DEV_URL = "http://localhost:3000";
 	const [victories, setVictories] = useState(0)
 	const [losses, setLoses] = useState(0)
 
@@ -18,7 +19,8 @@ const Profile = () => {
 	useEffect (() => {
 		const getUserData = async () => {
 			try {
-				// const gameData = await axios.get(`${API_URL}/user/${userId}/stats`)
+				// const gameData = await axios.get(`${API_URL}/user/${userId}/stats`); //product environment
+				const gameData = await axios.get(`${API_DEV_URL}/user/${userId}/stats`); //dev environment
 				// setVictories(gameData.data.wins) //these are the actual ones for the game testing purposes commented out
 				// setLoses(gameData.data.losses)
 				setVictories(5)
