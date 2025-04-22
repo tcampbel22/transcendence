@@ -13,6 +13,7 @@ try {
 // Start the server
 const start = async () => {
 	try {
+		console.log("Connecting to DB from:", process.cwd());
 		const dbConnected = await testConnection();
 		if (!dbConnected) {
 		  throw new Error('Failed to connect to the database');

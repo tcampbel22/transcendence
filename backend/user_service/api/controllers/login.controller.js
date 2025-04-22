@@ -13,7 +13,7 @@ export const loginController = {
 			reply.status(200).send(login.user.id);  
 		} catch (err) {
 			request.log.error(err);
-			reply.status(500).send({ message: "loginUser: Internal server error" });
+			reply.status(500).send({ message: "loginUser: Internal server error!" });
 		}
 	}
 };
