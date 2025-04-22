@@ -16,7 +16,7 @@ export const loginController = {
 		} catch (err) {
 			logger.error(`Error logging in user: ${err.message}`);
 			request.log.error(err);
-			reply.status(500).send({ message: "loginUser: Internal server error" });
+			reply.status(500).send({ message: "loginUser: Internal server error!" });
 		}
 	}
 };

@@ -4,8 +4,15 @@ import  loginRoutes  from "./api/routes/login.routes.js"
 import registerRoutes from "./api/routes/register.routes.js";
 import profileRoutes from "./api/routes/profile.routes.js";
 import logger from "@eleekku/logger"
+import cors from '@fastify/cors';
 
 const fastify = Fastify({ logger: true });
+
+//testing purposes only to get frontend connected in the dev env.
+fastify.register(cors, {
+	origin: ["http://localhost:5173"], // 👈 Vite's default dev server port
+	method: ["GET", "POST", "PUT", "DELETE"]
+  });
 
 try {
 	fastify.register(loginRoutes);

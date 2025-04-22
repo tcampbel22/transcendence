@@ -14,6 +14,7 @@ try {
 // Start the server
 const start = async () => {
 	try {
+		console.log("Connecting to DB from:", process.cwd());
 		const dbConnected = await testConnection();
 		if (!dbConnected) {
 			logger.error('game_service failed to connect to the database')
