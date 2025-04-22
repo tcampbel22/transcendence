@@ -18,7 +18,7 @@ export const registerController = {
 			const user = await registerService.registerUser({ username, email, password, picture });
 			reply.code(201).send({
 				message: "User registered successfully",
-				userId: user.id,
+				id: user.id,
 				username: user.username}); 
 		} catch (err) {
 			request.log.error(err);

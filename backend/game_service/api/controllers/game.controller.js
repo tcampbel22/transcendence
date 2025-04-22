@@ -12,8 +12,8 @@ export const gameController = {
 				time: game.createdAt,
 			});
 		} catch (err) {
-			console.log(`createGame: failed to create game`, err);
-			return reply.code(500).send(`Failed to start the game`);
+			console.log(`createGame: failed to create game ${game.id}`, err);
+			return reply.code(500).send(`Failed to start the game ${game.id}`);
 		}
 
 	},

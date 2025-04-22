@@ -1,0 +1,49 @@
+import { errorResponseSchema, idParamsSchema } from "./templates.schema.js";
+
+export const registerSchema = {
+    body: {
+        type: 'object',
+        required: ['username', 'password', 'email'],
+        properties: {
+            username: {
+                type: 'string',
+                minLength: 3,
+                maxLength: 15
+            },
+            password: {
+                type: 'string',
+                minLength: 5,
+				// Requires 1 uppercase, 1 number  and cannot containt the word password
+                pattern: '^(?!.*password)(?=.*[A-Z])(?=.*\\d).{5,}$'
+            },
+            email: { 
+                type: 'string',
+                format: 'email'
+            },
+			picture: {
+				type: 'string',
+				minLength: 5,
+				maxLength: 100,
+				pattern: '\\.(jpg|jpeg|png)$'
+			}
+        },
+        additionalProperties: false
+    },
+	response: {
+		201: {
+			type: 'object',
+			required: ['id', 'username', 'email'],
+			properties: {
+				id: { type: 'integer' },
+				username: { type: 'string'},
+				email: { type: 'string', format: 'email' }
+			}
+		},
+		400: errorResponseSchema,
+		401: errorResponseSchema,
+		404: errorResponseSchema,
+		409: errorResponseSchema,
+		500: errorResponseSchema,
+
+	}
+};

@@ -4,14 +4,12 @@ export const gameService = {
 
 	async startGame(player1Id, player2Id = null) {
 		const player1 = await prisma.user.findUnique({ where: { id: parseInt(player1Id)} });
-		if (!player1) {
+		if (!player1)
 			throw new Error(`Player 1 not found`);
-		}
 		if (player2Id) {
 			const player2 = await prisma.user.findUnique({ where: { id: parseInt(player2Id)} });
-			if (!player2) {
-			throw new Error(`Player 2 not found`);
-		}
+			if (!player2)
+				throw new Error(`Player 2 not found`);
 	}
 	//Create default game row
 	const newGame = await prisma.game.create({
@@ -79,7 +77,7 @@ export const gameService = {
 	async getGameById(gameId) {
 		const game = await prisma.game.findUnique({ where: { id: parseInt(gameId) }})
 		if (!game)
-			throw new Error(`getGameById: gameId does not exist`);
+			throw new Error(`getGameById: gameId ${gameId} does not exist`);
 		return game;
 	},
     // Fetches all games a user has played in
