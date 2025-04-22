@@ -15,7 +15,7 @@ type Game = {
 
 const GamesPlayed = ({userId}: GameStatsInfo) => {
 	// const API_URL = "https://localhost:4433";
-	const API_DEV_URL = "http://localhost:3000";
+	const API_DEV_URL = "http://localhost:3002";
 	const [games, setGames] = useState<Game[]>([]);
 
 

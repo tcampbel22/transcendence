@@ -9,7 +9,7 @@ type EditProfileProps = {
 
 const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
 	// const API_URL = "https://localhost:4433";
-	const API_DEV_URL = "http://localhost:3000";
+	const API_DEV_URL = "http://localhost:3002";
 	const [newUsername, setNewUsername] = useState('')
 	const [message, setMessage] = useState('')
 	const [loading, setLoading] = useState(false);

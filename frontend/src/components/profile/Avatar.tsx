@@ -8,7 +8,7 @@ type AvatarInfo = {
 
 const Avatar = ({userId}: AvatarInfo) => {
 	// const API_URL = "https://localhost:4433";
-	const API_DEV_URL = "http://localhost:3000";
+	const API_DEV_URL = "http://localhost:3002";
 	const [isOpen, setOpen] = useState(false);
 	const [username, setUsername] = useState('Timothy');
 	const [email, setEmail] = useState('Timothy@gmail.com');
