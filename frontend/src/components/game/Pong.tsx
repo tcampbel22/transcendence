@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import GameCanvas  from "./GameCanvas"
 
 type PongProps = {
   onScoreChange?: (leftScore: number, rightScore: number) => void;
@@ -157,38 +158,14 @@ const Pong: React.FC<PongProps> = ({
     return () => clearInterval(gameLoop);
   }, [gameOver, ballX, ballY]);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    ctx.clearRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
-	ctx.fillStyle = 'black';
-  	ctx.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
-	ctx.strokeStyle = '#39FF14';
-	ctx.lineWidth = 4;
-	ctx.strokeRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
-	ctx.setLineDash([5, 15]);
-	ctx.beginPath();
-	ctx.moveTo(BOARD_WIDTH / 2, 0);
-	ctx.lineTo(BOARD_WIDTH / 2, BOARD_HEIGHT);
-	ctx.stroke();
-	ctx.setLineDash([]);
-    ctx.fillStyle = '#39FF14';
-	ctx.beginPath();
-	ctx.arc(ballX + BALL_SIZE/2, ballY + BALL_SIZE/2, BALL_SIZE/2, 0, Math.PI * 2);
-	ctx.fill();
-    ctx.fillStyle = '#FFFF00';
-    ctx.fillRect(0, leftPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
-    ctx.fillStyle = '#BC13FE';
-    ctx.fillRect(BOARD_WIDTH - PADDLE_WIDTH, rightPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
-  }, [ballX, ballY, leftPaddleY, rightPaddleY]);
-
   return (
 	<div className="bg-black flex items-center justify-center p-4">
     <div className="relative">
-      <canvas ref={canvasRef} width={BOARD_WIDTH} height={BOARD_HEIGHT} />
+	  <GameCanvas 	ballX={ballX}
+	   				ballY={ballY} 
+					leftPaddleY={leftPaddleY} 
+					rightPaddleY={rightPaddleY}
+		/>
 	  {gameOver && (
       <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-70">
         <div className="bg-white p-6 rounded-lg text-center">
