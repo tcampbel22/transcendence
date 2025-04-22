@@ -12,13 +12,13 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@eleekku/logger": "^1.0.0",
     "@fastify/env": "^5.0.2",
     "@prisma/client": "^6.6.0",
     "argon2": "^0.41.1",
     "axios": "^1.8.4",
     "fastify": "^5.3.0",
-    "uuid": "^11.1.0",
-	"@eleekku/logger": "^1.0.0"
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@fastify/cors": "^11.0.1",

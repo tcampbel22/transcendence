@@ -12,6 +12,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@eleekku/logger": "^1.0.0",
     "@fastify/env": "^5.0.2",
     "@prisma/client": "^6.6.0",
     "argon2": "^0.41.1",
