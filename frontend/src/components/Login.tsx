@@ -11,6 +11,10 @@ const Login = () => {
 	const [loginError, setLoginError] = useState('');
 	const navigate = useNavigate()
 
+	const handleGoogleLogin = () => {
+		window.location.href = "https://localhost:4433/auth/google";
+	  };
+
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 
@@ -65,6 +69,12 @@ const Login = () => {
 			)}
 			<p>Don't have an account? <Link to="/register" className="text-blue-600 hover:underline">Register</Link></p>
 			<p>Forgot your password? <Link to="/restore_password" className="text-blue-600 hover:underline">Reset Password</Link></p>
+            <button
+                onClick={handleGoogleLogin}
+                className="border-2 border-black font-bold rounded px-4 py-2 hover:shadow-lg"
+            >
+                Login with Google
+            </button>
 			</div>
 		</div>
 		</div>

@@ -173,14 +173,16 @@ services:
       - app_network
     restart: unless-stopped
 
-  # auth_service:
-  #   build:
-  #     context: ./backend/auth_service
-  #     dockerfile: Dockerfile
-  #   container_name: auth_service
-  #   networks:
-  #     - app_network
-  #   restart: unless-stopped
+  googlesignin:
+    build:
+      context: backend/googleAutentication
+      dockerfile: Dockerfile
+    container_name: GoogleSignIn
+    volumes:
+      - ./backend/fastify/database/data:/app/database/data
+    networks:
+      - app_network
+    restart: unless-stopped
 
 
 networks:
