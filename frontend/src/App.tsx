@@ -1,13 +1,5 @@
 import React, { useState }  from "react";
-import { Routes, Route, Link } from "react-router-dom";
-import Login from "./components/Login";
-import Register from "./components/Register";
-// import Pong from "./Pong";
-import Button from "./components/ButtonGroup";
-import OneVsOnePage from "./pages/OneVsOnePage";
-import TournamentPage from "./pages/TournamentPage";
-import AppRoutes from "./components/AppRoutes";
-
+import AppRoutes from "./components/routes/AppRoutes";
 
 const App: React.FC = () => {
   
@@ -24,8 +16,4 @@ const App: React.FC = () => {
     );
 };
 
-
 export default App;
-{/* <Route path="/register" element={<Register />} />
-<Route path="/play/1v1" element={<OneVsOnePage />} />
-<Route path="/play/Tournament" element={<TournamentPage />} /> */}

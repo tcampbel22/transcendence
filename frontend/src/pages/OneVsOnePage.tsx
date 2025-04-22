@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Pong from "../components/Pong"
+import Pong from "../components/game/Pong"
 
 
 
