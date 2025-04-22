@@ -177,6 +177,8 @@ services:
     build:
       context: backend/googleAutentication
       dockerfile: Dockerfile
+    depends_on:
+      - game_service
     container_name: GoogleSignIn
     volumes:
       - ./backend/fastify/database/data:/app/database/data
