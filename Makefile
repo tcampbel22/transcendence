@@ -50,7 +50,7 @@ down:
 
 basic: ssl_cert build-frontend
 		@echo "$(YELLOW)Building docker images...$(RESET)"
-	@docker compose -f $(DOCKER_COMPOSE_FILE) up nginx game_service file_service user_service -d
+	@docker compose -f $(DOCKER_COMPOSE_FILE) up nginx game_service file_service user_service  googlesignin -d
 	@echo "$(GREEN)Docker images built.$(RESET)"
 
 clean: down
