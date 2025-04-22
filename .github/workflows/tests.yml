@@ -34,7 +34,7 @@ jobs:
           cache-dependency-path: backend/tests/package.json
 
       - name: Install backend Dependencies
-        run: cd backend && npm install
+        run: cd backend/user_service && npm install
 
       - name: Install test Dependencies
         run: cd backend/tests && npm install
