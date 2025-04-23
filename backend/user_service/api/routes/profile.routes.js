@@ -1,7 +1,9 @@
 import { profileController } from "../controllers/profile.controller.js"
+import { authenticate } from "../../../libs/jtw_authenticator/jwt_authenticator.js";
 
 // Get profile page 
 export default async function profileRoutes(fastify, options) {
+	fastify.addHook("preHandler", authenticate);
 	//Get user profile
 	fastify.get("/api/:id", profileController.getUser);
 	//Update user name
@@ -24,5 +26,4 @@ export default async function profileRoutes(fastify, options) {
 	fastify.delete("/api/:id/delete-friend", profileController.deleteFriend);
 	// Is a friend online
 	// fastify.get("/api/:id/friends/is-online", profileController.isFriendOnline);
-
 }

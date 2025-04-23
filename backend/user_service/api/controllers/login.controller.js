@@ -11,11 +11,17 @@ export const loginController = {
 				return reply.status(401).send({message: 'invalid username'});
 			if (!login.isMatch)
 				return reply.status(401).send({ message: "invalid username or password" });
+
+			reply.setCookie("token", login.token, {
+				httpOnly: true,
+				secure: true,
+				sameSite: "strict",
+				maxAge: 3600,
+			});
 			logger.info(`User logged in: ${login.user.username}, ID: ${login.user.id}`);
 			reply.status(200).send({
 				userId: login.user.id,
 				username: login.user.username,
-				token: login.token
 			});  
 		} catch (err) {
 			logger.error(`Error logging in user: ${err.message}`);
