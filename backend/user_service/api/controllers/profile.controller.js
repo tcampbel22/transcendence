@@ -4,7 +4,8 @@ export const profileController = {
 	async getUser(request, reply){
 		try {
 			const { id: userId } = request.params;
-			const user = profileService.getUser(userId);
+			const user = await profileService.getUser(userId);
+			console.log("inside user: ", user);
 			return reply.code(200).send({
 				message: `User ${userId} fetched successfully`,
 				userId: user.id,

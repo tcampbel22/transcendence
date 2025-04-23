@@ -1,5 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import GameCanvas  from "./GameCanvas"
+import GameControls from "./GameControls"
+import { userIdFromState } from '../../hooks/userIdFromState';
+import { useGameLoop } from '../../hooks/useGameLoop'
+import { usePaddles } from '../../hooks/usePaddles';
+import { useKeyPress } from '../../hooks/useKeyPress';
+import GameEnd from './GameEnd';
 
 type PongProps = {
   onScoreChange?: (leftScore: number, rightScore: number) => void;
@@ -9,24 +15,21 @@ type PongProps = {
   winningScore?: number;                 // Make winning score configurable
 };
 
-const PADDLE_WIDTH = 10;
 const PADDLE_HEIGHT = 100;
-const BALL_SIZE = 10;
 const BOARD_WIDTH = 1000;
 const BOARD_HEIGHT = 500;
-const PADDLE_SPEED = 10;
 const BALL_SPEED = 10;
-const PADDLE_SIZE = 5;
-const WINNING_SCORE = 5;
+const WINNING_SCORE = 1;
 
-const Pong: React.FC<PongProps> = ({ 
+const Pong: React.FC<PongProps> = ({
   onScoreChange, 
   onGameEnd,
   player1 = "Left Player", 
   player2 = "Right Player",
   winningScore = WINNING_SCORE 
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const userId = userIdFromState();
+  const [opponentUserId, setOpponentUserId] = useState(0);
   const [leftPaddleY, setLeftPaddleY] = useState(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
   const [rightPaddleY, setRightPaddleY] = useState(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
   const [ballX, setBallX] = useState(BOARD_WIDTH / 2);
@@ -37,7 +40,8 @@ const Pong: React.FC<PongProps> = ({
   const [rightScore, setRightScore] = useState(0);
   const ballSpeedX = useRef<number>(BALL_SPEED);
   const ballSpeedY = useRef<number>(0);
-  const keysPressed = useRef<{ [key: string]: boolean }>({ ArrowUp: false, ArrowDown: false, w: false, s: false });
+  const keysPressed = useKeyPress();
+  const [isGameStarted, setIsGameStarted] = useState(false);
 
   const updateLeftScore = (newScore: number) => {
     setLeftScore(newScore);
@@ -60,103 +64,38 @@ const Pong: React.FC<PongProps> = ({
   };
 
   const resetGame = () => {
-	setGameOver(false);
-	setWinner(null);
-	setLeftScore(0);
-	setRightScore(0);
-	setLeftPaddleY(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
-	setRightPaddleY(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
-	onScoreChange?.(0, 0);
-	setBallX(BOARD_WIDTH / 2);
-	setBallY(BOARD_HEIGHT / 2);
-	ballSpeedX.current = BALL_SPEED * (Math.random() > 0.5 ? 1 : -1);
-	ballSpeedY.current = 0;
+    setGameOver(false);
+    setWinner(null);
+    setLeftScore(0);
+    setRightScore(0);
+    setLeftPaddleY(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
+    setRightPaddleY(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
+    onScoreChange?.(0, 0);
+    setBallX(BOARD_WIDTH / 2);
+    setBallY(BOARD_HEIGHT / 2);
+    ballSpeedX.current = BALL_SPEED * (Math.random() > 0.5 ? 1 : -1);
+    ballSpeedY.current = 0;
   };
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key in keysPressed.current) {
-        keysPressed.current[event.key] = true;
-      }
-    };
+  usePaddles({setLeftPaddleY, setRightPaddleY, keysPressed});
 
-    const handleKeyUp = (event: KeyboardEvent) => {
-      if (event.key in keysPressed.current) {
-        keysPressed.current[event.key] = false;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, []);
-
-  useEffect(() => {
-    const movePaddles = () => {
-      setLeftPaddleY((prev) =>
-        Math.max(0, Math.min(BOARD_HEIGHT - PADDLE_HEIGHT, prev + (keysPressed.current.s ? PADDLE_SPEED : 0) - (keysPressed.current.w ? PADDLE_SPEED : 0)))
-      );
-      setRightPaddleY((prev) =>
-        Math.max(0, Math.min(BOARD_HEIGHT - PADDLE_HEIGHT, prev + (keysPressed.current.ArrowDown ? PADDLE_SPEED : 0) - (keysPressed.current.ArrowUp ? PADDLE_SPEED : 0)))
-      );
-    };
-
-    const paddleInterval = setInterval(movePaddles, 1000 / 60);
-
-    return () => clearInterval(paddleInterval);
-  }, []);
-
-  useEffect(() => {
-    if (gameOver) return;
-    // Move updateGame inside so it always has fresh state
-    const updateGame = () => {
-      let newBallX = ballX + ballSpeedX.current;
-      let newBallY = ballY + ballSpeedY.current;
-  
-      if (newBallY <= 0 || newBallY + BALL_SIZE >= BOARD_HEIGHT) {
-        ballSpeedY.current *= -1;
-      }
-  
-      if (newBallX <= PADDLE_WIDTH && newBallY + BALL_SIZE >= leftPaddleY && newBallY <= leftPaddleY + PADDLE_HEIGHT) {
-        ballSpeedX.current *= -1;
-        const impact = (newBallY - leftPaddleY) / PADDLE_HEIGHT - 0.5;
-        ballSpeedY.current = BALL_SPEED * impact * 1.5;
-      }
-  
-      if (newBallX >= BOARD_WIDTH - PADDLE_WIDTH - BALL_SIZE && newBallY + BALL_SIZE >= rightPaddleY && newBallY <= rightPaddleY + PADDLE_HEIGHT) {
-        ballSpeedX.current *= -1;
-        const impact = (newBallY - rightPaddleY) / PADDLE_HEIGHT - 0.5;
-        ballSpeedY.current = BALL_SPEED * impact * 1.5;
-      }
-  
-      if (newBallX <= 0 || newBallX >= BOARD_WIDTH - BALL_SIZE) {
-          if (newBallX <= 0) {
-            updateRightScore(rightScore + 1);
-          } else {
-            updateLeftScore(leftScore + 1);
-          }
-          if (newBallX >= BOARD_WIDTH / 2)
-              setBallX(BOARD_WIDTH - PADDLE_WIDTH - PADDLE_SIZE);
-          else
-              setBallX(0 + PADDLE_WIDTH + PADDLE_SIZE);
-          setBallY(BOARD_HEIGHT / 2);
-          ballSpeedX.current = BALL_SPEED * (Math.random() > 0.5 ? 1 : -1);
-          ballSpeedY.current = 0;
-          setLeftPaddleY(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
-          setRightPaddleY(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
-          return ;
-      }
-      setBallX(newBallX);
-      setBallY(newBallY);
-    };
-    
-    const gameLoop = setInterval(updateGame, 1000 / 60);
-    return () => clearInterval(gameLoop);
-  }, [gameOver, ballX, ballY]);
+  useGameLoop({
+      gameOver,
+      ballX,
+      ballY,
+      setBallX,
+      setBallY,
+      setLeftPaddleY,
+      setRightPaddleY,
+      ballSpeedX,
+      ballSpeedY,
+      updateLeftScore,
+      updateRightScore,
+      leftPaddleY,
+      rightPaddleY,
+      leftScore,
+      rightScore
+    });
 
   return (
 	<div className="bg-black flex items-center justify-center p-4">
@@ -166,7 +105,20 @@ const Pong: React.FC<PongProps> = ({
 					leftPaddleY={leftPaddleY} 
 					rightPaddleY={rightPaddleY}
 		/>
-	  {gameOver && (
+    {!isGameStarted && <GameControls  userId={userId} 
+                                      resetGame={resetGame} 
+                                      setIsGameStarted={setIsGameStarted}
+                                      setOpponentUserId={setOpponentUserId}
+                      />
+    };
+    {gameOver && isGameStarted && <GameEnd  userId={userId}
+                                            opponentUserId={opponentUserId}
+                                            winner={winner}
+                                            p1score={leftScore}
+                                            p2score={rightScore}
+                                  />
+    };
+	  {/* {gameOver ? (
       <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-70">
         <div className="bg-white p-6 rounded-lg text-center">
           <h2 className="text-2xl font-bold mb-4">
@@ -180,7 +132,7 @@ const Pong: React.FC<PongProps> = ({
           </button>
         </div>
       </div>
-    )}
+    ) : <GameControls userId={userId} resetGame={resetGame} setIsStarted={setIsStarted}/> } */}
     </div>
    </div>
   );
