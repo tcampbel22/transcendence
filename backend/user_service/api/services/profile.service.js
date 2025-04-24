@@ -2,11 +2,21 @@ import { prisma } from "../../database/db.js";
 import argon2 from "argon2";
 import axios from "axios";
 import logger from "@eleekku/logger";
-import { ErrorConflict, ErrorNotFound } from "@app/errors";
-import { ErrorCustom, ErrorUnAuthorized } from "../../../libs/error_lib/error.js";
+import { ErrorConflict, ErrorNotFound, ErrorCustom, ErrorUnAuthorized } from "@app/errors";
 
 export const profileService = {
-    // Fetches a user's profile
+	// Check if user is in db
+	async validateUser(id) {
+		const user = await prisma.user.findUnique({ 
+			where: {id: id },
+			select: { id: true }
+			});
+		if (!user)
+			throw new ErrorNotFound(`validateUser: User ${id} cannot be found`);
+		return user;
+	},
+
+	// Fetches a user's profile
     async getUser(id) {
         const user = await prisma.user.findUnique({
             where: { id: id },
@@ -113,7 +123,7 @@ export const profileService = {
     async getStats(id) {
         // Fetch the user's stats
         const user = await prisma.userStats.findUnique({
-            where: { id: id },
+            where: { userId: id },
             select: {
                 id: true,
                 wins: true,
@@ -125,6 +135,31 @@ export const profileService = {
             throw new ErrorNotFound(`getStats: User ${id} cannot be found`);
         return user;
     },
+
+	 // Fetches a user's stats
+	 async updateStats(id, isWinner) {
+		const user = await prisma.user.findUnique({
+            where: { id: id },
+            select: { id: true, },
+        });
+        if (!user)
+            throw new ErrorNotFound(`updateStats: User ${id} cannot be found`);
+		try {
+			// Update the user's stats
+			const updatedStats = await prisma.userStats.update({
+				where: { userId: id },
+				data: {
+					wins: isWinner ? { increment: 1 } : undefined,
+					losses: !isWinner ? { increment: 1 } : undefined,
+					matchesPlayed: { increment: 1 } 
+				}}
+			);
+			return updatedStats;
+		} catch (err) {
+			throw (err);
+		}
+    },
+
 
     // Fetches a user's match history
     async getMatchHistory(id) {

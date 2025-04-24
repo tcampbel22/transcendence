@@ -16,7 +16,8 @@
     "fastify": "^5.3.0",
     "uuid": "^11.1.0",
 	"argon2": "^0.41.1",
-	"@app/errors": "file:../lib/error_lib"
+	"@app/errors": "file:../lib/error_lib",
+	"axios": "^1.8.4"
   },
   "devDependencies": {
     "prisma": "^6.6.0"

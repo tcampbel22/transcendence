@@ -10,7 +10,7 @@ export const loginController = {
 				return reply.status(401).send({message: 'invalid username'});
 			if (!login.isMatch)
 				return reply.status(401).send({ message: "invalid username or password" });
-			reply.status(200).send(login.user.id);  
+			reply.status(200).send(login.user.id); 
 		} catch (err) {
 			request.log.error(err);
 			reply.status(500).send({ message: "loginUser: Internal server error" });

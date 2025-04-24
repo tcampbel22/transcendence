@@ -1,8 +1,11 @@
 import { profileController } from "../controllers/profile.controller.js"
-import schemas from "../schemas/profile.schema.js"
+import * as schemas from "../schemas/profile.schema.js"
 
 export default async function profileRoutes(fastify, options) {
-    // Get user profile
+    // Check if user exists
+    fastify.get("/api/validate/:id", profileController.validateUser);
+	
+	// Get user profile
     fastify.get("/api/:id", { schema: schemas.getUserProfileSchema }, profileController.getUser);
     
     // Update user name
@@ -34,4 +37,7 @@ export default async function profileRoutes(fastify, options) {
     
     // Is a friend online
     // fastify.get("/api/:id/friends/is-online", profileController.isFriendOnline);
+
+	// Update stats Needs to update users wins, losses and matches played when game is finished
+	fastify.patch("/api/:id/update-stats", profileController.updateStats);
 }

@@ -167,6 +167,7 @@ services:
     container_name: user_service
     volumes:
       - ./backend/user_service/database/data:/app/database/data
+      - ./backend/libs/error_lib:/app/node_modules/@app/errors
     env_file:
       - ./backend/user_service/.env
     networks:
