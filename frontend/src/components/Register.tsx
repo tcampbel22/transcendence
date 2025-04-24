@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 const Register = () => {
-	// const API_URL = "https://localhost:4433";
-	const API_DEV_URL = "http://localhost:3002"
+	const API_URL = process.env.REACT_APP_API_URL;
 	const [username, setUsername] = useState('')
   	const [password, setPassword] = useState('')
 	const [email, setEmail] = useState('')
@@ -27,8 +26,7 @@ const Register = () => {
 			password,
 		};
 
-		const response = await axios.post(`${API_DEV_URL}/api/register`, payload)
-		// const response = await axios.post(`${API_URL}/user/api/register`, payload) //product
+		const response = await axios.post(`${API_URL}/user/api/register`, payload) //product
 		return response.data
 	}
 
@@ -38,8 +36,7 @@ const Register = () => {
 		formData.append("image", image)
 
 		try {
-			const response = await axios.post(`${API_DEV_URL}/user/api/${userId}/picture`, image)
-			// const response = await axios.post(`${API_URL}/user/api/${userId}/picture`, image) //the post location might change
+			const response = await axios.post(`${API_URL}/user/api/${userId}/picture`, image) //the post location might change
 			console.log("Profile image uploaded:", response.data);
 			
 		} catch (error: any) {
