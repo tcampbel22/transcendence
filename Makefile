@@ -10,12 +10,7 @@ YELLOW = $$(printf '\033[0;33m')
 RED = $$(printf '\033[0;31m')
 RESET = $$(printf '\033[0m')
 
-all: setup build-frontend up
-
-setup: ssl_cert
-	@echo "$(YELLOW)Building docker images...$(RESET)"
-#	@docker compose -f $(DOCKER_COMPOSE_FILE) up setup
-#	@echo "$(GREEN)Setup built.$(RESET)"
+all: ssl_cert build-frontend up
 
 ssl_cert:
 	@mkdir -p $(SSL_DIR)
@@ -75,3 +70,7 @@ db_clean: down
 logs:
 	@echo "$(YELLOW)Container logs:$(RESET)"
 	@docker compose -f $(DOCKER_COMPOSE_FILE) logs
+
+re: clean all
+
+re_basic: clean basic
