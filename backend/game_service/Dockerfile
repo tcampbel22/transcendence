@@ -1,12 +1,11 @@
 FROM node:23-alpine
 
-#Create api and database directories
-RUN mkdir -p api database
-
 WORKDIR /app/
 
 COPY package*.json /app/
 COPY index.js /app/
+COPY ssl/cert.pem /app/ssl/cert.pem
+COPY ssl/key.pem /app/ssl/key.pem
 RUN npm install
 
 
