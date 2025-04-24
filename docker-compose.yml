@@ -146,6 +146,7 @@ services:
     container_name: game_service
     volumes:
       - ./backend/game_service/database/data:/app/database/data
+      - ./backend/libs:/libs
       - ./backend/game_service/logs:/app/logs
     env_file:
       - ./backend/game_service/.env
@@ -159,6 +160,7 @@ services:
       dockerfile: Dockerfile
     container_name: file_service
     volumes:
+      - ./backend/libs:/libs
       - ./backend/file_service/logs:/app/logs
     networks:
       - app_network
@@ -171,6 +173,7 @@ services:
     container_name: user_service
     volumes:
       - ./backend/user_service/database/data:/app/database/data
+      - ./backend/libs:/libs
       - ./backend/user_service/logs:/app/logs
     env_file:
       - ./backend/user_service/.env

@@ -3,8 +3,9 @@ import { testConnection } from "./database/db.js";
 import loginRoutes from "./api/routes/login.routes.js";
 import registerRoutes from "./api/routes/register.routes.js";
 import profileRoutes from "./api/routes/profile.routes.js";
-import logger from "@eleekku/logger";
-import cors from "@fastify/cors";
+import logger from "@eleekku/logger"
+import cors from '@fastify/cors';
+import fastifyCookie from "@fastify/cookie";
 import fs from "fs";
 
 const SSL_CERT_PATH = "./ssl/cert.pem";
@@ -27,6 +28,9 @@ try {
 	fastify.register(loginRoutes);
 	fastify.register(registerRoutes);
 	fastify.register(profileRoutes);
+	fastify.register(fastifyCookie, {
+		secret: process.env.JWT_SECRET }, // for cookies signature
+	)
 } catch (err) {
 	logger.error(err);
 	fastify.log.error(err);
