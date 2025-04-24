@@ -10,15 +10,19 @@ type Profile = {
     picture: string | boolean
 }
 
-export const useUsername = (UserId : userIdProp) => {
+export const useUsername = async (UserId : userIdProp) => {
    // const API_URL = "https://localhost:4433";
 	const API_DEV_URL = "http://localhost:3002";
     const [Profile, setProfile] = useState<Profile | null>(null);
 
+    
+
     useEffect (() => {
         const getName = async () => {
             try {
+                //const res = await axios.get(`${API_URL}/api/${UserId}`);
                 const res = await axios.get(`${API_DEV_URL}/api/${UserId}`);
+                console.log("dataset from userid info: ", res);
                 setProfile(res.data);
             } catch (err) {
                 const error = err as AxiosError;
@@ -27,6 +31,5 @@ export const useUsername = (UserId : userIdProp) => {
         }
         getName();
     }, [UserId])
-
     return {username: Profile?.username};
 };

@@ -30,7 +30,8 @@ const GameControls = ({userId, resetGame, setIsGameStarted, setOpponentUserId}: 
                 // MOCK DATA
                 const mockFriends: Friends[] = [
                     { id: 1, username: "kissa", picture: null, status: "online" },
-                    { id: 2, username: "piisami", picture: null, status: "offline" },
+                    { id: 2, username: "piisami", picture: null, status: "online" },
+                    { id: 2, username: "koira", picture: null, status: "online" },
                 ];
                 // const res = await axios.get(`${API_DEV_URL}/api/${userId}/friends`); //get friends list
                 // setFriendsList(res.data); //set it for usage in the dropdown list

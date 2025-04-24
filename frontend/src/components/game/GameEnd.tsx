@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import  {useUsername} from '../../hooks/useUsername'
-import axios from 'axios';
+import { useCreateGame } from '../../hooks/useCreateGame';
+import axios, { AxiosError } from 'axios';
 
 
 type EndGameProps = {
@@ -11,26 +12,33 @@ type EndGameProps = {
     p2score: number
 };
 
-type p2Name = string | undefined;
-
-const GameEnd = ({userId, opponentUserId, winner, p1score, p2score} : EndGameProps) => {
+const GameEnd = async ({userId, opponentUserId, winner, p1score, p2score} : EndGameProps) => {
     // const API_URL = "https://localhost:4433";
-	const API_DEV_URL = "http://localhost:3000";
-    const { username: p1Username } = useUsername(userId);
-    const { username: p2Username } = useUsername(opponentUserId);
+	const API_DEV_URL = "http://localhost:3001";
+    const { username: p1Username } = await useUsername(userId);
+    const { username: p2Username } = await useUsername(opponentUserId);
+
+    console.log("usernames of players: ", p2Username);
+    const { gameId: gameId } = await useCreateGame({ p1Id: userId, p2Id: opponentUserId });
 
     useEffect(() => {
         const postWinner = async () => {
            const payload = {
-                gameId: 1,
+                gameId: gameId,
                 p1score: p1score,
                 p2score: p2score,
                 winnerId: winner === 'left' ? userId : opponentUserId
             }
-
-            axios.post(`${API_DEV_URL}/api/${userId}/finish-game`, payload)
+            try {
+               // axios.patch(`${API_URL}/api/${gameId}/finish-game`, payload);
+                axios.patch(`${API_DEV_URL}/api/${gameId}/finish-game`, payload);
+            } catch (err) {
+                const error = err as AxiosError;
+                console.log("unable to save match result", error);
+            };
         }
-    })
+        postWinner();
+    }, [gameId, userId])
 
     return (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-70">
@@ -40,7 +48,8 @@ const GameEnd = ({userId, opponentUserId, winner, p1score, p2score} : EndGamePro
                 <div className="flex flex-row justify-between items-center gap-8">
                 {/* Player 1 */}
                 <div className="flex flex-col items-center">
-                    <p className="font-semibold text-lg">Player 1</p>
+                    {winner === 'left' && <p className="font-semibold text-lg text-green-500">Winner</p>}
+                    <p className="font-semibold text-lg">Loser</p>
                     <p className="text-sm text-gray-600">{p1Username}</p>
                 </div>
 
