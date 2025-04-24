@@ -83,7 +83,7 @@ jobs:
 
       - name: Create google env
         run: |
-          cat > backend/googleAutentication/.env << EOL
+          cat > backend/googleAuth/.env << EOL
           GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
           GOOGLE_CALLBACK_URL=${{ secrets.GOOGLE_CALLBACK_URL }}a
