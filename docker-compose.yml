@@ -146,11 +146,11 @@ services:
     volumes:
       - ./backend/game_service/database/data:/app/database/data
     env_file:
-        - ./backend/game_service/.env
+      - ./backend/game_service/.env
     networks:
       - app_network
     restart: unless-stopped
-  
+
   file_service:
     build:
       context: ./backend/file_service
@@ -175,7 +175,7 @@ services:
 
   googlesignin:
     build:
-      context: backend/googleAutentication
+      context: backend/googleAuth
       dockerfile: Dockerfile
     container_name: GoogleSignIn
     volumes:
@@ -183,7 +183,6 @@ services:
     networks:
       - app_network
     restart: unless-stopped
-
 
 networks:
   app_network:
