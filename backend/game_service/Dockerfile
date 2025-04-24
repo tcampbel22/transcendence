@@ -11,7 +11,6 @@ RUN npm install
 
 COPY ./api /app/api/
 COPY ./database/ /app/database/
-COPY ./logs /app/logs/
 
 WORKDIR /app/database
 RUN npx prisma generate
