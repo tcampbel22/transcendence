@@ -57,6 +57,9 @@ jobs:
       - name: Create .env file
         run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> backend/game_service/.env
 
+      - name: Create google .env
+
+
       - name: user
         run: cd backend; ls
       - name: Create .env file
@@ -74,6 +77,11 @@ jobs:
           LICENSE=${{ secrets.LICENSE }}
           ES_PORT=${{ secrets.ES_PORT }}
           KIBANA_PORT=${{ secrets.KIBANA_PORT }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_CALLBACK_URL=${{ secrets.GOOGLE_CALLBACK_URL }}
+          FASTIFY_SECURE_SECRET=${{ secrets.FASTIFY_SECURE_SECRET }}
           EOL
 
       - name: Set Up Node.js

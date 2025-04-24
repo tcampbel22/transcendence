@@ -1,9 +1,9 @@
 import { profileController } from "../controllers/profile.controller.js"
-import { authenticate } from "../../../libs/jtw_authenticator/jwt_authenticator.js";
+import authenticate from "../../../libs/jwt_authenticator/jwt_authenticator.js";
 
 // Get profile page 
 export default async function profileRoutes(fastify, options) {
-	fastify.addHook("preHandler", authenticate);
+//	fastify.addHook("preHandler", authenticate); UNCOMMENT THIS LINE TO ENABLE AUTHENTICATION
 	//Get user profile
 	fastify.get("/api/:id", profileController.getUser);
 	//Update user name

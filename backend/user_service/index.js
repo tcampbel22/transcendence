@@ -5,6 +5,7 @@ import registerRoutes from "./api/routes/register.routes.js";
 import profileRoutes from "./api/routes/profile.routes.js";
 import logger from "@eleekku/logger"
 import cors from '@fastify/cors';
+import fastifyCookie from "@fastify/cookie";
 
 const fastify = Fastify({ logger: true });
 
@@ -18,6 +19,9 @@ try {
 	fastify.register(loginRoutes);
 	fastify.register(registerRoutes);
 	fastify.register(profileRoutes);
+	fastify.register(fastifyCookie, {
+		secret: process.env.JWT_SECRET }, // for cookies signature
+	)
 } catch (err) {
 	logger.error(err);
 	fastify.log.error(err);

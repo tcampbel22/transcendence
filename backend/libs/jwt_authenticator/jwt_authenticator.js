@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-export const authenticate = async (request, reply) => {
+const authenticate = async (request, reply) => {
 	try {
     const token = request.cookies.token;
     if (!token) {
@@ -14,3 +14,5 @@ export const authenticate = async (request, reply) => {
     return reply.status(401).send({ message: "Unauthorized: Invalid or expired token" });
   }
 }
+
+export default authenticate;
