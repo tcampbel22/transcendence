@@ -1,8 +1,6 @@
 DOCKER_COMPOSE_FILE = docker-compose.yml
 ENV_FILE = .env
-SSL_DIR = backend/nginx/ssl
-SSL_CERT = $(SSL_DIR)/cert.pem
-SSL_KEY = $(SSL_DIR)/key.pem
+DIR_NAMES = nginx game_service user_service file_service googleAuth
 
 # Colors for better output
 GREEN = $$(printf '\033[0;32m')
@@ -13,18 +11,27 @@ RESET = $$(printf '\033[0m')
 all: ssl_cert build-frontend up
 
 ssl_cert:
-	@mkdir -p $(SSL_DIR)
-	@if [ ! -f $(SSL_CERT) ] || [ ! -f $(SSL_KEY) ]; then \
-		echo "$(YELLOW)Generating SSL certificate...$(RESET)"; \
+	@for name in $(DIR_NAMES); do \
+	SSL_DIR=./backend/$$name/ssl; \
+	mkdir -p $$SSL_DIR; \
+	SSL_CERT=$$SSL_DIR/cert.pem; \
+	SSL_KEY=$$SSL_DIR/key.pem; \
+	if [ ! -f $$SSL_CERT ] || [ ! -f $$SSL_KEY ]; then \
+		echo "$(YELLOW)Generating SSL certificate for $$name...$(RESET)"; \
 		openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-			-keyout $(SSL_DIR)/key.pem \
-			-out $(SSL_DIR)/cert.pem \
+			-keyout $$SSL_KEY \
+			-out $$SSL_CERT \
 			-subj "/C=FI/ST=Uusimaa/L=Helsinki/O=42/OU=Hive/CN=soyboys.42.fr" \
 			2>/dev/null; \
 		echo "$(GREEN)SSL certificate generated.$(RESET)"; \
 	else \
 		echo "$(YELLOW)SSL certificate already exists.$(RESET)"; \
-	fi
+	fi; \
+	if [ "$$name" != "nginx" ]; then \
+		cp $$SSL_CERT ./backend/nginx/ssl/$$name.cert.pem; \
+		cp $$SSL_KEY ./backend/nginx/ssl/$$name.key.pem; \
+	fi; \
+	done
 
 build-frontend:
 	cd frontend && npm install && npm run build
@@ -54,6 +61,11 @@ clean: down
 	@echo "$(GREEN)Docker images removed.$(RESET)"
 	@rm -rf ./frontend/dist
 	@rm -rf ./backend/file_service/dist
+	@rm -rf ./backend/nginx/ssl
+	@rm -rf ./backend/game_service/ssl
+	@rm -rf ./backend/user_service/ssl
+	@rm -rf ./backend/file_service/ssl
+	@rm -rf ./backend/googleAuth/ssl
 
 #WARNING!! THIS WILL PERMANTLY REMOVE THE DB, ONLY USE IN TESTING ENV
 db_clean: down
