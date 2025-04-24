@@ -81,6 +81,15 @@ jobs:
           FASTIFY_SECURE_SECRET=${{ secrets.FASTIFY_SECURE_SECRET }}
           EOL
 
+      - name: Create google env
+        run: |
+          cat > backend/googleAuthentication/.env << EOL
+          GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_CALLBACK_URL=${{ secrets.GOOGLE_CALLBACK_URL }}a
+          DATABASE_URL=${{ secrets.DATABASE_URL }}
+          EOL
+
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
