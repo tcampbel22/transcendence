@@ -34,6 +34,18 @@ export const profileController = {
 			return handleError(err, reply, `Failed to fetch user ${id}`);
 		}
 	},
+	async getUserList(request, reply){
+		try {
+			const users = await profileService.getUserList();
+			return reply.code(200).send({
+				message: `User ${id} fetched successfully`,
+				users: users
+			})
+		} catch (err) {
+			request.log.error(err);
+			return handleError(err, reply, `Failed to fetch users`);
+		}
+	},
 	async updateUsername(request, reply) {
 		try {
 			const { id } = request.params;
@@ -81,6 +93,21 @@ export const profileController = {
 			logger.error(`Failed to update user ${userId}'s password: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to update user ${id}'s password`);
+		}
+	},
+	async validatePassword(request, reply) {
+		try {
+			const { id, password } = request.body
+			const user = await loginService.validatePassword(parseInt(id), password);
+			logger.info(`User registered to play: ${user.username}, ID: ${user.id}`);
+			reply.status(200).send({
+				id: user.id,
+				username: user.username,
+			});  
+		} catch (err) {
+			logger.error(`Error validating user password: ${err.message}`);
+			request.log.error(err);
+			return handleError(err, reply, `Failed to validate user ${id}'s password`);
 		}
 	},
 	async getStats(request, reply) {

@@ -1,4 +1,5 @@
 import { profileController } from "../controllers/profile.controller.js"
+import * as schemas from "../schemas/profile.schema.js"
 // import authenticate from "../../../libs/jwt_authenticator/jwt_authenticator.js";
 
 export default async function profileRoutes(fastify, options) {
@@ -6,6 +7,12 @@ export default async function profileRoutes(fastify, options) {
     
 	// Check if user exists
     fastify.get("/api/validate/:id", profileController.validateUser);
+    
+	// Get all users id's amd usernames
+	// fastify.get("/api/user-list/", profileController.getUserList);
+
+	// Validates a user password
+	// fastify.post("/api/validate-password", profileController.validatePassword);
 	
 	// Get user profile
     fastify.get("/api/:id", { schema: schemas.getUserProfileSchema }, profileController.getUser);

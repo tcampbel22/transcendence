@@ -31,7 +31,21 @@ export const profileService = {
 			throw new ErrorNotFound(`getUser: User ${id} cannot be found`);
         return user;
     },
-
+	async getUserList(limit = 20, sortField = 'username') {
+        const users = await prisma.user.findMany({
+            select: {
+                id: true,
+                username: true,
+            },
+			orderBy: {
+				[sortField]: 'asc',
+			},
+			take: limit
+        });
+        if (users.length === 0) 
+			throw new ErrorNotFound(`getUserList: no users in database`);
+        return users
+    },
     // Updates a user's username
     async updateUsername(id, newUsername) {
         // Check if the new username already exists
@@ -118,7 +132,25 @@ export const profileService = {
         });
         return newUser;
     },
-
+	async validatePassword(id, password) {
+		const user = await prisma.user.findFirst( { 
+			where: id,
+			select: { 
+				username: true,
+				id: true,
+				password: true
+			 }
+		});
+		if (!user) {
+			throw new ErrorNotFound(`User ${id} cannot be found`);
+		}
+		const isMatch = await argon2.verify(user.password, password);
+		if (!isMatch) {
+			throw new ErrorUnAuthorized(`User ${id} password is incorrect`);
+		}
+		const { password: _, ...noPasswordUser} = user;
+		return { user: noPasswordUser };
+	},
     // Fetches a user's stats
     async getStats(id) {
         // Fetch the user's stats
