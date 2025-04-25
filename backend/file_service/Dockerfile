@@ -1,15 +1,13 @@
 FROM node:23-alpine
 
-#Create api and dist directories
-RUN mkdir -p api dist
-
 WORKDIR /app/
 
 COPY package*.json /app/
 COPY index.js /app/
+COPY ssl/cert.pem /app/ssl/cert.pem
+COPY ssl/key.pem /app/ssl/key.pem
 RUN npm install --production
 
 COPY /dist /app/dist/
-COPY /logs /app/logs/
 
 CMD [ "node", "/app/index.js" ]

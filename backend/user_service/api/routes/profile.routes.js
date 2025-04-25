@@ -1,8 +1,10 @@
 import { profileController } from "../controllers/profile.controller.js"
-import * as schemas from "../schemas/profile.schema.js"
+// import authenticate from "../../../libs/jwt_authenticator/jwt_authenticator.js";
 
 export default async function profileRoutes(fastify, options) {
-    // Check if user exists
+	//	fastify.addHook("preHandler", authenticate); UNCOMMENT THIS LINE TO ENABLE AUTHENTICATION
+    
+	// Check if user exists
     fastify.get("/api/validate/:id", profileController.validateUser);
 	
 	// Get user profile
@@ -37,7 +39,7 @@ export default async function profileRoutes(fastify, options) {
     
     // Is a friend online
     // fastify.get("/api/:id/friends/is-online", profileController.isFriendOnline);
-
+	
 	// Update stats Needs to update users wins, losses and matches played when game is finished
 	fastify.patch("/api/:id/update-stats", profileController.updateStats);
 }

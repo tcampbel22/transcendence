@@ -1,5 +1,6 @@
 import { profileService } from "../services/profile.service.js"
 import { handleError } from "@app/errors"
+import logger from "@eleekku/logger"
 
 export const profileController = {
 	
@@ -38,12 +39,14 @@ export const profileController = {
 			const { id } = request.params;
 			const { newUsername } = request.body;
 			const user = await profileService.updateUsername(parseInt(id), newUsername);
+			logger.info(`User ${userId}'s username updated to ${newUsername}`);
 			return reply.code(201).send({
 				message: `User ${id}'s username updated successfully`,
 				id: user.id,
 				newUsername: user.username,
 			});
 		} catch (err) {
+			logger.error(`Failed to update user ${userId}'s username: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to update user ${id}'s username`);
 		}
@@ -53,6 +56,7 @@ export const profileController = {
 			const { id } = request.params;
 			const { newPicture } = request.body;
 			const user = await profileService.updatePicture(parseInt(id), newPicture);
+			logger.info(`User ${userId}'s profile picture updated`);
 			return reply.code(201).send({
 				message: `User ${id}'s profile picture updated successfully`,
 				id: user.id,
@@ -68,11 +72,13 @@ export const profileController = {
 			const { id } = request.params;
 			const { newPassword } = request.body;
 			const user = await profileService.updatePassword(parseInt(id), newPassword);
+			logger.info(`User ${userId}'s password updated`);
 			return reply.code(201).send({
 				message: `User ${id}'s password updated successfully`,
 				id: user.id,
 			});
 		} catch (err) {
+			logger.error(`Failed to update user ${userId}'s password: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to update user ${id}'s password`);
 		}
@@ -106,6 +112,7 @@ export const profileController = {
 				matchesPlayed: user.matchesPlayed,
 			})
 		} catch (err) {
+			logger.error(`Failed to fetch user ${userId}'s stats: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to update user ${id}'s stats`);
 		}
@@ -119,6 +126,7 @@ export const profileController = {
 				matchHistory,
 			})
 		} catch (err) {
+			logger.error(`Failed to fetch user ${userId}'s match history: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to fetch user ${id}'s match history`);
 		}
@@ -127,8 +135,10 @@ export const profileController = {
 		try {
 			const { id } = request.params;
 			await profileService.deleteUser(parseInt(id));
+			logger.info(`User ${userId} deleted successfully`);
 			return reply.code(204).send({ message: `User ${id} deleted successfully` });
 		} catch (err) {
+			logger.error(`Failed to delete user ${userId}: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to delete user ${id}`);
 		} 
@@ -157,10 +167,12 @@ export const profileController = {
 			const { id } = request.params;
 			const { friendId } = request.body;
 			await profileService.addFriend(parseInt(id), parseInt(friendId));
+			logger.info(`User ${userId} added user ${friendId} as a friend`);
 			return reply.code(201).send({ 
 				message: `Friendship created between user ${id} and user ${friendId}` 
 			});
 		} catch (err) {
+			logger.error(`Failed to add user ${friendId} to user ${userId}'s friend list: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to add friend to user ${id}'s friend list`);
 		}
@@ -170,8 +182,10 @@ export const profileController = {
 			const { id } = request.params;
 			const { friendId } = request.body;
 			await profileService.deleteFriend(parseInt(id), parseInt(friendId));
+			logger.info(`User ${userId} deleted user ${friendId} from their friend list`);
 			return reply.code(204).send({ message: `User ${id} friendship with ${friendId} has ended permanently` })
 		} catch (err) {
+			logger.error(`Failed to delete user ${friendId} from user ${userId}'s friend list: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to delete user ${id}'s friend`);
 		}
