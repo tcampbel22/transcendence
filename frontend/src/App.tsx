@@ -9,15 +9,33 @@ import TournamentPage from "./pages/TournamentPage";
 import AppRoutes from "./components/AppRoutes";
 
 const App: React.FC = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
+    //const navigate = useNavigate();
+    //const location = useLocation();
 
-    useEffect(() => {
+    /*useEffect(() => {
+        const handleMessage = (event: MessageEvent) => {
+          // Valida el origen si estás en producción, por ejemplo:
+          // if (event.origin !== "https://tudominio.com") return;
+      
+          if (event.data && event.data.userId) {
+            console.log("Login exitoso, user ID:", event.data.userId);
+            // Aquí puedes guardar el userId, actualizar el contexto, navegar, etc.
+            navigate('/hub');
+          }
+        };
+      
+        window.addEventListener("message", handleMessage);
+        return () => window.removeEventListener("message", handleMessage);
+      }, [navigate]);*/
+      
+
+    /*useEffect(() => {
         const params = new URLSearchParams(location.search);
         if (params.get('authenticated') === 'true') {
             navigate('/hub');
         }
-    }, [location, navigate]);
+    }, [location, navigate]);*/
+    
 
     return (
         <div 

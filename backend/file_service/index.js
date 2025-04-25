@@ -4,7 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import logger from "@eleekku/logger"
 
-const fastify = Fastify({ logger: true });
+const fastify = Fastify({ logger: true, trustProxy: true });
 
 
 const __filename = fileURLToPath(import.meta.url);

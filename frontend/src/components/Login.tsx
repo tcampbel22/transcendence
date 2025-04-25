@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from "react";
 
 const Login = () => {
 	// const API_URL = "https://localhost:4433"
@@ -11,9 +12,21 @@ const Login = () => {
 	const [loginError, setLoginError] = useState('');
 	const navigate = useNavigate()
 
-	const handleGoogleLogin = () => {
-		window.location.href = "https://localhost:4433/auth/google";
-	  };
+	const handleGoogleLogin = async () => {
+		window.open("https://localhost:4433/auth/google", "GoogleLoginPopup", "width=500,height=600");
+	};
+
+	useEffect(() => {
+		const receiveMessage = (event:MessageEvent) => {
+		  if (event.origin !== "https://localhost:4433") 
+				return;
+		  navigate('/hub');
+		};	  
+		window.addEventListener("message", receiveMessage);	  
+		return () => {
+		  window.removeEventListener("message", receiveMessage);
+		};
+	  }, []);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()

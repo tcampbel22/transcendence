@@ -3,38 +3,18 @@ import fastifySecureSession from '@fastify/secure-session';
 import fastifyPassport from '@fastify/passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { PrismaClient } from '@prisma/client';
+import axios from 'axios';
 import dotenv from 'dotenv';
+import fastifyStatic from '@fastify/static';
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
 const fastify = Fastify({ logger: true });
-
-const prisma = new PrismaClient();
-
-export const saveUser = async (userData) => {
-    try {
-        const existingUser = await prisma.user.findUnique({
-            where: { googleId: userData.googleId },
-        });
-
-        if (existingUser) {
-            console.log('Usuario ya existente:', existingUser);
-        } else {
-            const newUser = await prisma.user.create({
-                data: {
-                    googleId: userData.googleId,
-                    name: userData.name,
-                    email: userData.email,
-                },
-            });
-            console.log('Usuario agregado:', newUser);
-        }
-    } catch (error) {
-        console.error('Error al manejar el usuario:', error.message);
-    } finally {
-        await prisma.$disconnect(); // Cerrar conexiones
-    }
-};
 
 // Register plugins
 fastify.register(fastifySecureSession, {
@@ -42,7 +22,7 @@ fastify.register(fastifySecureSession, {
     cookie: {
         path: '/',
         httpOnly: true,
-        secure: true, // Cambiar a true para producción
+        secure: true, // Set to true if using HTTPS
     },
 });
 
@@ -72,26 +52,40 @@ fastify.get(
     async (req, reply) => {}
 );
 
-fastify.get(
-  '/auth/google/callback',
-  { preValidation: fastifyPassport.authenticate('google', { failureRedirect: '/' }) },
-  async (req, reply) => {
-      try {
-          const profile = req.user;
-          const userData = {
-              googleId: profile.id,
-              name: profile.displayName,
-              email: profile.emails[0].value,
-          };
-          await saveUser(userData);
-          reply.redirect('https://localhost:4433?authenticated=true');
-      } catch (error) {
-          fastify.log.error('Error en Google Callback:', error.message);
-          reply.redirect('/error');
-      }
-  }
-);
+fastify.get('/auth/google/callback',
+    { preValidation: fastifyPassport.authenticate('google', { failureRedirect: '/' }) },
+    async (req, reply) => {
+        const profile = req.user;
+        const userData = encodeURIComponent(JSON.stringify({//need to change this to response.data.id
+            username: profile.displayName,
+            email: profile.emails[0].value,
+            googleId: profile.id,
+        }));
+        try {
+            const payload = {
+                username : profile.displayName,
+                email : profile.emails[0].value,
+                password : profile.id,
+            }
+            const response = await axios.post(`http://user_service:3002/api/register`, payload)
+            console.log('Respuesta del servicio de usuario:', response.data);
+            reply.redirect(`/auth/google/callback.html?user=${userData}`);
+        }
+        catch (error) {
+            if (error.response) {
+                console.error('Error al registrar el usuario:', error.response.data);
+            } else {
+                console.error('Error al registrar el usuario:', error.message); 
+            }
+            reply.redirect(`/auth/google/callback.html?user=${userData}`);
+        }
+    }
+  );
 
+  fastify.register(fastifyStatic, {
+    root: path.join(__dirname, 'public'),
+    prefix: '/auth/google/',
+});
 
 fastify.listen({ port: 3003, host: '0.0.0.0' }, (err, address) => {
     if (err) {
