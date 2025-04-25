@@ -7,12 +7,16 @@ import fs from "fs";
 const SSL_CERT_PATH = "./ssl/cert.pem";
 const SSL_KEY_PATH = "./ssl/key.pem";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const fastify = Fastify({
 	logger: true,
+	...(isProduction && {
 	https: {
 		key: fs.readFileSync(SSL_KEY_PATH),
 		cert: fs.readFileSync(SSL_CERT_PATH),
 	},
+	}),
 });
 
 try {
