@@ -7,8 +7,7 @@ type AvatarInfo = {
 };
 
 const Avatar = ({userId}: AvatarInfo) => {
-	// const API_URL = "https://localhost:4433";
-	const API_DEV_URL = "http://localhost:3002";
+	const API_URL = import.meta.env.VITE_API_USER;
 	const [isOpen, setOpen] = useState(false);
 	const [username, setUsername] = useState('Timothy');
 	const [email, setEmail] = useState('Timothy@gmail.com');
@@ -18,8 +17,7 @@ const Avatar = ({userId}: AvatarInfo) => {
 	useEffect(() => {
 		const fetchUserInfo = async () => {
 			try {
-				// const response = await axios.get(`${API_URL}/api/users/${userId}`);
-				const response = await axios.get(`${API_DEV_URL}/api/users/${userId}`);
+				const response = await axios.get(`${API_URL}/users/${userId}`);
 				setUsername(response.data.username);
 				setEmail(response.data.email)
 			} 

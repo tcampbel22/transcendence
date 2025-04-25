@@ -8,8 +8,7 @@ type EditProfileProps = {
 }
 
 const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
-	// const API_URL = "https://localhost:4433";
-	const API_DEV_URL = "http://localhost:3002";
+ 	const API_URL = import.meta.env.VITE_API_USER;
 	const [newUsername, setNewUsername] = useState('')
 	const [message, setMessage] = useState('')
 	const [loading, setLoading] = useState(false);
@@ -20,7 +19,6 @@ const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
 		try {
 			//need to check with Tim that this is the correct place where to change the username
 			// await axios.put(`${API_URL}/api/users/${userId}/name`, {username: newUsername}); //product version
-			// await axios.put(`${API_DEV_URL}/api/users/${userId}/name`, {username: newUsername}); //dev version
 			setMessage("Username changed succesfully");
 			setMessageType('success')
 			onSave();
