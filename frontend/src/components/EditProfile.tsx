@@ -8,7 +8,7 @@ type EditProfileProps = {
 }
 
 const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
- 	const API_URL = "https://localhost:4433";
+ 	const API_URL = import.meta.env.VITE_API_USER;
 	const [newUsername, setNewUsername] = useState('')
 	const [message, setMessage] = useState('')
 	const [loading, setLoading] = useState(false);

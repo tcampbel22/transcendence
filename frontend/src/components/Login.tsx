@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-	const API_URL = process.env.REACT_APP_API_URL;
+	const API_URL = import.meta.env.VITE_API_USER;
 	const [password, setPassword] = useState('')
 	const [username, setUsername] = useState('')
 	const [loginError, setLoginError] = useState('');
@@ -25,7 +25,7 @@ const Login = () => {
 			password,
 		}
 		try {
-			const response = await axios.post(`${API_URL}/user/api/login`, loginInput)
+			const response = await axios.post(`${API_URL}/login`, loginInput)
 			console.log("logged in succesfully", response.data)
 			navigate('/hub', {state: response.data})
 		} catch (error: any) {

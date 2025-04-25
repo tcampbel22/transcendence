@@ -14,15 +14,14 @@ type Game = {
 };
 
 const GamesPlayed = ({userId}: GameStatsInfo) => {
-	const API_URL = "https://localhost:4433";
+	const API_URL = import.meta.env.VITE_API_GAME;
 	const [games, setGames] = useState<Game[]>([]);
 
 
 	useEffect (() => {
 		const getMatchHistory = async () => {
 			try {
-				// const history = await axios.get(`${API_URL}/games/user/${userId}`);
-				const history = await axios.get(`${API_DEV_URL}/games/user/${userId}`);
+				const history = await axios.get(`${API_URL}/user/${userId}`);
 				setGames(history.data);
 			} catch (err) {
 				const error = err as AxiosError;
