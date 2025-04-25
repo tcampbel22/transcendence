@@ -1,8 +1,19 @@
 import Fastify from "fastify";
 import { testConnection } from "./database/db.js";
-import  gameRoutes  from "./api/routes/game.routes.js"
+import gameRoutes from "./api/routes/game.routes.js";
+import logger from "@eleekku/logger";
+import fs from "fs";
 
-const fastify = Fastify({ logger: true });
+const SSL_CERT_PATH = "./ssl/cert.pem";
+const SSL_KEY_PATH = "./ssl/key.pem";
+
+const fastify = Fastify({
+	logger: true,
+	https: {
+		key: fs.readFileSync(SSL_KEY_PATH),
+		cert: fs.readFileSync(SSL_CERT_PATH),
+	},
+});
 
 try {
 	fastify.register(gameRoutes);
@@ -16,10 +27,13 @@ const start = async () => {
 		console.log("Connecting to DB from:", process.cwd());
 		const dbConnected = await testConnection();
 		if (!dbConnected) {
-		  throw new Error('Failed to connect to the database');
+			logger.error("game_service failed to connect to the database");
+			throw new Error("Failed to connect to the database");
 		}
 		await fastify.listen({ port: 3001, host: "0.0.0.0" });
+		logger.info("game_service connected to the database");
 	} catch (err) {
+		logger.error(err);
 		fastify.log.error(err);
 		process.exit(1);
 	}

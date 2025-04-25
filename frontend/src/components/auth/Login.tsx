@@ -4,12 +4,16 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-	// const API_URL = "https://localhost:4433"
-	const API_DEV_URL = "http://localhost:3002"
+	const API_URL = "https://localhost:4433"
+	// const API_DEV_URL = "http://localhost:3002"
 	const [password, setPassword] = useState('')
 	const [username, setUsername] = useState('')
 	const [loginError, setLoginError] = useState('');
 	const navigate = useNavigate()
+
+	const handleGoogleLogin = () => {
+		window.location.href = "https://localhost:4433/auth/google";
+	  };
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
@@ -23,8 +27,8 @@ const Login = () => {
 		}
 		try {
 			//uncomment these when database is connected to the frontend
-			// const response = await axios.post(`${API_URL}/user/api/login`, loginInput)
-			const response = await axios.post(`${API_DEV_URL}/api/login`, loginInput);
+			const response = await axios.post(`${API_URL}/users/login`, loginInput)
+			// const response = await axios.post(`${API_DEV_URL}/api/login`, loginInput);
 			console.log("logged in succesfully", response.data)
 			navigate('/hub', {state: response.data})
 		} catch (error: any) {
@@ -66,6 +70,12 @@ const Login = () => {
 			)}
 			<p>Don't have an account? <Link to="/register" className="text-blue-600 hover:underline">Register</Link></p>
 			<p>Forgot your password? <Link to="/restore_password" className="text-blue-600 hover:underline">Reset Password</Link></p>
+            <button
+                onClick={handleGoogleLogin}
+                className="border-2 border-black font-bold rounded px-4 py-2 hover:shadow-lg"
+            >
+                Login with Google
+            </button>
 			</div>
 		</div>
 		</div>
