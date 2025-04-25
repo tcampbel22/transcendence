@@ -10,5 +10,7 @@ then run node index.js in backend/api/
 
 
 npm run dev in the root = dev mode. Make sure you have .env files in each service and npm installs done
+Also, frontend has now two .env's you can just "cp env.development .env.develpment" and same for production or modify the variables
 make (basic) = production
+
 
