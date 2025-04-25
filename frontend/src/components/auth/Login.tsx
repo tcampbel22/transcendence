@@ -30,7 +30,7 @@ const Login = () => {
 			navigate('/hub', {state: response.data})
 		} catch (error: any) {
 			console.error("Error:", error.response?.data || error.message);
-			navigate('/hub')
+			// navigate('/hub')
 			setLoginError("invalid username or password")
 			return;
 		}

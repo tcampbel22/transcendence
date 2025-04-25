@@ -13,8 +13,7 @@ type EndGameProps = {
 };
 
 const GameEnd = async ({userId, opponentUserId, winner, p1score, p2score} : EndGameProps) => {
-    // const API_URL = "https://localhost:4433";
-	const API_DEV_URL = "http://localhost:3001";
+    const API_URL = import.meta.env.VITE_API_USER;
     const { username: p1Username } = await useUsername(userId);
     const { username: p2Username } = await useUsername(opponentUserId);
 
@@ -30,8 +29,7 @@ const GameEnd = async ({userId, opponentUserId, winner, p1score, p2score} : EndG
                 winnerId: winner === 'left' ? userId : opponentUserId
             }
             try {
-               // axios.patch(`${API_URL}/api/${gameId}/finish-game`, payload);
-                axios.patch(`${API_DEV_URL}/api/${gameId}/finish-game`, payload);
+                axios.patch(`${API_URL}/api/${gameId}/finish-game`, payload);
             } catch (err) {
                 const error = err as AxiosError;
                 console.log("unable to save match result", error);

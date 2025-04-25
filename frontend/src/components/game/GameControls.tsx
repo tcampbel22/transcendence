@@ -17,8 +17,7 @@ type GameControlProps = {
 
 
 const GameControls = ({userId, resetGame, setIsGameStarted, setOpponentUserId}: GameControlProps) => {
-    // const API_URL = "https://localhost:4433";
-	const API_DEV_URL = "http://localhost:3002";
+    const API_URL = import.meta.env.VITE_API_USER;
     const [opponent, setOpponent] = useState<'Friend' | null>(null);
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState<Friends | null>(null);
@@ -33,22 +32,23 @@ const GameControls = ({userId, resetGame, setIsGameStarted, setOpponentUserId}: 
                     { id: 2, username: "piisami", picture: null, status: "online" },
                     { id: 2, username: "koira", picture: null, status: "online" },
                 ];
-                // const res = await axios.get(`${API_DEV_URL}/api/${userId}/friends`); //get friends list
+                // const res = await axios.get(`${API_DEV}/api/${userId}/friends`); //get friends list
                 // setFriendsList(res.data); //set it for usage in the dropdown list
                 setFriendsList(mockFriends);
 
             } catch (err) {
-                const error = err as AxiosError;
+				const error = err as AxiosError;
                 console.error("Error fetching friends:", error);
                 setFriendsList([]);
             }
         }
         getFriendsList();
     }, [userId]);
-
+	
     const handleClick = () => {
-        setIsGameStarted(true);
+		setIsGameStarted(true);
         resetGame();
+		console.log(selected);
     }
 
     return (
