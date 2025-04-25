@@ -36,17 +36,5 @@ export const registerService = {
 			return user;
 		});
 		return result;
-	},
-	//Returns all the users info excluding the password ***FOR TESTING ONLY DELETE FOR PROD***
-	async getAllUsers() {
-		const users = await prisma.user.findMany({
-			select: {
-				id: true,
-				username: true,
-				email: true,
-				picture: true,
-			}
-		});
-		return users;
 	}
 }

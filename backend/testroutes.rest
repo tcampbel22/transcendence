@@ -1,0 +1,335 @@
+### User Validation Tests ###
+
+### Test 1: Valid User Validation
+GET https://localhost:4433/users/validate/1
+Content-Type: application/json
+
+### Test 2: Invalid User Validation
+GET https://localhost:4433/users/validate/999
+Content-Type: application/json
+
+
+### User List Tests ###
+
+### Test 3: Get User List - Success
+GET https://localhost:4433/users/user-list
+Content-Type: application/json
+
+### Test 4: Get User List with Limit - Success
+GET https://localhost:4433/users/user-list?limit=5
+Content-Type: application/json
+
+
+### Password Validation Tests ###
+
+### Test 5: Valid Password Validation
+POST https://localhost:4433/users/validate-password
+Content-Type: application/json
+
+{
+  "id": 1,
+  "password": "12345"
+}
+
+### Test 6: Invalid Password Validation
+POST https://localhost:4433/users/validate-password
+Content-Type: application/json
+
+{
+  "id": 1,
+  "password": "WrongPassword"
+}
+
+
+### User Profile Tests ###
+
+### Test 7: Get User Profile - Success
+GET https://localhost:4433/users/1
+Content-Type: application/json
+
+### Test 8: Get User Profile - Invalid ID
+GET https://localhost:4433/users/999
+Content-Type: application/json
+
+
+### Update Username Tests ###
+
+### Test 9: Update Username - Success
+PUT https://localhost:4433/users/1
+Content-Type: application/json
+
+{
+  "username": "UpdatedUser123"
+}
+
+### Test 10: Update Username - Duplicate
+PUT https://localhost:4433/users/1
+Content-Type: application/json
+
+{
+  "username": "ExistingUsername"
+}
+
+
+### Update Profile Picture Tests ###
+
+### Test 11: Update Profile Picture - Success
+PUT https://localhost:4433/users/1/picture
+Content-Type: application/json
+
+{
+  "newPicture": "profile.jpg"
+}
+
+### Test 12: Update Profile Picture - Invalid Format
+PUT https://localhost:4433/users/1/picture
+Content-Type: application/json
+
+{
+  "newPicture": "profile.txt"
+}
+
+
+### Reset Password Tests ###
+
+### Test 13: Reset Password - Success
+PUT https://localhost:4433/users/1/reset-password
+Content-Type: application/json
+
+{
+  "newPassword": "NewPassword123"
+}
+
+### Test 14: Reset Password - Same as Old
+PUT https://localhost:4433/users/1/reset-password
+Content-Type: application/json
+
+{
+  "newPassword": "CurrentPassword123"
+}
+
+
+### User Stats Tests ###
+
+### Test 15: Get User Stats - Success
+GET https://localhost:4433/users/1/stats
+Content-Type: application/json
+
+### Test 16: Get User Stats - Invalid ID
+GET https://localhost:4433/users/999/stats
+Content-Type: application/json
+
+
+### Match History Tests ###
+
+### Test 17: Get Match History - Success
+GET https://localhost:4433/users/1/match-history
+Content-Type: application/json
+
+### Test 18: Get Match History - User with No Matches
+GET https://localhost:4433/users/2/match-history
+Content-Type: application/json
+
+
+### Delete User Tests ###
+
+### Test 19: Delete User - Success (use with caution)
+DELETE https://localhost:4433/users/3/delete-user
+Content-Type: application/json
+
+### Test 20: Delete User - Invalid ID
+DELETE https://localhost:4433/users/999/delete-user
+Content-Type: application/json
+
+
+### Friends List Tests ###
+
+### Test 21: Get Friends List - Success
+GET https://localhost:4433/users/1/friends
+Content-Type: application/json
+
+### Test 22: Get Friends List - User with No Friends
+GET https://localhost:4433/users/2/friends
+Content-Type: application/json
+
+
+### Add Friend Tests ###
+
+### Test 23: Add Friend - Success
+POST https://localhost:4433/users/1/friends
+Content-Type: application/json
+
+{
+  "friendId": 2
+}
+
+### Test 24: Add Friend - Already Friends
+POST https://localhost:4433/users/1/friends
+Content-Type: application/json
+
+{
+  "friendId": 2
+}
+
+
+### Delete Friend Tests ###
+
+### Test 25: Delete Friend - Success
+DELETE https://localhost:4433/users/1/delete-friend
+Content-Type: application/json
+
+{
+  "friendId": 2
+}
+
+### Test 26: Delete Friend - Not Friends
+DELETE https://localhost:4433/users/1/delete-friend
+Content-Type: application/json
+
+{
+  "friendId": 3
+}
+
+
+### Update Stats Tests ###
+
+### Test 27: Update Stats - Win
+PATCH https://localhost:4433/users/1/update-stats
+Content-Type: application/json
+
+{
+  "isWinner": true,
+  "gameId": 1
+}
+
+### Test 28: Update Stats - Loss
+PATCH https://localhost:4433/users/1/update-stats
+Content-Type: application/json
+
+{
+  "isWinner": false,
+  "gameId": 2
+}
+
+
+### Register User Tests ###
+
+### Test 29: Register User - Success
+POST https://localhost:4433/users/register
+Content-Type: application/json
+
+{
+  "username": "NewUser123",
+  "email": "newuser@example.com",
+  "password": "Password123",
+  "picture": "default.jpg"
+}
+
+### Test 30: Register User - Username Already Exists
+POST https://localhost:4433/users/register
+Content-Type: application/json
+
+{
+  "username": "ExistingUser",
+  "email": "new@example.com",
+  "password": "Password123",
+  "picture": "default.jpg"
+}
+
+
+### GAME TESTS ###
+
+### Test G1: Create Game - Solo Game
+POST https://localhost:4433/games/create-game
+Content-Type: application/json
+
+{
+  "player1Id": 1
+}
+
+### Test G2: Create Game - Multiplayer
+POST https://localhost:4433/games/create-game
+Content-Type: application/json
+
+{
+  "player1Id": 1,
+  "player2Id": 2
+}
+
+### Test G3: Create Game - Invalid Player ID
+POST https://localhost:4433/games/create-game
+Content-Type: application/json
+
+{
+  "player1Id": 999
+}
+
+### Test G4: Finish Game - Success (Player 1 wins)
+PATCH https://localhost:4433/games/1/finish-game
+Content-Type: application/json
+
+{
+  "p1score": 5,
+  "p2score": 3,
+  "winnerId": 1
+}
+
+### Test G5: Finish Game - Success (Player 2 wins)
+PATCH https://localhost:4433/games/2/finish-game
+Content-Type: application/json
+
+{
+  "p1score": 2,
+  "p2score": 5,
+  "winnerId": 2
+}
+
+### Test G6: Finish Game - Invalid Game ID
+PATCH https://localhost:4433/games/999/finish-game
+Content-Type: application/json
+
+{
+  "p1score": 5,
+  "p2score": 3,
+  "winnerId": 1
+}
+
+### Test G7: Get Game - Success
+GET https://localhost:4433/games/1
+Content-Type: application/json
+
+### Test G8: Get Game - Invalid Game ID
+GET https://localhost:4433/games/999
+Content-Type: application/json
+
+### Test G9: Get User Games - Success
+GET https://localhost:4433/games/users/1/games
+Content-Type: application/json
+
+### Test G10: Get User Games - User with No Games
+GET https://localhost:4433/games/users/999/games
+Content-Type: application/json
+
+
+### Test Register with Profile Picture
+POST https://localhost:4433/users/register
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="username"
+
+testuser123
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="email"
+
+testuser@example.com
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="password"
+
+Password123
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="picture"; filename="profile.jpg"
+Content-Type: image/jpeg
+
+< ./path/to/your/profile.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--

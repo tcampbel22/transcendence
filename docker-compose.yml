@@ -130,6 +130,7 @@ services:
     container_name: nginx
     volumes:
       - ./backend/nginx/log:/var/log/nginx
+      - ./backend/user_service/uploads:/app/uploads:ro
     networks:
       - app_network
     logging:
@@ -172,6 +173,7 @@ services:
       dockerfile: Dockerfile
     container_name: user_service
     volumes:
+      - ./backend/user_service/uploads:/app/uploads
       - ./backend/user_service/database/data:/app/database/data
       - ./backend/libs/error_lib:/app/node_modules/@app/errors
       - ./backend/libs:/libs

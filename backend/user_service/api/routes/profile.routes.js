@@ -8,11 +8,11 @@ export default async function profileRoutes(fastify, options) {
 	// Check if user exists
     fastify.get("/api/validate/:id", profileController.validateUser);
     
-	// Get all users id's amd usernames
-	// fastify.get("/api/user-list/", profileController.getUserList);
+	// Get all users id's and usernames
+	fastify.get("/api/user-list", profileController.getUserList);
 
 	// Validates a user password
-	// fastify.post("/api/validate-password", profileController.validatePassword);
+	fastify.post("/api/validate-password", profileController.validatePassword);
 	
 	// Get user profile
     fastify.get("/api/:id", { schema: schemas.getUserProfileSchema }, profileController.getUser);

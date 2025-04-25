@@ -104,7 +104,6 @@ export const profileService = {
         });
         return newUser;
     },
-
     // Updates a user's password
     async updatePassword(id, newPassword) {
         // Check if the user exists
@@ -133,23 +132,27 @@ export const profileService = {
         return newUser;
     },
 	async validatePassword(id, password) {
-		const user = await prisma.user.findFirst( { 
-			where: id,
-			select: { 
-				username: true,
-				id: true,
-				password: true
-			 }
-		});
-		if (!user) {
-			throw new ErrorNotFound(`User ${id} cannot be found`);
+		try {
+			const user = await prisma.user.findUnique( { 
+				where: { id: id },
+				select: { 
+					username: true,
+					id: true,
+					password: true
+				}
+			});
+			if (!user) {
+				throw new ErrorNotFound(`User ${id} cannot be found`);
+			}
+			const isMatch = await argon2.verify(user.password, password);
+			if (!isMatch) {
+				throw new ErrorUnAuthorized(`User ${id} password is incorrect`);
+			}
+			const { password: _, ...noPasswordUser} = user;
+			return { user: noPasswordUser };
+		} catch (err) {
+			throw (err);
 		}
-		const isMatch = await argon2.verify(user.password, password);
-		if (!isMatch) {
-			throw new ErrorUnAuthorized(`User ${id} password is incorrect`);
-		}
-		const { password: _, ...noPasswordUser} = user;
-		return { user: noPasswordUser };
 	},
     // Fetches a user's stats
     async getStats(id) {

@@ -46,7 +46,30 @@ const Register = () => {
 			console.error("Image upload failed:", error.response?.data || error.message);
 		}
 	}
-
+	// const uploadProfileImage = async (userId: string) => {
+	// 	// Don't proceed if no image selected
+	// 	if (!image) return;
+		
+	// 	// Create proper FormData
+	// 	const formData = new FormData();
+	// 	formData.append("picture", image); // Change field name to 'picture' to match backend
+		
+	// 	try {
+	// 		// Send FormData, not the raw image
+	// 		const response = await axios.post(
+	// 			`${API_URL}/users/${userId}/picture`, 
+	// 			formData,
+	// 			{
+	// 				headers: {
+	// 					'Content-Type': 'multipart/form-data' // Important!
+	// 				}
+	// 			}
+	// 		);
+	// 		console.log("Profile image uploaded:", response.data);
+	// 	} catch (error: any) {
+	// 		console.error("Image upload failed:", error.response?.data || error.message);
+	// 	}
+	// }
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		setError('')
