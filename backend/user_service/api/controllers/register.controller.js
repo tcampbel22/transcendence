@@ -19,7 +19,9 @@ export const registerController = {
 			reply.code(201).send({
 				message: "User registered successfully",
 				id: user.id,
-				username: user.username}); 
+				username: user.username, 
+				email: user.email
+			});
 		} catch (err) {
 			request.log.error(err);
 			return reply.code(500).send({ message: "Internal server error" });
