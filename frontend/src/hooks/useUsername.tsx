@@ -10,26 +10,24 @@ type Profile = {
     picture: string | boolean
 }
 
-export const useUsername = async (UserId : userIdProp) => {
-   // const API_URL = "https://localhost:4433";
-	const API_DEV_URL = "http://localhost:3002";
+export const useUsername = (UserId : userIdProp) => {
+   const API_URL = import.meta.env.VITE_API_USER;
     const [Profile, setProfile] = useState<Profile | null>(null);
 
-    
-
+    console.log("userid in use_username: ", UserId);
     useEffect (() => {
         const getName = async () => {
             try {
-                //const res = await axios.get(`${API_URL}/api/${UserId}`);
-                const res = await axios.get(`${API_DEV_URL}/api/${UserId}`);
-                console.log("dataset from userid info: ", res);
+                const res = await axios.get(`${API_URL}/${UserId}`);
                 setProfile(res.data);
             } catch (err) {
                 const error = err as AxiosError;
+                console.log("error fetching player: ", error);
                 setProfile(null);
             };
         }
         getName();
     }, [UserId])
+
     return {username: Profile?.username};
 };

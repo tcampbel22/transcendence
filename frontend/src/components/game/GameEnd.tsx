@@ -1,43 +1,50 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import  {useUsername} from '../../hooks/useUsername'
 import { useCreateGame } from '../../hooks/useCreateGame';
 import axios, { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
+type userObj = {
+    userId: number;
+    username: string;
+};
 
 type EndGameProps = {
-    userId: number,
+    user: userObj,
     opponentUserId: number,
     winner: string | null ,
     p1score: number,
     p2score: number
 };
 
-const GameEnd = async ({userId, opponentUserId, winner, p1score, p2score} : EndGameProps) => {
-    const API_URL = import.meta.env.VITE_API_USER;
-    const { username: p1Username } = await useUsername(userId);
-    const { username: p2Username } = await useUsername(opponentUserId);
+const GameEnd = ({user, opponentUserId, winner, p1score, p2score} : EndGameProps) => {
+    const navigate = useNavigate();
+    const {userId, username } = user;
+    const API_URL = import.meta.env.VITE_API_GAME;
+    const { username: p2Username } = useUsername(opponentUserId);
+    const [finished, setFinished] = useState(false);
 
-    console.log("usernames of players: ", p2Username);
-    const { gameId: gameId } = await useCreateGame({ p1Id: userId, p2Id: opponentUserId });
+    console.log("username of player2: ", p2Username);
+    
+    const { gameId: gameId } = useCreateGame({ p1Id: userId, p2Id: opponentUserId });
 
-    useEffect(() => {
-        const postWinner = async () => {
-           const payload = {
-                gameId: gameId,
-                p1score: p1score,
-                p2score: p2score,
-                winnerId: winner === 'left' ? userId : opponentUserId
-            }
-            try {
-                axios.patch(`${API_URL}/api/${gameId}/finish-game`, payload);
-            } catch (err) {
-                const error = err as AxiosError;
-                console.log("unable to save match result", error);
-            };
+    const postWinner = async () => {
+        const payload = {
+            gameId: gameId,
+            p1score: p1score,
+            p2score: p2score,
+            winnerId: winner === 'left' ? userId : opponentUserId
         }
-        postWinner();
-    }, [gameId, userId])
-
+        try {
+            await axios.patch(`${API_URL}/${gameId}/finish-game`, payload);
+            console.log("match finished");
+            setFinished(true);
+        } catch (err) {
+            const error = err as AxiosError;
+            console.log("unable to save match result", error);
+            navigate('/hub');
+        };
+    }
     return (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-70">
             <div className="bg-beige p-6 rounded-lg text-center">
@@ -47,8 +54,10 @@ const GameEnd = async ({userId, opponentUserId, winner, p1score, p2score} : EndG
                 {/* Player 1 */}
                 <div className="flex flex-col items-center">
                     {winner === 'left' && <p className="font-semibold text-lg text-green-500">Winner</p>}
-                    <p className="font-semibold text-lg">Loser</p>
-                    <p className="text-sm text-gray-600">{p1Username}</p>
+                    <p className=   {`font-semibold text-lg ${winner === 'left' ? 'text-green-500' : 'text-red-600'}`}>
+                                    {winner === 'left' ? 'Winner' : 'Loser'}
+                    </p>
+                    <p className="text-sm text-gray-600 font-bold">{username}</p>
                 </div>
 
                 {/* Score */}
@@ -58,10 +67,13 @@ const GameEnd = async ({userId, opponentUserId, winner, p1score, p2score} : EndG
 
                 {/* Player 2 */}
                 <div className="flex flex-col items-center">
-                    <p className="font-semibold text-lg">Player 2</p>
-                    <p className="text-sm text-gray-600">{p2Username}</p>
+                    <p className=   {`font-semibold text-lg ${winner === 'right' ? 'text-green-500' : 'text-red-600'}`}>
+                                    {winner === 'right' ? 'Winner' : 'Loser'}
+                    </p>
+                    <p className="text-sm text-gray-600 font-bold">{p2Username}</p>
                 </div>
          </div>
+         <button onClick={postWinner} className='border-2 border-black rounded px-1 m-2 hover:bg-black hover:text-beige shadow-sm'>submit</button>
     </div>
 </div>
     )

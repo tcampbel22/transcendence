@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type id = {
     p1Id: number,
@@ -12,25 +12,29 @@ type GameId = {
 };
 
 //creates game lol
-export const useCreateGame = async ({p1Id, p2Id} : id) => {
-     // const API_URL = "https://localhost:4433"; //product
-	const API_DEV_URL = "http://localhost:3001";
+export const useCreateGame = ({p1Id, p2Id} : id) => {
+     const API_URL = import.meta.env.VITE_API_GAME;
     const [gameId, setGameId] = useState<GameId | null>(null);
     
     const payload = {
-        Player1Id: p1Id,
+        player1Id: p1Id,
         Player2Id: p2Id
     };
-    console.log("userId: ", p1Id);
-    try {
-        const res = await axios.post(`${API_DEV_URL}/api/create-game`, payload);
-        if (res.status == 201)
-            setGameId(res.data); 
-    } catch (err) {
-        const error = err as AxiosError;
-        setGameId(null);
-        console.log("failed to create a game", error);
-        return {gameId: undefined}
-    }
+    useEffect (() => {
+        const createGame = async () => {
+            try {
+                const res = await axios.post(`${API_URL}/create-game`, payload);
+                if (res.status == 201)
+                    setGameId(res.data); 
+            } catch (err) {
+                const error = err as AxiosError;
+                setGameId(null);
+                console.log("failed to create a game", error);
+                return {gameId: undefined}
+            }
+        }
+        createGame()
+    }, [p1Id])
+    
     return {gameId: gameId?.gameId};
 }

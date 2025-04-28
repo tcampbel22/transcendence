@@ -1,18 +1,23 @@
 import React, { useEffect, useState, useRef } from 'react';
 import GameCanvas  from "./GameCanvas"
 import GameControls from "./GameControls"
-import { userIdFromState } from '../../hooks/userIdFromState';
 import { useGameLoop } from '../../hooks/useGameLoop'
 import { usePaddles } from '../../hooks/usePaddles';
 import { useKeyPress } from '../../hooks/useKeyPress';
 import GameEnd from './GameEnd';
+
+type userObj = {
+  userId: number;
+  username: string;
+};
 
 type PongProps = {
   onScoreChange?: (leftScore: number, rightScore: number) => void;
   onGameEnd?: (winner: string) => void;  // Add this for tournament progression
   player1?: string;                      // Add player names
   player2?: string;
-  winningScore?: number;                 // Make winning score configurable
+  winningScore?: number; // Make winning score configurable
+  userInfo: userObj;               
 };
 
 const PADDLE_HEIGHT = 100;
@@ -26,9 +31,9 @@ const Pong: React.FC<PongProps> = ({
   onGameEnd,
   player1 = "Left Player", 
   player2 = "Right Player",
-  winningScore = WINNING_SCORE 
+  winningScore = WINNING_SCORE,
+  userInfo 
 }) => {
-  const userId = userIdFromState();
   const [opponentUserId, setOpponentUserId] = useState(0);
   const [leftPaddleY, setLeftPaddleY] = useState(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
   const [rightPaddleY, setRightPaddleY] = useState(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
@@ -105,13 +110,13 @@ const Pong: React.FC<PongProps> = ({
 					leftPaddleY={leftPaddleY} 
 					rightPaddleY={rightPaddleY}
 		/>
-    {!isGameStarted && <GameControls  userId={userId} 
+    {!isGameStarted && <GameControls  userId={userInfo.userId} 
                                       resetGame={resetGame} 
                                       setIsGameStarted={setIsGameStarted}
                                       setOpponentUserId={setOpponentUserId}
                       />
     };
-    {gameOver && isGameStarted && <GameEnd  userId={userId}
+    {gameOver && isGameStarted && <GameEnd  user={userInfo}
                                             opponentUserId={opponentUserId}
                                             winner={winner}
                                             p1score={leftScore}
