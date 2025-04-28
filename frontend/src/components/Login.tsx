@@ -18,9 +18,15 @@ const Login = () => {
 
 	useEffect(() => {
 		const receiveMessage = (event:MessageEvent) => {
-		  if (event.origin !== "https://localhost:4433") 
-				return;
-		  navigate('/hub');
+			if (event.origin !== "https://localhost:4433") 
+					return;
+			if (!event.data.statusCode) {	
+				//console.log("Received message from Google login:", event.data);
+				navigate('/hub', { state: event.data.userId });
+				}						 
+			else {
+				setLoginError("Unable to connect with Google Sign-In");
+			}
 		};	  
 		window.addEventListener("message", receiveMessage);	  
 		return () => {
@@ -54,43 +60,62 @@ const Login = () => {
 	}
 
   	return (
-		<div className='flex flex-col justify-center items-center min-h-screen gap-4 animate-fade-in'>
-			<div className='bg-beige p-10 rounded border-2 border-black'>
-			<h1 className="font-bold text-5xl text-black">Welcome to Pong</h1>
-			<div>
-			<h2 className='font-bold text-3xl m-5 animate-fade-in text-black'>Login</h2>
-			<form className="flex flex-col items-center gap-4 animate-slide-in" onSubmit={handleSubmit}>
-				<input 	type="text"
-						placeholder="Username"
-						className='border-2 border-black px-1 rounded w-auto focus:outline-none'
-						value={username}
-						autoComplete='Username'
-						onChange={(e) => setUsername(e.target.value)}
+	<div className="flex flex-col justify-center items-center min-h-screen gap-4 animate-fade-in">
+		<div className="bg-beige p-10 rounded border-2 border-black flex flex-col items-center">
+			<h1 className="font-bold text-5xl text-black mb-6">Welcome to Pong</h1>
+			<h2 className="font-bold text-3xl mb-5 text-black">Login</h2>
+			<form className="flex flex-col items-center gap-4 mb-6" onSubmit={handleSubmit}>
+				<input
+					type="text"
+					placeholder="Username"
+					className="border-2 border-black px-1 rounded w-auto focus:outline-none"
+					value={username}
+					autoComplete="Username"
+					onChange={(e) => setUsername(e.target.value)}
 				/>
-				<input 	type="password"
-						placeholder="Password"
-						className='border-2 border-black px-1 rounded w-auto focus:outline-none'
-						value={password}
-						autoComplete='Password'
-						onChange={(e) => setPassword(e.target.value)}
+				<input
+					type="password"
+					placeholder="Password"
+					className="border-2 border-black px-1 rounded w-auto focus:outline-none"
+					value={password}
+					autoComplete="Password"
+					onChange={(e) => setPassword(e.target.value)}
 				/>
-				<button type="submit" className='border-2 border-black font-bold rounded px-2 hover:shadow-lg m-2 hover:bg-black hover:text-white'>Sign in</button>
+				<button
+					type="submit"
+					className="border-2 border-black font-bold rounded px-2 hover:shadow-lg m-2 hover:bg-black hover:text-white"
+				>
+					Sign in
+				</button>
 			</form>
-			{loginError && 
-			(
-				<p className="text-red-600 font-semibold text-center my-2"> {loginError} </p>
+			{loginError && (
+				<p className="text-red-600 font-semibold text-center my-2">{loginError}</p>
 			)}
-			<p>Don't have an account? <Link to="/register" className="text-blue-600 hover:underline">Register</Link></p>
-			<p>Forgot your password? <Link to="/restore_password" className="text-blue-600 hover:underline">Reset Password</Link></p>
-            <button
-                onClick={handleGoogleLogin}
-                className="border-2 border-black font-bold rounded px-4 py-2 hover:shadow-lg"
-            >
-                Login with Google
-            </button>
-			</div>
+			<p>
+				Don't have an account?{" "}
+				<Link to="/register" className="text-blue-600 hover:underline">
+					Register
+				</Link>
+			</p>
+			<p>
+				Forgot your password?{" "}
+				<Link to="/restore_password" className="text-blue-600 hover:underline">
+					Reset Password
+				</Link>
+			</p>
+			<button
+				onClick={handleGoogleLogin}
+				className="flex items-center border-2 border-gray-300 font-medium rounded px-3 py-1 hover:shadow-lg bg-white hover:bg-gray-100 mt-6 text-sm"
+			>
+				<img
+					src="/images/google-icon.png"
+					alt="Google Icon"
+					className="w-4 h-4 mr-2"
+				/>
+				Login with Google
+			</button>
 		</div>
-		</div>
+	</div>
   	);
 }
 
