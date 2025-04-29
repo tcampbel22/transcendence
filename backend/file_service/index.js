@@ -9,7 +9,7 @@ const SSL_CERT_PATH = "./ssl/cert.pem";
 const SSL_KEY_PATH = "./ssl/key.pem";
 
 const fastify = Fastify({
-	logger: true, trustProxy: true,
+	logger: true,
 	https: {
 		key: fs.readFileSync(SSL_KEY_PATH),
 		cert: fs.readFileSync(SSL_CERT_PATH),

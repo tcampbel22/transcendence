@@ -1,4 +1,4 @@
-import { fastify } from './api/config/fastifyConfig.js';
+import fastify from './api/config/fastifyConfig.js';
 import { configurePassport } from './api/config/passport.js';
 import { authRoutes } from './api/routes/authRoutes.js';
 import fastifyStatic from '@fastify/static';
