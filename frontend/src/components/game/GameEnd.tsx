@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState, useRef } from 'react';
 import  {useUsername} from '../../hooks/useUsername'
 import { useCreateGame } from '../../hooks/useCreateGame';
 import axios, { AxiosError } from 'axios';
@@ -22,29 +22,38 @@ const GameEnd = ({user, opponentUserId, winner, p1score, p2score} : EndGameProps
     const {userId, username } = user;
     const API_URL = import.meta.env.VITE_API_GAME;
     const { username: p2Username } = useUsername(opponentUserId);
-    const [finished, setFinished] = useState(false);
-
-    console.log("username of player2: ", p2Username);
-    
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const submittedOnce = useRef(false);
     const { gameId: gameId } = useCreateGame({ p1Id: userId, p2Id: opponentUserId });
+   
+
 
     const postWinner = async () => {
+        if (!gameId || isSubmitting || submittedOnce.current) {
+            console.log("Submission skipped - game not ready or already submitted");
+            return;
+        }
+        setIsSubmitting(true);
+        submittedOnce.current = true;
+
         const payload = {
             gameId: gameId,
             p1score: p1score,
             p2score: p2score,
             winnerId: winner === 'left' ? userId : opponentUserId
         }
+
         try {
-            await axios.patch(`${API_URL}/${gameId}/finish-game`, payload);
-            console.log("match finished");
-            setFinished(true);
+            const res = await axios.patch(`${API_URL}/${gameId}/finish-game`, payload);
+            console.log("match finished", res.data);
+            navigate('/hub', {state:user});
         } catch (err) {
             const error = err as AxiosError;
             console.log("unable to save match result", error);
-            navigate('/hub');
+            navigate('/hub', {state:user});
         };
     }
+    
     return (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-70">
             <div className="bg-beige p-6 rounded-lg text-center">
@@ -73,7 +82,7 @@ const GameEnd = ({user, opponentUserId, winner, p1score, p2score} : EndGameProps
                     <p className="text-sm text-gray-600 font-bold">{p2Username}</p>
                 </div>
          </div>
-         <button onClick={postWinner} className='border-2 border-black rounded px-1 m-2 hover:bg-black hover:text-beige shadow-sm'>submit</button>
+         <button onClick={postWinner} disabled={!gameId || isSubmitting} className='border-2 border-black rounded px-1 m-2 hover:bg-black hover:text-beige shadow-sm'>submit</button>
     </div>
 </div>
     )

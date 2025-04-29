@@ -27,9 +27,9 @@ export const useCreateGame = ({p1Id, p2Id} : id) => {
                 if (res.status == 201)
                     setGameId(res.data); 
             } catch (err) {
-                const error = err as AxiosError;
+                // const error = err as AxiosError;
                 setGameId(null);
-                console.log("failed to create a game", error);
+                console.log("failed to create a game", err);
                 return {gameId: undefined}
             }
         }
