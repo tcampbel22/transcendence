@@ -129,7 +129,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Pong from '../components/Pong';
+import Pong from '../components/game/Pong';
 
 // Define the types of tournaments
 type TournamentType = '4player' | '8player';

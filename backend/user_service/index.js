@@ -24,8 +24,8 @@ const fastify = Fastify({
 });
 //testing purposes only to get frontend connected in the dev env.
 fastify.register(cors, {
-	origin: ["http://localhost:5173"], // 👈 Vite's default dev server port
-	method: ["GET", "POST", "PUT", "DELETE"],
+	origin: ["http://localhost:5173"],
+	methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
 });
 
 try {

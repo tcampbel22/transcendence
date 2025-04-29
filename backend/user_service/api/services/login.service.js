@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { prisma } from "../../database/db.js";
 import { HttpStatusCode } from "axios";
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = "daniel1";
 
 export const loginService = {
 
