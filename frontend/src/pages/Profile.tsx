@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
-import Wins from "../components/Wins";
-import Losses from "../components/Losses";
+import Wins from "../components/profile/Wins";
+import Losses from "../components/profile/Losses";
 import axios from "axios";
-import Avatar from "../components/Avatar";
-import GamesPlayed from "../components/GamesPlayed";
+import Avatar from "../components/profile/Avatar";
+import GamesPlayed from "../components/profile/GamesPlayed";
 import {userIdFromState} from "../hooks/userIdFromState"
 
 
 const Profile = () => {
 	const userId = userIdFromState();
 	// const API_URL = "https://localhost:4433"
-	const API_DEV_URL = "http://localhost:3000";
+	const API_DEV_URL = "http://localhost:3002";
 	const [victories, setVictories] = useState(0)
 	const [losses, setLoses] = useState(0)
 

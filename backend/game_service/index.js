@@ -3,6 +3,7 @@ import { testConnection } from "./database/db.js";
 import gameRoutes from "./api/routes/game.routes.js";
 import logger from "@eleekku/logger";
 import fs from "fs";
+import cors from '@fastify/cors';
 
 const SSL_CERT_PATH = "./ssl/cert.pem";
 const SSL_KEY_PATH = "./ssl/key.pem";
@@ -17,6 +18,13 @@ const fastify = Fastify({
 		cert: fs.readFileSync(SSL_CERT_PATH),
 	},
 	}),
+});
+
+fastify.register(cors, {
+	origin: ["http://localhost:5173"], // 👈 Vite's default dev server port
+	methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+	allowedHeaders: ["Content-Type", "Authorization"],
+	credentials:true,
 });
 
 try {

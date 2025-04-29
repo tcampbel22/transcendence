@@ -2,12 +2,24 @@ import { prisma } from "../../database/db.js";
 import argon2 from "argon2";
 import axios from "axios";
 import logger from "@eleekku/logger";
+import { ErrorConflict, ErrorNotFound, ErrorCustom, ErrorUnAuthorized } from "@app/errors";
 
 export const profileService = {
-    // Fetches a user's profile
-    async getUser(userId) {
+	// Check if user is in db
+	async validateUser(id) {
+		const user = await prisma.user.findUnique({ 
+			where: {id: id },
+			select: { id: true }
+			});
+		if (!user)
+			throw new ErrorNotFound(`validateUser: User ${id} cannot be found`);
+		return user;
+	},
+
+	// Fetches a user's profile
+    async getUser(id) {
         const user = await prisma.user.findUnique({
-            where: { id: parseInt(userId) },
+            where: { id: id },
             select: {
                 id: true,
                 username: true,
@@ -15,33 +27,46 @@ export const profileService = {
                 picture: true,
             },
         });
-        if (!user) throw new Error(`getUser: User ${userId} cannot be found`);
+        if (!user) 
+			throw new ErrorNotFound(`getUser: User ${id} cannot be found`);
         return user;
     },
-
+	async getUserList(limit = 20, sortField = 'username') {
+        const users = await prisma.user.findMany({
+            select: {
+                id: true,
+                username: true,
+            },
+			orderBy: {
+				[sortField]: 'asc',
+			},
+			take: limit
+        });
+        if (users.length === 0) 
+			throw new ErrorNotFound(`getUserList: no users in database`);
+        return users
+    },
     // Updates a user's username
-    async updateUsername(userId, newUsername) {
+    async updateUsername(id, newUsername) {
         // Check if the new username already exists
         const duplicate = await prisma.user.findUnique({
             where: { username: newUsername },
             select: { username: true },
         });
         if (duplicate)
-            throw new Error(
-                `updateUsername: ${duplicate.username} already exists, please choose another`
-            );
+            throw new ErrorConflict(`updateUsername: ${duplicate.username} already exists, please choose another`);
 
         // Check if the user exists
         const user = await prisma.user.findUnique({
-            where: { id: parseInt(userId) },
+            where: { id: id },
             select: { id: true },
         });
         if (!user)
-            throw new Error(`updateUsername: User ${userId} cannot be found`);
+            throw new ErrorNotFound(`updateUsername: User ${id} cannot be found`);
 
         // Update the username
         const newUser = await prisma.user.update({
-            where: { id: parseInt(userId) },
+            where: { id: id },
             data: { username: newUsername },
             select: {
                 id: true,
@@ -52,27 +77,25 @@ export const profileService = {
     },
 
     // Updates a user's profile picture
-    async updatePicture(userId, newPicture) {
+    async updatePicture(id, newPicture) {
         // Check if the user exists
         const user = await prisma.user.findUnique({
-            where: { id: parseInt(userId) },
+            where: { id: id },
             select: {
                 id: true,
                 picture: true,
             },
         });
         if (!user)
-            throw new Error(`updatePicture: User ${userId} cannot be found`);
+            throw new ErrorNotFound(`updatePicture: User ${id} cannot be found`);
 
         // Check if the new picture is the same as the current one
         if (user.picture === newPicture)
-            throw new Error(
-                `updatePicture: Picture already exists, please choose another`
-            );
+            throw new ErrorConflict(`updatePicture: Picture already exists, please choose another`);
 
         // Update the profile picture
         const newUser = await prisma.user.update({
-            where: { id: parseInt(userId) },
+            where: { id: id },
             data: { picture: newPicture },
             select: {
                 id: true,
@@ -83,57 +106,98 @@ export const profileService = {
     },
 
     // Updates a user's password
-    async updatePassword(userId, newPassword) {
+    async updatePassword(id, newPassword) {
         // Check if the user exists
         const user = await prisma.user.findUnique({
-            where: { id: parseInt(userId) },
+            where: { id: id },
             select: {
                 id: true,
                 password: true,
             },
         });
         if (!user)
-            throw new Error(`updatePassword: User ${userId} cannot be found`);
+            throw new ErrorNotFound(`updatePassword: User ${id} cannot be found`);
 
         // Hash the new password and check if it's the same as the current one
         const hashPassword = await argon2.hash(newPassword);
         const duplicate = await argon2.verify(user.password, hashPassword);
         if (duplicate)
-            throw new Error(
-                `updatePassword: Password already exists, please choose another`
-            );
+            throw new ErrorConflict(`updatePassword: Password already exists, please choose another`);
 
         // Update the password
         const newUser = await prisma.user.update({
-            where: { id: parseInt(userId) },
+            where: { id: id },
             data: { password: hashPassword },
             select: { id: true },
         });
         return newUser;
     },
-
+	async validatePassword(id, password) {
+		const user = await prisma.user.findFirst( { 
+			where: id,
+			select: { 
+				username: true,
+				id: true,
+				password: true
+			 }
+		});
+		if (!user) {
+			throw new ErrorNotFound(`User ${id} cannot be found`);
+		}
+		const isMatch = await argon2.verify(user.password, password);
+		if (!isMatch) {
+			throw new ErrorUnAuthorized(`User ${id} password is incorrect`);
+		}
+		const { password: _, ...noPasswordUser} = user;
+		return { user: noPasswordUser };
+	},
     // Fetches a user's stats
-    async getStats(userId) {
+    async getStats(id) {
         // Fetch the user's stats
         const user = await prisma.userStats.findUnique({
-            where: { userId: parseInt(userId) },
+            where: { userId: id },
             select: {
-                userId: true,
+                id: true,
                 wins: true,
                 losses: true,
                 matchesPlayed: true,
             },
         });
         if (!user)
-            throw new Error(`getStats: User ${userId} cannot be found`);
+            throw new ErrorNotFound(`getStats: User ${id} cannot be found`);
         return user;
     },
 
+	 // Fetches a user's stats
+	 async updateStats(id, isWinner) {
+		const user = await prisma.user.findUnique({
+            where: { id: id },
+            select: { id: true, },
+        });
+        if (!user)
+            throw new ErrorNotFound(`updateStats: User ${id} cannot be found`);
+		try {
+			// Update the user's stats
+			const updatedStats = await prisma.userStats.update({
+				where: { userId: id },
+				data: {
+					wins: isWinner ? { increment: 1 } : undefined,
+					losses: !isWinner ? { increment: 1 } : undefined,
+					matchesPlayed: { increment: 1 } 
+				}}
+			);
+			return updatedStats;
+		} catch (err) {
+			throw (err);
+		}
+    },
+
+
     // Fetches a user's match history
-    async getMatchHistory(userId) {
+    async getMatchHistory(id) {
         // Fetch the user's basic information
         const user = await prisma.user.findUnique({
-            where: { id: parseInt(userId) },
+            where: { id: id },
             select: {
                 id: true,
                 username: true,
@@ -141,24 +205,22 @@ export const profileService = {
             },
         });
         if (!user)
-            throw new Error(`getMatchHistory: User ${userId} cannot be found`);
+            throw new ErrorNotFound(`getMatchHistory: User ${id} cannot be found`);
 
         try {
             // Fetch match history from the game service
             const response = await axios.get(
-                `http://game_service:3001/api/user/${userId}`
+                `http://game_service:3001/api/user/${id}`
             );
             if (response.status !== 200)
-                throw new Error(
-                    `Error retrieving match history ${response.statusText}`
-                );
+                throw new ErrorCustom(`Error retrieving match history ${response.statusText}`, response.status);
 
             // Handle empty match history
             if (!response.data || response.data.length === 0) {
                 return {
                     ...user,
                     matchHistory: [],
-                    message: `No match history found for this user ${userId}`,
+                    message: `No match history found for this user ${id}`,
                 };
             }
 
@@ -171,13 +233,11 @@ export const profileService = {
                         !game.player1Score ||
                         !game.player2Score
                     ) {
-                        throw new Error(
-                            `Invalid game data received from game service`
-                        );
+                        throw new ErrorNotFound(`Invalid game data received from game service`);
                     }
-                    const isPlayer1 = game.player1Id === userId;
+                    const isPlayer1 = game.player1Id === id;
                     const oppId =
-                        game.player1Id !== userId
+                        game.player1Id !== id
                             ? game.player1Id
                             : game.player2Id;
                     const oppName = await prisma.user.findUnique({
@@ -192,7 +252,7 @@ export const profileService = {
                         date: game.createdAt,
                         score: `${game.player1Score} - ${game.player2Score}`,
                         result:
-                            game.winnerId === userId ? "Winner" : "Loser",
+                            game.winnerId === id ? "Winner" : "Loser",
                         opponentId: isPlayer1
                             ? game.player2Id
                             : game.player1Id,
@@ -205,26 +265,24 @@ export const profileService = {
             return newMatchHistory;
         } catch (err) {
             logger.error(`getMatchHistory: Failed to retrieve match history`);
-            throw new Error(
-                `Failed to retrieve match history for user ${userId}`
-            );
+            throw new ErrorCustom(err.message, err.statusCode);
         }
     },
     // Deletes a user
-    async deleteUser(userId) {
+    async deleteUser(id) {
         const user = await prisma.user.findUnique({
-            where: { id: parseInt(userId) },
+            where: { id: id },
         });
         if (!user) {
-            throw new Error(`User with id ${userId} does not exist.`);
+            throw new ErrorNotFound(`User with id ${id} does not exist.`);
         }
         await prisma.user.delete({
-            where: { id: parseInt(userId) },
+            where: { id: id },
         });
     },
-	async getFriendsList(userId) {
+	async getFriendsList(id) {
 		const rawFriendsData = await prisma.user.findUnique ({
-			where: { id: parseInt(userId)},
+			where: { id: id},
 			select: {
 				friends: {
 					select: {
@@ -250,64 +308,64 @@ export const profileService = {
 		}));
 		return friendsList;
 	},
-	async addFriend(userId, friendId) {
-		if (userId === friendId) {
-			throw new Error("A user cannot add themselves as a friend");
+	async addFriend(id, friendId) {
+		if (id === friendId) {
+			throw new ErrorConflict("A user cannot add themselves as a friend");
 		};
 		const temp = await prisma.user.findMany({ 
 			where: {
 				id: {
-					in: [userId, friendId],
+					in: [id, friendId],
 				},
 			},
 		});
 		if (temp.length !== 2)
-			throw new Error(`User or friend id cannot be found`);
+			throw new ErrorNotFound(`User or friend id cannot be found`);
 		const duplicate = await prisma.friend.findUnique({
 			where: {
-				userId_friendId: {
-					userId: userId,
+				id_friendId: {
+					id: id,
 					friendId: friendId,
 				}
 			},
 		});
 		if (duplicate)
-			throw new Error(`User ${userId} is already friends with friend ${friendId}`);
+			throw new ErrorUnAuthorized(`User ${id} is already friends with friend ${friendId}`);
 		//Create friendship for friend
 		await prisma.friend.createMany({
 			data: [
-				{ userId: userId, friendId: friendId, isOnline: false },
-				{ userId: friendId, friendId: userId, isOnline: false },
+				{ id: id, friendId: friendId, isOnline: false },
+				{ id: friendId, friendId: id, isOnline: false },
 			],
 		});
 	},
-	async deleteFriend(userId, friendId) {
-		if (userId === friendId) {
-			throw new Error("A user cannot delete themselves... TWICE");
+	async deleteFriend(id, friendId) {
+		if (id === friendId) {
+			throw new ErrorConflict("A user cannot delete themselves... TWICE");
 		};
 		const temp = await prisma.user.findMany({ 
 			where: {
 				id: {
-					in: [userId, friendId],
+					in: [id, friendId],
 				},
 			},
 		});
 		if (temp.length !== 2)
-			throw new Error(`User or friend id cannot be found`);
+			throw new ErrorNotFound(`User or friend id cannot be found`);
 		deleted = await prisma.friend.deleteMany({
 			where: {
 				AND: [{
-						userId: userId,
+						id: id,
 						friendId: friendId
 					},
 					{
-						userId: friendId,
-						friendId: userId	
+						id: friendId,
+						friendId: id	
 				}]
 			},
 		});
 		if (deleted.count === 0) {
-			throw new Error(`No friendship exists between user ${userId} and user ${friendId}`);
+			throw new ErrorNotFound(`No friendship exists between user ${id} and user ${friendId}`);
 		}
 	}
 }
