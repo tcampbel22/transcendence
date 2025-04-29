@@ -1,0 +1,47 @@
+import { useEffect, useState } from "react";
+import axios, { AxiosError } from "axios";
+
+type Friends = {
+    id: number,
+    username: string,
+    picture: string | null,
+    status: "online" | "offline"
+}
+
+export const useFriendslist = (userId : number) => {
+    const API_URL = import.meta.env.VITE_API_USER;
+    const [friendsList, setFriendsList] = useState<Friends[] | null>(null);
+
+    useEffect (() => {
+            const getFriendsList = async () => {
+                try {
+                    // MOCK DATA
+                    const mockFriends: Friends[] = [
+                        { id: 1, username: "kissa", picture: null, status: "online" },
+                        { id: 2, username: "piissddsddsdami", picture: null, status: "offline" },
+                        { id: 2, username: "koira", picture: null, status: "online" },
+                        { id: 1, username: "kissa", picture: null, status: "online" },
+                        { id: 2, username: "piisami", picture: null, status: "offline" },
+                        { id: 2, username: "koira", picture: null, status: "online" },
+                        { id: 1, username: "kissa", picture: null, status: "online" },
+                        { id: 2, username: "piisami", picture: null, status: "offline" },
+                        { id: 2, username: "koira", picture: null, status: "online" },
+                        { id: 1, username: "kissa", picture: null, status: "online" },
+                        { id: 2, username: "piisami", picture: null, status: "offline" },
+                        { id: 2, username: "koira", picture: null, status: "online" },
+                    ];
+                    // const res = await axios.get(`${API_URL}/api/${userId}/friends`); //get friends list
+                    // setFriendsList(res.data); //set it for usage in the dropdown list
+                    setFriendsList(mockFriends);
+    
+                } catch (err) {
+                    const error = err as AxiosError;
+                    console.error("Error fetching friends:", error);
+                    setFriendsList([]);
+                }
+            }
+            getFriendsList();
+        }, []);
+
+    return friendsList;
+};

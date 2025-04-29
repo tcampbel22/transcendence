@@ -14,7 +14,6 @@ export const useUsername = (UserId : userIdProp) => {
    const API_URL = import.meta.env.VITE_API_USER;
     const [Profile, setProfile] = useState<Profile | null>(null);
 
-    console.log("userid in use_username: ", UserId);
     useEffect (() => {
         const getName = async () => {
             try {
