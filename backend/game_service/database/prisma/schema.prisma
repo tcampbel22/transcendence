@@ -20,6 +20,6 @@ model Game {
   player2Id    Int? //Can be nullable as opponent can be ai
   player1Score Int
   player2Score Int
-  winnerId     Int //id of winner
+  winnerId     Int? //id of winner
   createdAt    DateTime @default(now())
 }

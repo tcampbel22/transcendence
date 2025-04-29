@@ -1,0 +1,33 @@
+import axios, { AxiosError } from "axios";
+import { useEffect, useState } from "react";
+
+type userIdProp = number;
+
+type Profile = {
+    id: number,
+    username: string,
+    email: string,
+    picture: string | boolean
+}
+
+export const useUsername = (UserId : userIdProp) => {
+   const API_URL = import.meta.env.VITE_API_USER;
+    const [Profile, setProfile] = useState<Profile | null>(null);
+
+    console.log("userid in use_username: ", UserId);
+    useEffect (() => {
+        const getName = async () => {
+            try {
+                const res = await axios.get(`${API_URL}/${UserId}`);
+                setProfile(res.data);
+            } catch (err) {
+                const error = err as AxiosError;
+                console.log("error fetching player: ", error);
+                setProfile(null);
+            };
+        }
+        getName();
+    }, [UserId])
+
+    return {username: Profile?.username};
+};

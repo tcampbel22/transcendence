@@ -22,8 +22,10 @@ export const registerController = {
 			logger.info(`User registered: ${user.username}, ID: ${user.id}`);
 			reply.code(201).send({
 				message: "User registered successfully",
-				userId: user.id,
-				username: user.username}); 
+				id: user.id,
+				username: user.username, 
+				email: user.email
+			});
 		} catch (err) {
 			logger.error(`Error registering user: ${err.message}`);
 			request.log.error(err);

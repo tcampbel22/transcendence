@@ -12,54 +12,52 @@ export const gameController = {
 				time: game.createdAt,
 			});
 		} catch (err) {
-			console.log(`createGame: failed to create game`, err);
-			return reply.code(500).send(`Failed to start the game`);
+			request.log.error(`createGame: failed to create game`, err);
+			return reply.code(500).send(`Failed to start the game: `, err);
 		}
 
 	},
 	async finishGame(request, reply) {
 		try {
-			const { gameId, p1score, p2score, winnerId } = request.body;
-			const game = await gameService( {gameId, p1score, p2score, winnerId});
+			const { id } = request.params;
+			const { p1score, p2score, winnerId } = request.body;
+			const game = await gameService.finishGame(parseInt(id), parseInt(p1score), parseInt(p2score), parseInt(winnerId));
 			return reply.code(201).send({
 				message: `Game finished`,
-				gameId: game.id,
-				// winnerId: game.winnerId,
-				time: game.createdAt,
-		})
+				id: game.id,
+		});
 		} catch (err) {
-			console.log(`finishGame: failed to update finished game user ${gameId}`);
-			return reply.code(500).send({ message: `Failed to update finished game ${gameId}` });
+			request.log.error(`finishGame: failed to update finished game ${request.params.id}`);
+			return reply.code(500).send({ message: `Failed to update finished game ${request.params.id}` });
 		}
 	},
 	async getGame(request, reply) {
 		try {
-			const	{ gameId } = request.body;
-			const game = await gameService.getGameById({ gameId });
+			const { id: gameId } = request.params;
+			const game = await gameService.getGameById(gameId);
 			reply.code(200).send({
 				message: `Game ${gameId} fetched successfully`,
 				gameId: game.id,
-				// winner: winnerId,
 			})
 			
 		} catch(err) {
-			console.log(`getGame: failed to fetch game ${gameId}`);
-			return reply.code(500).send({ message: `Failed to fetch game ${gameId}`});
+			request.log.error(`getGame: failed to fetch game ${request.params.id}`);
+			return reply.code(500).send({ message: `Failed to fetch game ${request.params.id}`});
 		}
 
 	},
 	async getUserGames(request, reply) {
 		try {
 			const { id: userId } = request.params;
-			const userGames = await gameService.getUserGames( { userId } );
-			reply.code(200),send({
+			const userGames = await gameService.getUserGames(userId);
+			reply.code(200).send({
 				message: `User ${userId}'s games fetched successfully`,
 				userId,
 				userGames,
 			});
 		} catch (err) {
-			console.log(`getGame: failed to fetch user ${userId}'s games`);
-			return reply.code(500).send({ message: `Failed to fetch user ${userId}'s games`});
+			request.log.error(`getGame: failed to fetch user ${request.params.id}'s games`);
+			return reply.code(500).send({ message: `Failed to fetch user ${request.params.id}'s games`});
 		}
 	},
 }
