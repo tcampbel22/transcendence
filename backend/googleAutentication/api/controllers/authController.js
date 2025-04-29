@@ -1,3 +1,9 @@
+/*This file handles the callback after Google authentication. It retrieves the authenticated user's profile data,
+ formats it into a payload, and sends a request to register the user_service module (add to database).
+ If the registration succeeds, it redirects to a frontend page with userID(/hub). If the user is already registered (409 error) just redirect to frontend with userId(/hub),
+ For other errors, it returns the error status code in the redirect URL.*/
+
+
 import axios from 'axios';
 
 export const googleCallback = async (req, reply) => {
@@ -9,7 +15,6 @@ export const googleCallback = async (req, reply) => {
             password: profile.id,
         };
         const response = await axios.post(`http://user_service:3002/api/register`, payload);
-        console.log('Respuesta del servicio de usuario:', response.data.userId);
         const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId }));
         reply.redirect(`/auth/google/callback.html?user=${userData}`);
     } 

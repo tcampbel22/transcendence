@@ -1,3 +1,7 @@
+/*This file configures Google authentication in a Fastify server using @fastify/passport and passport-google-oauth20.
+ It initializes Passport, registers secure session handling, sets up Google OAuth with credentials from environment variables,
+  and defines user serialization/deserialization for session management, allowing users to log in via Google securely.*/
+
 import fastifyPassport from '@fastify/passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
