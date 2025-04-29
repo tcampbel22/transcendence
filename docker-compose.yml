@@ -100,6 +100,7 @@ services:
       - ./backend/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
       - ./backend/logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
       - ./backend/nginx/log:/var/log/nginx:ro
+      - ./backend/user_service/logs:/var/log/user_service:ro
     ports:
       - 5044:5044
     environment:
@@ -145,17 +146,22 @@ services:
     container_name: game_service
     volumes:
       - ./backend/game_service/database/data:/app/database/data
+      - ./backend/libs:/libs
+      - ./backend/game_service/logs:/app/logs
     env_file:
-        - ./backend/game_service/.env
+      - ./backend/game_service/.env
     networks:
       - app_network
     restart: unless-stopped
-  
+
   file_service:
     build:
       context: ./backend/file_service
       dockerfile: Dockerfile
     container_name: file_service
+    volumes:
+      - ./backend/libs:/libs
+      - ./backend/file_service/logs:/app/logs
     networks:
       - app_network
     restart: unless-stopped
@@ -167,6 +173,8 @@ services:
     container_name: user_service
     volumes:
       - ./backend/user_service/database/data:/app/database/data
+      - ./backend/libs:/libs
+      - ./backend/user_service/logs:/app/logs
     env_file:
       - ./backend/user_service/.env
     networks:
@@ -175,7 +183,7 @@ services:
 
   googlesignin:
     build:
-      context: backend/googleAutentication
+      context: backend/googleAuth
       dockerfile: Dockerfile
     depends_on:
       - game_service
@@ -185,7 +193,6 @@ services:
     networks:
       - app_network
     restart: unless-stopped
-
 
 networks:
   app_network:

@@ -5,3 +5,6 @@ ssl/
 *.db
 *.db-journal
 .env
+dist
+.env.development
+.env.production

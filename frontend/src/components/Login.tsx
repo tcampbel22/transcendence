@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import React, { useEffect } from "react";
 
 const Login = () => {
-	// const API_URL = "https://localhost:4433"
-	const API_DEV_URL = "http://localhost:3002"
+	const API_URL = import.meta.env.VITE_API_USER;
 	const [password, setPassword] = useState('')
 	const [username, setUsername] = useState('')
 	const [loginError, setLoginError] = useState('');
@@ -45,9 +44,7 @@ const Login = () => {
 			password,
 		}
 		try {
-			//uncomment these when database is connected to the frontend
-			// const response = await axios.post(`${API_URL}/user/api/login`, loginInput)
-			const response = await axios.post(`${API_DEV_URL}/api/login`, loginInput);
+			const response = await axios.post(`${API_URL}/login`, loginInput)
 			console.log("logged in succesfully", response.data)
 			navigate('/hub', {state: response.data})
 		} catch (error: any) {

@@ -126,4 +126,90 @@ curl -X PUT "https://es01:9200/%3Cnginx_logs-%7Bnow%2Fd%7D-000001%3E" \
   }
 }';
 
-echo "ILM policy setup complete";
+echo "Nginx policy setup complete";
+
+echo "Setting up Index Lifecycle Management policy for User logs"
+# Create the ILM policy
+curl -X PUT "https://es01:9200/_ilm/policy/user_logs_policy" \
+  --cacert config/certs/ca/ca.crt \
+  -u "elastic:${ELASTIC_PASSWORD}" \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "policy": {
+    "phases": {
+      "hot": {
+        "min_age": "0ms",
+        "actions": {
+          "rollover": {
+            "max_age": "1d",
+            "max_size": "5gb"
+          },
+          "set_priority": {
+            "priority": 100
+          }
+        }
+      },
+      "warm": {
+        "min_age": "3d",
+        "actions": {
+          "shrink": {
+            "number_of_shards": 1
+          },
+          "forcemerge": {
+            "max_num_segments": 1
+          },
+          "set_priority": {
+            "priority": 50
+          }
+        }
+      },
+      "cold": {
+        "min_age": "7d",
+        "actions": {
+          "set_priority": {
+            "priority": 0
+          },
+          "freeze": {}
+        }
+      },
+      "delete": {
+        "min_age": "30d",
+        "actions": {
+          "delete": {}
+        }
+      }
+    }
+  }
+}';
+
+# Create the index template
+curl -X PUT "https://es01:9200/_index_template/user_logs_template" \
+  --cacert config/certs/ca/ca.crt \
+  -u "elastic:${ELASTIC_PASSWORD}" \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "index_patterns": ["user_logs-*"],
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1,
+      "index.lifecycle.name": "user_logs_policy",
+      "index.lifecycle.rollover_alias": "user_logs"
+    }
+  }
+}';
+
+# Create the initial index
+curl -X PUT "https://es01:9200/%3Cuser_logs-%7Bnow%2Fd%7D-000001%3E" \
+  --cacert config/certs/ca/ca.crt \
+  -u "elastic:${ELASTIC_PASSWORD}" \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "aliases": {
+    "user_logs": {
+      "is_write_index": true
+    }
+  }
+}';
+
+echo "ILM policy for User logs setup complete"
