@@ -1,10 +1,10 @@
 import Fastify from "fastify";
 import loginRoutes from "../user_service/api/routes/login.routes.js";
 import registerRoutes from "../user_service/api/routes/register.routes.js";
-// import profileRoutes from "../user_service/api/routes/profile.routes.js";
+import profileRoutes from "../user_service/api/routes/profile.routes.js";
 import supertest from "supertest";
 import { prisma, testConnection } from "../user_service/database/db.js";
-// import { populate_users } from "./populate_db.js";
+import { populate_users } from "./populate_db.js";
 
 describe("Backend API Tests", () => {
   let app;
@@ -17,11 +17,11 @@ describe("Backend API Tests", () => {
     }
 	process.stdout.write("Connected to db");
 
-	// await populate_users();
+	await populate_users();
     app = Fastify();
     app.register(loginRoutes);
     app.register(registerRoutes);
-	// app.register(profileRoutes);
+	app.register(profileRoutes);
     await app.ready();
   });
 
@@ -60,10 +60,10 @@ describe("Backend API Tests", () => {
 	  expect(response.status).toBe(201);
 	});
 	
-	// // check if user exists
-	// it("should return 200", async () => {
-	//   const response = await supertest(app.server)
-	// 	  .get("/api/validate/1")
-	//   expect(respnse.status).toBe(200);
-	// });
+	// check if user exists
+	it("should return 200", async () => {
+	  const response = await supertest(app.server)
+		  .get("/api/validate/1")
+	  expect(response.status).toBe(200);
+	});
 });
