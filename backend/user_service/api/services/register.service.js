@@ -9,7 +9,7 @@ export const registerService = {
 		const hashedPassword = await argon2.hash(password);
 		
 		//Creates a row in the user table with the new user (ATOMIC)
-		const result = prisma.$transaction(async (tx) => {
+		const result = await prisma.$transaction(async (tx) => {
 			const user = await tx.user.create({
 				data: {
 					username,

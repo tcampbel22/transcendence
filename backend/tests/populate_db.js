@@ -8,12 +8,12 @@ const user_email_suffix = '@test.com'
 const user_pw = 'Kissa123'
 
 
-//Users will have the usernames according to the iterator eg user1, user2 etc
+//Users will have the usernames according to the iterator eg user0, user1 etc
 //Note this populates db with default profile picture users, adding a profile pic will be tested later
 export async function populate_users() {
 	for (let i = 0; i < user_amount; i++) {
-		unq_un = `${user_name}` + toString(i + 1)
-		userData = {
+		const unq_un = `${user_name}${(i + 1).toString()}`
+		const userData = {
 			"username": unq_un,
 			"email": unq_un + user_email_suffix,
 			"password": user_pw
@@ -22,7 +22,6 @@ export async function populate_users() {
 			await registerService.registerUser(userData);
 		} catch (err) {
 			console.log("Could not create users in db");
-			return;
 		}
 		console.log(`${user_amount} users created in db`)
 	} 

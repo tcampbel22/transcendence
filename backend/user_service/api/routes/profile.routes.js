@@ -6,13 +6,13 @@ export default async function profileRoutes(fastify, options) {
 	//	fastify.addHook("preHandler", authenticate); UNCOMMENT THIS LINE TO ENABLE AUTHENTICATION
     
 	// Check if user exists
-    fastify.get("/api/validate/:id", profileController.validateUser);
+    fastify.get("/api/validate/:id", { schema: schemas.validateUserSchema }, profileController.validateUser);
     
 	// Get all users id's and usernames
-	fastify.get("/api/user-list", profileController.getUserList);
+	fastify.get("/api/user-list", { schema: schemas.getUserListSchema }, profileController.getUserList);
 
 	// Validates a user password
-	fastify.post("/api/validate-password", profileController.validatePassword);
+	fastify.post("/api/validate-password", { schema: schemas.validatePasswordSchema }, profileController.validatePassword);
 	
 	// Get user profile
     fastify.get("/api/:id", { schema: schemas.getUserProfileSchema }, profileController.getUser);

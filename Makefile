@@ -68,7 +68,7 @@ clean: down
 	@rm -rf ./backend/googleAuth/ssl
 
 #WARNING!! THIS WILL PERMANTLY REMOVE THE DB, ONLY USE IN TESTING ENV
-db_clean: down
+db_clean: clean down
 	@read -p "⚠️ $(RED) Are you sure you want to permanently delete the DB files? $(RESET)(y/N): " confirm; \
 	if [ "$$confirm" = "y" ] || [ "$$confirm" = "Y" ]; then \
 		echo "🗑️ $(YELLOW) Deleting databases...  $(RESET)"; \

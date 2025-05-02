@@ -301,8 +301,8 @@ export const profileService = {
 				},
 			},
 		});
-		if (rawFriendsData.length === 0)
-			return;
+		if (!rawFriendsData)
+			return [];
 		const friendsList = rawFriendsData.friends.map((formatFriends) => ({
 			id: formatFriends.friend.id,
 			username: formatFriends.friend.username,
