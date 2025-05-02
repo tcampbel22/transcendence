@@ -12,19 +12,21 @@ import multipart from "@fastify/multipart";
 const SSL_CERT_PATH = "./ssl/cert.pem";
 const SSL_KEY_PATH = "./ssl/key.pem";
 
-
+const isProduction = process.env.NODE_ENV === "production";
 
 const fastify = Fastify({
 	logger: true,
+	...(isProduction && {
 	https: {
 		key: fs.readFileSync(SSL_KEY_PATH),
 		cert: fs.readFileSync(SSL_CERT_PATH),
 	},
+	}),
 });
 //testing purposes only to get frontend connected in the dev env.
 fastify.register(cors, {
-	origin: ["http://localhost:5173"], // 👈 Vite's default dev server port
-	method: ["GET", "POST", "PUT", "DELETE"],
+	origin: ["http://localhost:5173"],
+	methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
 });
 
 fastify.register(multipart, {
