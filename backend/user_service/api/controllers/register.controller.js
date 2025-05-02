@@ -16,7 +16,8 @@ export const registerController = {
 			const existingUser = await checkForExistingUser(prisma, username);
 			if (existingUser) {
 				logger.info(`User registration failed: ${username} already exists`);
-				return reply.code(409).send({ message: "Username or email already taken",
+				return reply.code(409).send({ 
+					message: "Username or email already taken",
 					userId: existingUser.id,
 				 });
 			}
