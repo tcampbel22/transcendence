@@ -1,8 +1,10 @@
 import Fastify from "fastify";
-import loginRoute from "../user_service/api/routes/login.routes.js";
-import registerRoute from "../user_service/api/routes/register.routes.js";
+import loginRoutes from "../user_service/api/routes/login.routes.js";
+import registerRoutes from "../user_service/api/routes/register.routes.js";
+import profileRoutes from "../user_service/api/routes/profile.routes.js";
 import supertest from "supertest";
 import { prisma, testConnection } from "../user_service/database/db.js";
+import { populate_users } from "./populate_db.js";
 
 describe("Backend API Tests", () => {
   let app;
@@ -13,8 +15,10 @@ describe("Backend API Tests", () => {
       throw new Error("Failed to connect to the database");
     }
     app = Fastify();
-    app.register(loginRoute);
-    app.register(registerRoute);
+    app.register(loginRoutes);
+    app.register(registerRoutes);
+	app.register(profileRoutes);
+	populate_users();
     await app.ready();
   });
 
@@ -47,8 +51,16 @@ describe("Backend API Tests", () => {
   it("should return 201", async () => {
     const response = await supertest(app.server)
       .post("/api/register")
-      .send({ username: "testuser", email: "haha@gmail.com", password: "kissa" }); 
-
-    expect(response.status).toBe(201);
-  });
+      .send({ username: "testuser", email: "haha@gmail.com", password: "kissa" });
+	
+	  
+	  expect(response.status).toBe(201);
+	});
+	
+	// check if user exists
+	it("should return 200", async () => {
+	  const response = await supertest(app.server)
+		  .get("/api/validate/1")
+	  expect(respnse.status).toBe(200);
+	});
 });
