@@ -184,7 +184,7 @@ export const profileController = {
 		} catch (err) {
 			logger.error(`Failed to delete user ${id}: ${err.message}`);
 			request.log.error(err);
-			return handleError(err, reply, `Failed to delete user ${id}`);
+			return handleError(err, reply, `Failed to delete user ${id}:  ${err.message}`);
 		} 
 	},
 	async getFriendsList(request, reply) {

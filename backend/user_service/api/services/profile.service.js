@@ -283,6 +283,7 @@ export const profileService = {
             where: { id: id },
         });
     },
+	//Returns friends of user object 
 	async getFriendsList(id) {
 		const rawFriendsData = await prisma.user.findUnique ({
 			where: { id: id},

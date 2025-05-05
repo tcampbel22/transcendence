@@ -21,8 +21,9 @@ export async function populate_users() {
 		try {
 			await registerService.registerUser(userData);
 		} catch (err) {
-			console.log("Could not create users in db");
+			console.log("Could not create users in db:", err.message);
+			return err
 		}
-		console.log(`${user_amount} users created in db`)
 	} 
+	console.log(`${user_amount} users created in db`)
 };
