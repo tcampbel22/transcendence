@@ -1,4 +1,4 @@
-
+import { prisma } from "../user_service/database/db.js";
 import { registerService } from "../user_service/api/services/register.service.js";
 
 //Moodify user_amount if you want to increase db size
@@ -27,3 +27,23 @@ export async function populate_users() {
 	} 
 	console.log(`${user_amount} users created in db`)
 };
+
+export async function add_user(username) {
+	return await prisma.$transaction(async (tx) => {
+		const user = await tx.user.create({
+			data: {
+				username: username, 
+				email: `${username}fake@gmail.com`,
+				password: "kissa"
+		}});
+		await tx.userStats.create({
+			data: {
+				userId: user.id,
+				wins: 0,
+				losses: 0,
+				matchesPlayed: 0,
+			}
+		});
+		return user.id;
+	});
+}

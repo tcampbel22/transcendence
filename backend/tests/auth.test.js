@@ -4,22 +4,19 @@ import registerRoutes from "../user_service/api/routes/register.routes.js";
 import profileRoutes from "../user_service/api/routes/profile.routes.js";
 import supertest from "supertest";
 import { prisma, testConnection } from "../user_service/database/db.js";
-import { populate_users } from "./populate_db.js";
+import { populate_users, add_user } from "./populate_db.js";
 
 describe("Backend User API Tests", () => {
 	let app;
 	let userId;
+	let friendId;
+	
 	beforeAll(async () => {
 	const dbConnected = await testConnection();
 	if (!dbConnected) {
 		process.stdout.write("Failed to connect to db");
 		throw new Error("Failed to connect to the database");
 	}
-	// if (prisma.user.count({}) === 0)
-	// 	console.log("No users in db, calling populate db")
-	// 	await populate_users();
-	process.stdout.write("Connected to db");
-
 	app = Fastify();
 	app.register(loginRoutes);
 	app.register(registerRoutes);
@@ -38,13 +35,8 @@ describe("Backend User API Tests", () => {
 
 	beforeEach(async () => {
 		await populate_users();
-		const user = await prisma.user.create({
-			data: {
-				username: "fake", 
-				email: "fake@gmail.com",
-				password: "kissa"
-		}});
-		userId = user.id;
+		userId = await add_user("fake");
+		friendId = await add_user("friend");
 	});
 	
 	afterEach(async () => {

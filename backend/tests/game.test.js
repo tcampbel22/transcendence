@@ -71,6 +71,7 @@ describe("Backend Game API Tests", () => {
 		.get(`/api/${gameId}`)
 	expect(response.status).toBe(200);
 	});
+	
 	it("should return 201 when finishing a game", async () => {
 	const response = await supertest(app.server)
 		.patch(`/api/${gameId}/finish-game`)
