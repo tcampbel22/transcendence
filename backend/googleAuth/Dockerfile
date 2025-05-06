@@ -6,7 +6,6 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app/
 
 COPY package*.json /app/
-COPY .env /app/
 COPY ssl/cert.pem /app/ssl/cert.pem
 COPY ssl/key.pem /app/ssl/key.pem
 RUN npm install --production
