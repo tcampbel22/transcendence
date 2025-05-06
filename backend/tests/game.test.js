@@ -75,7 +75,7 @@ describe("Backend Game API Tests", () => {
 	it("should return 201 when finishing a game", async () => {
 	const response = await supertest(app.server)
 		.patch(`/api/${gameId}/finish-game`)
-		.send(({ p1score: 5, p2score: 1, winnerId: 1 }));
+		.send({ p1score: 5, p2score: 1, winnerId: 1 });
 	expect(response.status).toBe(201);
 	});
 
