@@ -52,7 +52,7 @@ describe("Backend User API Tests", () => {
 	});
 
 	//Creates a user
-	it("should return 201, user created succeessfully", async () => {
+	it("should return 201, user created successfully", async () => {
 	const response = await supertest(app.server)
 		.post("/api/register")
 		.send({ username: "testuser", email: "hahe@gmail.com", password: "kissa" });
