@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = env("USER_DATABASE_URL")
 }
 
 // Users Table - Stores user info
@@ -22,7 +22,7 @@ model User {
   picture  String   @default("default.png") // Enforce PNG/JPG in validation
 
   // Relations
-  friends        Friend[]      @relation("UserFriends") //other users that are friends with the current user (1 to many) 
+  friends        Friend[]      @relation("UserFriends") //other users that are friends with the current user (1 to many)
   friendOf       Friend[]      @relation("FriendOf") //users where the current user is friends with (1 to many)
   stats          UserStats?     // relation to the current users stats table (1 to 1)
 }
@@ -52,4 +52,3 @@ model Friend {
 
   @@unique([userId, friendId])
 }
-
