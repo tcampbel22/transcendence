@@ -22,4 +22,6 @@ export const authRoutes = (fastify) => {
         { preValidation: fastifyPassport.authenticate('google', { failureRedirect: '/' }) },
         googleCallback
     );
+
+    
 };

@@ -12,6 +12,7 @@ import Fastify from 'fastify';
 import fastifySecureSession from '@fastify/secure-session';
 import dotenv from 'dotenv';
 import fs from "fs";
+import emailRoutes from "../routes/emailRoutes.js";
 
 dotenv.config();
 
@@ -35,5 +36,7 @@ fastify.register(fastifySecureSession, {
         secure: false,
     },
 });
+
+fastify.register(emailRoutes)
 
 export default fastify;
