@@ -129,12 +129,4 @@ describe("Backend User API Tests", () => {
 		expect(response.status).toBe(404);
 	});
 
-
-
-
-	
-
-
-
-
 });

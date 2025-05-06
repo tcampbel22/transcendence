@@ -32,6 +32,8 @@ jobs:
           node-version: 18
           cache: npm
           cache-dependency-path: backend/tests/package.json
+      - name: Clear Jest cache
+        run: cd backend/tests && npx jest --clearCache
 
       - name: Install backend Dependencies
         run: cd backend/user_service && npm install

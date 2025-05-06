@@ -1,6 +1,5 @@
 export default {
   testEnvironment: 'node',
-  transform: {}, // Disable default Jest transformations for ES modules
   transform: {
     '^.+\\.js$': ['babel-jest', { presets: ['@babel/preset-env'] }],
   },
