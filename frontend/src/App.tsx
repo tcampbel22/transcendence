@@ -3,15 +3,6 @@ import React, { useEffect } from "react";
 import AppRoutes from "./components/routes/AppRoutes";
 
 const App: React.FC = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-
-    useEffect(() => {
-        const params = new URLSearchParams(location.search);
-        if (params.get('authenticated') === 'true') {
-            navigate('/hub');
-        }
-    }, [location, navigate]);
 
     return (
         <div 
