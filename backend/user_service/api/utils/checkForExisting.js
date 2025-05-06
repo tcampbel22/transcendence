@@ -2,10 +2,11 @@
 
 export async function checkForExistingUser(prisma, username) {
     return await prisma.user.findFirst(
-        { 
-            where: { username },
-            select: {
-                id: true
-            }
-        });
+		{ 
+			where: { username },
+			select: {
+				id: true
+			}
+		}
+	);
 }

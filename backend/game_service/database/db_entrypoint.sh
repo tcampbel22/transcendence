@@ -1,8 +1,9 @@
 #!/bin/bash
 
-cd /app/database
-echo "Initialising game db..."
+cd database
+echo "Initialising db..."
+npx prisma generate
 npx prisma db push
-cd /app
-echo "Starting game service"
+cd ..
+echo "Starting application"
 exec "$@"

@@ -1,5 +1,24 @@
 import { errorResponseSchema, idParamsSchema } from "./templates.schema.js";
 
+
+export const validateUserSchema = {
+	params: idParamsSchema,
+	additionalProperties: false,
+	response: {
+		200: {
+			type: 'object',
+			required: ['id'],
+			properties: {
+				id: { type: 'integer' }
+			}
+		},
+		400: errorResponseSchema,
+		401: errorResponseSchema,
+		404: errorResponseSchema,
+		500: errorResponseSchema,
+	}
+};
+
 export const getUserProfileSchema = {
 	params: idParamsSchema,
 	response: {
@@ -19,6 +38,28 @@ export const getUserProfileSchema = {
 		500: errorResponseSchema,
 	}
 };
+
+export const getUserListSchema = {
+	response: {
+		200: {
+			type: 'array',
+			items: {
+				type: 'object',
+				required: ['id', 'username'],
+				properties: {
+					id: { type: 'integer' },
+					username: { type: 'string' }
+				},
+				additionalProperties: false,
+			}
+		},
+		400: errorResponseSchema,
+		401: errorResponseSchema,
+		404: errorResponseSchema,
+		500: errorResponseSchema,
+	}
+};
+
 
 export const updateUsernameSchema = {
 	params: idParamsSchema,
@@ -95,7 +136,8 @@ export const updatePasswordSchema = {
 				type: 'string',
 				minLength: 5,
                 // Requires 1 uppercase, 1 number and cannot contain the word password
-                pattern: '^(?!.*password)(?=.*[A-Z])(?=.*\\d).{5,}$'
+                // pattern: '^(?!.*password)(?=.*[A-Z])(?=.*\\d).{5,}$'
+				pattern: '^[A-Za-z0-9]+$'
 			}
 		},
 		additionalProperties: false
@@ -116,6 +158,38 @@ export const updatePasswordSchema = {
 		502: errorResponseSchema,
 	}
 };
+
+export const validatePasswordSchema = {
+	body: {
+		type: 'object',
+		required: ['id', 'password'],
+		properties: {
+			id: { type: 'integer' },
+			password: {
+				type: 'string',
+				minLength: 5,
+				// Requires 1 uppercase, 1 number and cannot contain the word password
+                // pattern: '^(?!.*password)(?=.*[A-Z])(?=.*\\d).{5,}$'
+				pattern: '^[A-Za-z0-9]+$'
+			}
+		},
+		additionalProperties: false
+	},
+	response: {
+		200: {
+			type: 'object',
+			required: ['id'],
+			properties: {
+				id: { type: 'integer' },
+			}
+		},
+		400: errorResponseSchema,
+		401: errorResponseSchema,
+		404: errorResponseSchema,
+		500: errorResponseSchema,
+		502: errorResponseSchema,
+	}
+}
 
 export const getStatsSchema = {
 	params: idParamsSchema,
@@ -141,28 +215,24 @@ export const matchHistorySchema = {
 	params: idParamsSchema,
 	response: {
 		200: {
-			type: 'object',
-			required: ['matchHistory'],
-			properties: {
-				matchHistory: { 
-					type: 'object', 
-					required: ['id', 'username', 'picture', 'gameId', 'date', 'score', 'result', 'opponentId', 'opponentName', 'opponentPicture'],
-					properties: {
-						id: { type: 'integer'},
-						username: { type: 'string' },
-						picture: { type: 'string' },
-						gameId: { type: 'integer' },
-						date: { type: 'string', format: 'date-time' },
-						score: { type: 'string' },
-						result: {type: 'string'},
-						opponentId: { type: 'integer'},
-						opponentName: { type: 'string'},
-						opponentPicture: { type: 'string'},
-					},
-					additionalProperties: false,
-				}
-			},
-			additionalProperties: false,
+			type: 'array',
+			items: {
+				type: 'object', 
+				required: ['id', 'username', 'picture', 'gameId', 'date', 'score', 'result', 'opponentId', 'opponentName', 'opponentPicture'],
+				properties: {
+					id: { type: 'integer'},
+					username: { type: 'string' },
+					picture: { type: 'string' },
+					gameId: { type: 'integer' },
+					date: { type: 'string', format: 'date-time' },
+					score: { type: 'string' },
+					result: {type: 'string'},
+					opponentId: { type: 'integer'},
+					opponentName: { type: 'string'},
+					opponentPicture: { type: 'string'},
+				},
+				additionalProperties: false,
+			}
 		},
 		400: errorResponseSchema,
 		401: errorResponseSchema,

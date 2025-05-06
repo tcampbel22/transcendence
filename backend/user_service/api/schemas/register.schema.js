@@ -25,7 +25,7 @@ export const registerSchema = {
 				type: 'string',
 				minLength: 5,
 				maxLength: 100,
-				pattern: '\\.(jpg|jpeg|png)$'
+				format: 'binary'
 			}
         },
         additionalProperties: false
@@ -33,11 +33,12 @@ export const registerSchema = {
 	response: {
 		201: {
 			type: 'object',
-			required: ['id', 'username', 'email'],
+			required: ['id', 'username', 'email', 'picture'],
 			properties: {
 				id: { type: 'integer' },
 				username: { type: 'string'},
-				email: { type: 'string', format: 'email' }
+				email: { type: 'string', format: 'email' },
+				picture: { type: 'string' },
 			}
 		},
 		400: errorResponseSchema,

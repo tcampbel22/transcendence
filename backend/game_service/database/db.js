@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 // Create a singleton Prisma client instance, logs all db interactions
 const prisma = new PrismaClient({ 
-	log: ['query', 'info', 'warn'],
+	log: ['warn'],
 });
 
 // Test the database connection
