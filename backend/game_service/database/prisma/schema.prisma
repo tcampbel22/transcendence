@@ -11,7 +11,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = env("GAME_DATABASE_URL")
 }
 
 // Game Table - Tracks individual games
