@@ -31,19 +31,35 @@ jobs:
         with:
           node-version: 18
           cache: npm
-          cache-dependency-path: backend/tests/package.json
+          cache-dependency-path: backend/tests/package-lock.json
+
+      - name: Install backend Dependencies
+        run: cd backend/user_service && npm ci
+
       - name: Clear Jest cache
         run: cd backend/tests && npx jest --clearCache
 
-      - name: Install backend Dependencies
-        run: cd backend/user_service && npm install
-
       - name: Install test Dependencies
-        run: cd backend/tests && npm install
+        run: cd backend/tests && npm ci
 
       - name: Init database
         run: cd backend/user_service && bash database/db_entrypoint.sh
+      
+      - name: Show working directory
+        run: pwd
 
+      - name: List files in test directory
+        run: ls -la backend/tests
+
+      - name: Print Node.js version
+        run: node -v
+
+      - name: Show test script from package.json
+        run: cat backend/tests/package.json
+
+      - name: Run Jest with verbose config path
+        run: cd backend/tests && NODE_OPTIONS=--experimental-vm-modules npx jest --config=jest.config.js --verbose
+      
       - name: Run Tests
         run: cd backend/tests && npm test
 
@@ -105,7 +121,5 @@ jobs:
       - name: Install Dependencies
         run: cd e2e && npm install
 
-      - name: wait server to run
-        run: sleep 10
       - name: Run E2E Tests
         run: cd e2e && npm test

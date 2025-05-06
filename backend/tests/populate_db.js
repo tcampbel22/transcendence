@@ -24,8 +24,7 @@ export async function populate_users() {
 			console.log("Could not create users in db:", err.message);
 			return err
 		}
-	} 
-	console.log(`${user_amount} users created in db`)
+	}
 };
 
 export async function add_user(username) {
