@@ -36,8 +36,11 @@ jobs:
       - name: Install backend Dependencies
         run: cd backend/user_service && npm ci
 
-      - name: Clear Jest cache
-        run: cd backend/tests && npx jest --clearCache
+      - name: Install game_service dependencies
+        run: cd backend/game_service && npm install
+
+      - name: Init game_service database
+        run: cd backend/game_service && bash database/db_entrypoint.sh
 
       - name: Install test Dependencies
         run: cd backend/tests && npm ci
@@ -45,18 +48,6 @@ jobs:
       - name: Init database
         run: cd backend/user_service && bash database/db_entrypoint.sh
       
-      - name: Show working directory
-        run: pwd
-
-      - name: List files in test directory
-        run: ls -la backend/tests
-
-      - name: Print Node.js version
-        run: node -v
-
-      - name: Show test script from package.json
-        run: cat backend/tests/package.json
-
       - name: Run Jest with verbose config path
         run: cd backend/tests && NODE_OPTIONS=--experimental-vm-modules npx jest --config=jest.config.js --verbose
       
