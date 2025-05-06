@@ -33,14 +33,11 @@ jobs:
           cache: npm
           cache-dependency-path: backend/tests/package-lock.json
 
-      - name: Install backend Dependencies
+      - name: Install user_service Dependencies
         run: cd backend/user_service && npm ci
 
-      - name: Install game_service dependencies
-        run: cd backend/game_service && npm install
-
-      - name: Init game_service database
-        run: cd backend/game_service && bash database/db_entrypoint.sh
+      - name: Install game_service Dependencies
+        run: cd backend/game_service && npm ci
 
       - name: Install test Dependencies
         run: cd backend/tests && npm ci
@@ -48,6 +45,9 @@ jobs:
       - name: Init database
         run: cd backend/user_service && bash database/db_entrypoint.sh
       
+      - name: Init game_service database
+        run: cd backend/game_service && bash database/db_entrypoint.sh
+
       - name: Run Jest with verbose config path
         run: cd backend/tests && NODE_OPTIONS=--experimental-vm-modules npx jest --config=jest.config.js --verbose
       
