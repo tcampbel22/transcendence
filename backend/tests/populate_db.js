@@ -1,7 +1,7 @@
 import { prisma } from "../user_service/database/db.js";
 import { registerService } from "../user_service/api/services/register.service.js";
 
-//Moodify user_amount if you want to increase db size
+//Modify user_amount if you want to increase db size
 const user_amount = 10
 const user_name = 'user'
 const user_email_suffix = '@test.com'
