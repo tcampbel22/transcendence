@@ -15,29 +15,14 @@ export const useFriendslist = (userId : number) => {
     useEffect (() => {
             const getFriendsList = async () => {
                 try {
-                    // MOCK DATA
-                    const mockFriends: Friends[] = [
-                        { id: 1, username: "kissa", picture: null, status: "online" },
-                        { id: 2, username: "piissddsddsdami", picture: null, status: "offline" },
-                        { id: 2, username: "koira", picture: null, status: "online" },
-                        { id: 1, username: "kissa", picture: null, status: "online" },
-                        { id: 2, username: "piisami", picture: null, status: "offline" },
-                        { id: 2, username: "koira", picture: null, status: "online" },
-                        { id: 1, username: "kissa", picture: null, status: "online" },
-                        { id: 2, username: "piisami", picture: null, status: "offline" },
-                        { id: 2, username: "koira", picture: null, status: "online" },
-                        { id: 1, username: "kissa", picture: null, status: "online" },
-                        { id: 2, username: "piisami", picture: null, status: "offline" },
-                        { id: 2, username: "koira", picture: null, status: "online" },
-                    ];
-                    // const res = await axios.get(`${API_URL}/api/${userId}/friends`); //get friends list
-                    // setFriendsList(res.data); //set it for usage in the dropdown list
-                    setFriendsList(mockFriends);
+                    const res = await axios.get(`${API_URL}/api/${userId}/friends`); //get friends list
+                    setFriendsList(res.data); //set it for usage in the dropdown list
+                    // setFriendsList(mockFriends);
     
                 } catch (err) {
                     const error = err as AxiosError;
                     console.error("Error fetching friends:", error);
-                    setFriendsList([]);
+                    setFriendsList([{ id: 1, username: "No Friends", picture: null, status: "offline" }]);
                 }
             }
             getFriendsList();

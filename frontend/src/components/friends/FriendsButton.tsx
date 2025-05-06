@@ -11,8 +11,8 @@ const FriendsButton = ({userId} : Id) => {
     
     return (
         <div className="relative z-50 inline-block">
-        <button className={`transition-all duration-200 ease-in-out 
-          ${open ? 'w-64 rounded-t bg-beige' : 'w-12 rounded bg-beige'} 
+        <button title='Friends List' className={`transition-all duration-200 ease-in-out 
+          ${open ? 'w-64 rounded-t bg-beige' : 'w-12 rounded bg-beige'}
           bg-beige text-white py-2 shadow text-2xl flex items-center justify-center`} onClick={() => setOpen(!open)}>
                 🫂
         </button>

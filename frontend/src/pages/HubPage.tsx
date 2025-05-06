@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { userIdFromState } from "../hooks/userIdFromState";
 import { userNameFromState } from "../hooks/useNameFromState";
 import FriendsButton from "../components/friends/FriendsButton";
+import AddFriendButton from "../components/friends/AddFriendButton"
 
 
 const Hub = () => {
@@ -19,6 +20,7 @@ const Hub = () => {
         >
          <h1 className="items-center text-white text-4xl font-bold animate-fade-in">Welcome</h1>
         <div className="absolute top-5 right-10">
+                <AddFriendButton userId={userInfo.userId}/>
                 <FriendsButton userId={userInfo.userId}/>
         </div>
             <div className="flex  min-h-screen sm:flex-row items-center justify-center gap-6 animate-slide-in">

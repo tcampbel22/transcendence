@@ -17,7 +17,7 @@ const Avatar = ({userId}: AvatarInfo) => {
 	useEffect(() => {
 		const fetchUserInfo = async () => {
 			try {
-				const response = await axios.get(`${API_URL}/users/${userId}`);
+				const response = await axios.get(`${API_URL}/${userId}`);
 				setUsername(response.data.username);
 				setEmail(response.data.email)
 			} 
