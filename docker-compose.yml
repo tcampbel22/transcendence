@@ -149,7 +149,7 @@ services:
       - ./backend/libs:/libs
       - ./backend/game_service/logs:/app/logs
     env_file:
-      - ./backend/game_service/.env
+      - .env
     networks:
       - app_network
     restart: unless-stopped
@@ -177,7 +177,7 @@ services:
       - ./backend/libs:/libs
       - ./backend/user_service/logs:/app/logs
     env_file:
-      - ./backend/user_service/.env
+      - .env
     networks:
       - app_network
     restart: unless-stopped
@@ -189,6 +189,8 @@ services:
     container_name: GoogleSignIn
     volumes:
       - ./backend/fastify/database/data:/app/database/data
+    env_file:
+      - .env
     networks:
       - app_network
     restart: unless-stopped
