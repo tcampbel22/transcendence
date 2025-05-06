@@ -37,12 +37,12 @@ jobs:
         run: cd backend/user_service && npm ci
 
       - name: Install game_service Dependencies
-        run: cd backend/game_service && npm ci
+        run: cd backend/game_service && npm install
 
       - name: Install test Dependencies
         run: cd backend/tests && npm ci
 
-      - name: Init database
+      - name: Init user_service database
         run: cd backend/user_service && bash database/db_entrypoint.sh
       
       - name: Init game_service database
