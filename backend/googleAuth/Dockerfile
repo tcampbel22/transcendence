@@ -13,7 +13,6 @@ RUN npm install --production
 
 COPY api /app/api/
 COPY public /app/public/
-COPY .env /app/
 COPY index.js /app/
 
 CMD [ "node", "/app/index.js" ]
