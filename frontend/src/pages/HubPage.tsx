@@ -47,7 +47,7 @@ const Hub = () => {
 
                 <div className={baseCardClass} //profile
                         style={{
-                            backgroundImage: `url("/images/happy_profile.png")`,
+                            backgroundImage: `url("/images/new_profile.png")`,
                         }}
                     >
                     <Link 
@@ -60,11 +60,11 @@ const Hub = () => {
                 
                 <div className={baseCardClass} //settings/logout
                         style={{
-                            backgroundImage: `url("/images/settings.png")`,
+                            backgroundImage: `url("/images/logout.png")`,
                         }}
                     >
                     <Link 
-                        to="/settings" 
+                        to="/" 
 						state={userId}
                         className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">    
                     </Link>
