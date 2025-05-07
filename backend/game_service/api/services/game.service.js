@@ -18,7 +18,7 @@ export const gameService = {
 			const newGame = await prisma.game.create({
 				data: {
 					player1Id: player1Id,
-					player2Id: player2Id ? player2Id : null,
+					player2Id: player2Id,
 					player1Score: 0,
 					player2Score: 0,
 					winnerId: player1Id,

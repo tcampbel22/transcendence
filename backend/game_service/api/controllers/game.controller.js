@@ -4,8 +4,8 @@ export const gameController = {
 
 	async createGame(request, reply) {
 		try {
-			const { player1Id, Player2Id = null } = request.body;
-			const game = await gameService.startGame(player1Id, Player2Id);
+			const { player1Id, player2Id } = request.body;
+			const game = await gameService.startGame(parseInt(player1Id), parseInt(player2Id));
 			reply.code(201).send({
 				message: `Game ${game.id} started successfully`,
 				gameId: game.id,

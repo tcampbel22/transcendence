@@ -7,6 +7,7 @@ import logger from "@eleekku/logger"
 import cors from '@fastify/cors';
 import fastifyCookie from "@fastify/cookie";
 import fs from "fs";
+import multipart from "@fastify/multipart";
 
 const SSL_CERT_PATH = "./ssl/cert.pem";
 const SSL_KEY_PATH = "./ssl/key.pem";
@@ -28,6 +29,11 @@ fastify.register(cors, {
 	methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
 });
 
+fastify.register(multipart, {
+	limits: {
+	  fileSize: 5 * 1024 * 1024 // 5MB limit, maybe change later
+	}
+});
 try {
 	fastify.register(loginRoutes);
 	fastify.register(registerRoutes);

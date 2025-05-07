@@ -31,17 +31,26 @@ jobs:
         with:
           node-version: 18
           cache: npm
-          cache-dependency-path: backend/tests/package.json
+          cache-dependency-path: backend/tests/package-lock.json
 
-      - name: Install backend Dependencies
-        run: cd backend/user_service && npm install
+      - name: Install user_service Dependencies
+        run: cd backend/user_service && npm ci
+
+      - name: Install game_service Dependencies
+        run: cd backend/game_service && npm install
 
       - name: Install test Dependencies
-        run: cd backend/tests && npm install
+        run: cd backend/tests && npm ci
 
-      - name: Init database
+      - name: Init user_service database
         run: cd backend/user_service && bash database/db_entrypoint.sh
+      
+      - name: Init game_service database
+        run: cd backend/game_service && bash database/db_entrypoint.sh
 
+      - name: Run Jest with verbose config path
+        run: cd backend/tests && NODE_OPTIONS=--experimental-vm-modules npx jest --config=jest.config.js --verbose
+      
       - name: Run Tests
         run: cd backend/tests && npm test
 
@@ -103,7 +112,5 @@ jobs:
       - name: Install Dependencies
         run: cd e2e && npm install
 
-      - name: wait server to run
-        run: sleep 10
       - name: Run E2E Tests
         run: cd e2e && npm test

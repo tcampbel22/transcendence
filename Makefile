@@ -52,7 +52,7 @@ down:
 
 basic: ssl_cert build-frontend
 		@echo "$(YELLOW)Building docker images...$(RESET)"
-	@docker compose -f $(DOCKER_COMPOSE_FILE) up nginx game_service file_service user_service  googlesignin -d
+	@docker-compose -f $(DOCKER_COMPOSE_FILE) up -d nginx file_service user_service  game_service googlesignin 
 	@echo "$(GREEN)Docker images built.$(RESET)"
 
 clean: down
@@ -68,7 +68,7 @@ clean: down
 	@rm -rf ./backend/googleAuth/ssl
 
 #WARNING!! THIS WILL PERMANTLY REMOVE THE DB, ONLY USE IN TESTING ENV
-db_clean: down
+db_clean: clean
 	@read -p "⚠️ $(RED) Are you sure you want to permanently delete the DB files? $(RESET)(y/N): " confirm; \
 	if [ "$$confirm" = "y" ] || [ "$$confirm" = "Y" ]; then \
 		echo "🗑️ $(YELLOW) Deleting databases...  $(RESET)"; \
