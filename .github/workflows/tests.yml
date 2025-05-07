@@ -9,11 +9,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set USER_DATABASE_URL environment variable
-        run: echo "USER_DATABASE_URL=${{ secrets.USER_DATABASE_URL }}" >> $GITHUB_ENV
+      # - name: Set USER_DATABASE_URL environment variable
+      #   run: echo "DATABASE_URL=${{ secrets.USER_DATABASE_URL }}" >> $GITHUB_ENV
 
-      - name: Set GAME_DATABASE_URL environment variable
-        run: echo "GAME_DATABASE_URL=${{ secrets.GAME_DATABASE_URL }}" >> $GITHUB_ENV
+      # - name: Set GAME_DATABASE_URL environment variable
+      #   run: echo "GAME_DATABASE_URL=${{ secrets.GAME_DATABASE_URL }}" >> $GITHUB_ENV
+      - name: Create .env for user_service
+        run: |
+       echo "DATABASE_URL=${{ secrets.USER_DATABASE_URL }}" > backend/user_service/.env
+
+      - name: Create .env for game_service
+        run: |
+          echo "DATABASE_URL=${{ secrets.GAME_DATABASE_URL }}" > backend/game_service/.env
 
       - name: Create complete .env file
         run: |
