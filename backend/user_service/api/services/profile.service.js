@@ -2,7 +2,7 @@ import { prisma } from "../../database/db.js";
 import argon2 from "argon2";
 import axios from "axios";
 import logger from "@eleekku/logger";
-import { ErrorConflict, ErrorNotFound, ErrorCustom, ErrorUnAuthorized } from "@app/errors";
+import { ErrorConflict, ErrorNotFound, ErrorCustom, ErrorUnAuthorized, ErrorBadRequest } from "@app/errors";
 
 export const profileService = {
 	// Check if user is in db
@@ -312,64 +312,82 @@ export const profileService = {
 		}));
 		return friendsList;
 	},
-	async addFriend(id, friendId) {
-		if (id === friendId) {
+	async addFriend(id, friendUsername) {
+		const friend = await prisma.user.findUnique({ 
+			where: { username: friendUsername },
+			select: {
+				id: true
+			}
+		});
+		if (!friend)
+			throw new ErrorNotFound(`User ${friendUsername} not found`)
+		const user = await prisma.user.findUnique({ 
+			where: { id : id },
+			select: {
+				id: true
+			}
+		});
+		if (!user)
+			throw new ErrorNotFound(`User ${id} not found`)
+		if (id === friend.id) {
 			throw new ErrorConflict("A user cannot add themselves as a friend");
 		};
-		const temp = await prisma.user.findMany({ 
-			where: {
-				id: {
-					in: [id, friendId],
-				},
-			},
-		});
-		if (temp.length !== 2)
-			throw new ErrorNotFound(`User or friend id cannot be found`);
 		const duplicate = await prisma.friend.findUnique({
 			where: {
-				id_friendId: {
-					id: id,
-					friendId: friendId,
+				userId_friendId: {
+					userId: id,
+					friendId: friend.id,
 				}
 			},
 		});
 		if (duplicate)
-			throw new ErrorUnAuthorized(`User ${id} is already friends with friend ${friendId}`);
+			throw new ErrorUnAuthorized(`User ${id} is already friends with friend ${friend.id}`);
 		//Create friendship for friend
 		await prisma.friend.createMany({
 			data: [
-				{ id: id, friendId: friendId, isOnline: false },
-				{ id: friendId, friendId: id, isOnline: false },
+				{ userId: id, friendId: friend.id, isOnline: false },
+				{ userId: friend.id, friendId: id, isOnline: false },
 			],
 		});
+		return friend.id
 	},
-	async deleteFriend(id, friendId) {
-		if (id === friendId) {
-			throw new ErrorConflict("A user cannot delete themselves... TWICE");
+	async deleteFriend(id, friendUsername) {
+		const user = await prisma.user.findUnique({ 
+			where: { id : id },
+			select: {
+				id: true
+			}
+		});
+		if (!user)
+			throw new ErrorNotFound(`User ${id} not found`)
+		const friend = await prisma.user.findUnique({ 
+			where: { username: friendUsername },
+			select: {
+				id: true
+			}
+		});
+		if (!friend)
+			throw new ErrorNotFound(`User ${friendUsername} not found`)
+		if (id === friend.id) {
+			throw new ErrorConflict("A user cannot delete themselves...");
 		};
-		const temp = await prisma.user.findMany({ 
+		const deleted = await prisma.friend.deleteMany({
 			where: {
-				id: {
-					in: [id, friendId],
-				},
-			},
-		});
-		if (temp.length !== 2)
-			throw new ErrorNotFound(`User or friend id cannot be found`);
-		deleted = await prisma.friend.deleteMany({
-			where: {
-				AND: [{
-						id: id,
-						friendId: friendId
-					},
-					{
-						id: friendId,
-						friendId: id	
-				}]
-			},
-		});
+				OR: [
+				  {
+					userId: id,
+					friendId: friend.id
+				  },
+				  {
+					userId: friend.id,
+					friendId: id  
+				  }
+				]
+			  },
+			});
 		if (deleted.count === 0) {
-			throw new ErrorNotFound(`No friendship exists between user ${id} and user ${friendId}`);
+			throw new ErrorNotFound(`No friendship exists between user ${id} and user ${friend.id}`);
 		}
+		return friend.id
 	}
 }

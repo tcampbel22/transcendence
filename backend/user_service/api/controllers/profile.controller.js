@@ -190,7 +190,7 @@ export const profileController = {
 	async getFriendsList(request, reply) {
 		const { id } = request.params;
 		try {
-			friendList = await profileService.getFriendsList(parseInt(id));
+			const friendList = await profileService.getFriendsList(parseInt(id));
 			if (friendList.length === 0) {
 				return reply.code(200).send({
 					message: `User ${id} has no friends... :(`,
@@ -208,30 +208,30 @@ export const profileController = {
 	},
 	async addFriend(request, reply) {
 		const { id } = request.params;
-		const { friendId } = request.body;
+		const { friendUsername } = request.body;
 		try {
-			await profileService.addFriend(parseInt(id), parseInt(friendId));
-			logger.info(`User ${id} added user ${friendId} as a friend`);
+			const friendId = await profileService.addFriend(parseInt(id), friendUsername);
+			logger.info(`User ${id} added user ${friendUsername} as a friend`);
 			return reply.code(201).send({ 
-				message: `Friendship created between user ${id} and user ${friendId}` 
+				message: `Friendship created between user ${id} and user ${friendUsername}`,
+				friendUsername,
+				friendId
 			});
 		} catch (err) {
-			logger.error(`Failed to add user ${friendId} to user ${id}'s friend list: ${err.message}`);
-			request.log.error(err);
-			return handleError(err, reply, `Failed to add friend to user ${id}'s friend list`);
+			logger.error(`Failed to add user ${friendUsername} to user ${id}'s friend list: ${err.message}`);
+			return handleError(err, reply, `Failed to add friend to user ${id}'s friend list:`, err);
 		}
 	},
 	async deleteFriend(request, reply) {
 		const { id } = request.params;
-		const { friendId } = request.body;
+		const { friendUsername } = request.body;
 		try {
-			await profileService.deleteFriend(parseInt(id), parseInt(friendId));
+			const friendId = await profileService.deleteFriend(parseInt(id), friendUsername);
 			logger.info(`User ${id} deleted user ${friendId} from their friend list`);
-			return reply.code(204).send({ message: `User ${id} friendship with ${friendId} has ended permanently` })
+			return reply.code(201).send({ message: `User ${id} friendship with ${friendUsername} has ended permanently` })
 		} catch (err) {
-			logger.error(`Failed to delete user ${friendId} from user ${id}'s friend list: ${err.message}`);
-			request.log.error(err);
-			return handleError(err, reply, `Failed to delete user ${id}'s friend`);
+			logger.error(`Failed to delete user ${friendUsername} from user ${id}'s friend list: ${err.message}`);
+			return handleError(err, reply, `Failed to delete user ${id}'s friend ${friendUsername} friendship`);
 		}
 	}
 }

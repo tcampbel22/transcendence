@@ -293,18 +293,20 @@ export const deleteUserSchema = {
 	params: idParamsSchema,
 	body: {
 	  type: 'object',
-	  required: ['friendId'],
+	  required: ['friendUsername'],
 	  properties: {
-		friendId: { type: 'integer', minimum: 1 }
+		friendUsername: { type: 'string' }
 	  },
 	  additionalProperties: false
 	},
 	response: {
 	  201: {
 		type: 'object',
-		required: ['message'],
+		required: ['message', 'friendId', 'friendUsername'],
 		properties: {
-		  message: { type: 'string' }
+		  message: { type: 'string' },
+		  friendId: { type: 'integer', minimum: 1 },
+		  friendUsername: { type: 'string' }
 		}
 	  },
 	  400: errorResponseSchema,
@@ -319,14 +321,14 @@ export const deleteUserSchema = {
 	params: idParamsSchema,
 	body: {
 	  type: 'object',
-	  required: ['friendId'],
+	  required: ['friendUsername'],
 	  properties: {
-		friendId: { type: 'integer', minimum: 1 }
+		friendUsername: { type: 'string' }
 	  },
 	  additionalProperties: false
 	},
 	response: {
-	  204: {
+	  201: {
 		type: 'object',
 		properties: {
 		  message: { type: 'string' }
