@@ -37,6 +37,6 @@ fastify.register(fastifySecureSession, {
     },
 });
 
-fastify.register(emailRoutes)
+fastify.register(emailRoutes);
 
 export default fastify;
