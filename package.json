@@ -8,9 +8,10 @@
 	},
 	"devDependencies": {
 		"axios": "^1.8.4",
-		"concurrently": "^8.2.2"
-  },
-  "dependencies": {
-    "@eleekku/logger": "^1.0.0"
+		"concurrently": "^8.2.2",
+		"dotenv-cli": "^8.0.0"
+	},
+	"dependencies": {
+		"@eleekku/logger": "^1.0.0"
 	}
 }
