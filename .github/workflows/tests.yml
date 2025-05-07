@@ -9,7 +9,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set USER_DATABASE environment variable
+      - name: Set DATABASE environment variable
         run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
 
       - name: Create complete .env file
