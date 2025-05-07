@@ -15,7 +15,7 @@ export const useFriendslist = (userId : number) => {
     useEffect (() => {
             const getFriendsList = async () => {
                 try {
-                    const res = await axios.get(`${API_URL}/api/${userId}/friends`); //get friends list
+                    const res = await axios.get(`${API_URL}/${userId}/friends`); //get friends list
                     setFriendsList(res.data); //set it for usage in the dropdown list
                     // setFriendsList(mockFriends);
     
