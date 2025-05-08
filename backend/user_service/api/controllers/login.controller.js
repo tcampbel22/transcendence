@@ -22,6 +22,7 @@ export const loginController = {
 			reply.status(200).send({
 				userId: login.user.id,
 				username: login.user.username,
+				email: login.user.email,
 			});  
 		} catch (err) {
 			logger.error(`Error logging in user: ${err.message}`);

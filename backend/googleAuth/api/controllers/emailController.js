@@ -3,6 +3,7 @@ import { generateOTPToken, verifyOTPToken } from "../service/otpService.js";
 import crypto from "crypto";
 
 export const sendEmail = async (request, reply) => {
+    console.log("Sending email... ", request.body);
     const { to } = request.body;
 
     // Generar OTP
@@ -28,15 +29,16 @@ export const sendEmail = async (request, reply) => {
 };
 
 export const validateOTP = async (request, reply) => {
-    const { otp, token } = request.body;
+    const { otp, otpToken } = request.body;
 
-    // Verifica el token; internamente compara el OTP almacenado en el token con el que envía el usuario
-    const isValid = verifyOTPToken(token, otp);
+    console.log("body:", request.body);
+
+    const isValid = verifyOTPToken(otpToken, otp);
 
     if (isValid) {
-        reply.send({ success: true, message: "OTP válido, autenticación completada!" });
+        reply.send({ success: true, message: "OTP verified successfully!" });
     } else {
-        reply.send({ success: false, message: "Código inválido o expirado!" });
+        reply.send({ success: false, message: "Invalid or expired OTP!" });
     }
 };
 /*export const validateOTP = async (request, reply) => {

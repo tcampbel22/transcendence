@@ -13,6 +13,7 @@ import fastifySecureSession from '@fastify/secure-session';
 import dotenv from 'dotenv';
 import fs from "fs";
 import emailRoutes from "../routes/emailRoutes.js";
+import cors from "@fastify/cors";
 
 dotenv.config();
 
@@ -36,6 +37,12 @@ fastify.register(fastifySecureSession, {
         secure: false,
     },
 });
+
+// Enable CORS for all origins or specify your frontend URL
+fastify.register(cors, {
+    origin: "http://localhost:5173", // Allow only your frontend
+    methods: ["GET", "POST"], // Allow these HTTP methods
+  });
 
 fastify.register(emailRoutes);
 
