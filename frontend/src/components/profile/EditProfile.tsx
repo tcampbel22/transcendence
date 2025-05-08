@@ -18,7 +18,7 @@ const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
 		setLoading(true); 
 		try {
 			//need to check with Tim that this is the correct place where to change the username
-			// await axios.put(`${API_URL}/api/users/${userId}/name`, {username: newUsername}); //product version
+			await axios.put(`${API_URL}/${userId}`, {username: newUsername}); //product version
 			setMessage("Username changed succesfully");
 			setMessageType('success')
 			onSave();

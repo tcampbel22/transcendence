@@ -1,0 +1,53 @@
+### Database Population ###
+
+
+###
+#Add user1
+POST http://localhost:3002/api/register
+Content-Type: application/json
+
+{
+  "username": "alice42",
+  "email": "alice@example.com",
+  "password": "Password123",
+  "picture": "alice.jpg"
+}
+
+###
+#Add user2
+POST http://localhost:3002/api/register
+Content-Type: application/json
+
+{
+  "username": "bob",
+  "email": "bob@example.com",
+  "password": "Password123",
+  "picture": "bob.jpg"
+}
+
+### Test G2: Create Game - Multiplayer
+POST http://localhost:3001/api/create-game
+Content-Type: application/json
+
+{
+  "player1Id": 1,
+  "player2Id": 2
+}
+
+### Add Friend Tests ###
+
+### Test 23: Add Friend - Success
+POST http://localhost:3002/api/1/friends
+Content-Type: application/json
+
+{
+  "friendUsername": "bob"
+}
+
+### Test 23: Add Friend - Success
+DELETE http://localhost:3002/api/1/delete-friend
+Content-Type: application/json
+
+{
+  "friendUsername": "bob"
+}
