@@ -30,11 +30,12 @@ const fastify = Fastify({
 fastify.register(cors, {
 	origin: ["http://localhost:5173"],
 	methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+	credentials: true,
 });
 
 fastify.register(multipart, {
 	limits: {
-	  fileSize: 5 * 1024 * 1024 // 5MB limit, maybe change later
+	  fileSize: 10 * 1024 * 1024 // 5MB limit, maybe change later
 	}
 });
 try {

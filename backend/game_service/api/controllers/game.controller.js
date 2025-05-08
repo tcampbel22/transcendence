@@ -52,7 +52,7 @@ export const gameController = {
 			const userGames = await gameService.getUserGames(userId);
 			return reply.code(200).send({
 				message: `User ${userId}'s games fetched successfully`,
-				userId,
+				id,
 				userGames,
 			});
 		} catch (err) {

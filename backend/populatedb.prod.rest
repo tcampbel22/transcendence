@@ -3,6 +3,8 @@
 # Populate DB with 10 users
 # Run these one by one to add users to the database
 
+
+###
 # User 1
 POST https://localhost:4433/users/register
 Content-Type: application/json
