@@ -5,4 +5,4 @@ export const userIdFromState = () => {
   	const userId = location.state;
 	
 	return userId;
-}
+};

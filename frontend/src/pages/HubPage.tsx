@@ -2,23 +2,27 @@ import React from "react"
 import { Link, useLocation } from "react-router-dom";
 import { userIdFromState } from "../hooks/userIdFromState";
 import { userNameFromState } from "../hooks/useNameFromState";
+import FriendsButton from "../components/friends/FriendsButton";
+import AddFriendButton from "../components/friends/AddFriendButton"
 
 
 const Hub = () => {
 	const location = useLocation();
   	const userInfo = location.state as { userId: number; username: string };
-    const userId = userIdFromState();
+    const userId = userIdFromState() as number;
 	console.log("userid is:", userId);
 	const baseCardClass = "w-60 h-72 bg-cover bg-center rounded-lg shadow-lg p-1 transform hover:scale-110 transition-all duration-300 ease-in-out relative hover:shadow-xl hover:rotate-1";
     
 	
 	
 	return (
-        <div style={{
-                    backgroundImage: 'url("/images/epic_background.png")',
-                }}
+        <div 
         >
          <h1 className="items-center text-white text-4xl font-bold animate-fade-in">Welcome</h1>
+        <div className="absolute top-5 right-10">
+                <AddFriendButton userId={userInfo.userId}/>
+                <FriendsButton userId={userInfo.userId}/>
+        </div>
             <div className="flex  min-h-screen sm:flex-row items-center justify-center gap-6 animate-slide-in">
 
                 <div    className={baseCardClass} //1v1

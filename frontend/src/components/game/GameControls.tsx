@@ -1,5 +1,5 @@
-import axios, { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
+import { useFriendslist } from "../../hooks/useFriendsList";
 
 type Friends = {
     id: number,
@@ -17,34 +17,10 @@ type GameControlProps = {
 
 
 const GameControls = ({userId, resetGame, setIsGameStarted, setOpponentUserId}: GameControlProps) => {
-    const API_URL = import.meta.env.VITE_API_USER;
-    const [opponent, setOpponent] = useState<'Friend' | null>(null);
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState<Friends | null>(null);
-    const [friendsList, setFriendsList] = useState<Friends[] | null>(null);
+    const friendsList = useFriendslist(userId);
 
-    useEffect (() => {
-        const getFriendsList = async () => {
-            try {
-                // MOCK DATA
-                const mockFriends: Friends[] = [
-                    { id: 1, username: "kissa", picture: null, status: "online" },
-                    { id: 2, username: "piisami", picture: null, status: "online" },
-                    { id: 2, username: "koira", picture: null, status: "online" },
-                ];
-                // const res = await axios.get(`${API_DEV}/api/${userId}/friends`); //get friends list
-                // setFriendsList(res.data); //set it for usage in the dropdown list
-                setFriendsList(mockFriends);
-
-            } catch (err) {
-				const error = err as AxiosError;
-                console.error("Error fetching friends:", error);
-                setFriendsList([]);
-            }
-        }
-        getFriendsList();
-    }, [userId]);
-	
     const handleClick = () => {
 		setIsGameStarted(true);
         resetGame();

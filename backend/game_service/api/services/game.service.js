@@ -9,11 +9,9 @@ export const gameService = {
 			console.log(p1Response.status);
 			if (p1Response.status !== 200)
 					throw new Error(`${p1Response.status}: Error retrieving player: ${p1Response.statusText}`);
-			if (player2Id) {
-				const p2Response = await axios.get(`http://user_service:3002/api/validate/${player2Id}`)
-				if (p2Response.status !== 200)
-					throw new Error(`${p2Response.status}: Error retrieving player: ${p2Response.statusText}`);
-			}
+			const p2Response = await axios.get(`http://user_service:3002/api/validate/${player2Id}`)
+			if (p2Response.status !== 200)
+				throw new Error(`${p2Response.status}: Error retrieving player: ${p2Response.statusText}`);
 			//Create default game row
 			const newGame = await prisma.game.create({
 				data: {
