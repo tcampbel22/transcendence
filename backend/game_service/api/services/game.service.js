@@ -1,17 +1,18 @@
 import { prisma } from "../../database/db.js";
 import axios from "axios";
+import { ErrorConflict, ErrorNotFound, ErrorCustom, ErrorUnAuthorized, ErrorBadRequest } from "@app/errors";
+
 
 export const gameService = {
 
 	async startGame(player1Id, player2Id) {
 		try {	
 			const p1Response = await axios.get(`http://user_service:3002/api/validate/${player1Id}`);
-			console.log(p1Response.status);
 			if (p1Response.status !== 200)
-					throw new Error(`${p1Response.status}: Error retrieving player: ${p1Response.statusText}`);
+					throw new ErrorCustom(`Error retrieving player`, p1Response.status);
 			const p2Response = await axios.get(`http://user_service:3002/api/validate/${player2Id}`)
 			if (p2Response.status !== 200)
-				throw new Error(`${p2Response.status}: Error retrieving player: ${p2Response.statusText}`);
+				throw new ErrorCustom(`Error retrieving player`, p2Response.status);
 			//Create default game row
 			const newGame = await prisma.game.create({
 				data: {
@@ -40,7 +41,7 @@ export const gameService = {
 				}
 			})
 			if (!game)
-				throw new Error(`Game ${id} not found`);
+				throw new ErrorNotFound(`Game ${id} not found`);
 			//Update game
 			const updatedGame = await prisma.game.update(
 			{
@@ -81,7 +82,7 @@ export const gameService = {
 	async getGameById(gameId) {
 		const game = await prisma.game.findUnique({ where: { id: parseInt(gameId) }})
 		if (!game)
-			throw new Error(`getGameById: gameId ${gameId} does not exist`);
+			throw new ErrorNotFound(`getGameById: gameId ${gameId} does not exist`);
 		return game;
 	},
     // Fetches all games a user has played in
@@ -96,7 +97,7 @@ export const gameService = {
 			orderBy: { createdAt: 'desc' },
 		});
 		if (!games || games.length === 0)
-			throw new Error(`getUserGames: user ${userId} does not have a game history`);
+			throw new ErrorNotFound(`getUserGames: user ${userId} does not have a game history`);
 		return games;
 
 	},

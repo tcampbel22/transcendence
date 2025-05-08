@@ -73,11 +73,14 @@ export const profileController = {
 			const data = await request.file();
 			if (!data)
 				throw new ErrorNotFound(`No file uploaded`);
+			console.log(data.filename)
 			const fileExtension = path.extname(data.filename).toLowerCase();
 			if (!['jpg', '.jpeg', '.png'].includes(fileExtension))
 				throw new ErrorUnAuthorized(`File should be jpg, jpeg or png`);
+			
 			const filename = `user_${id}_${Date.now()}${fileExtension}`;
-			const filepath = `/app/uploads/${filename}`;
+			const uploadDir = process.env.NODE_ENV === 'test' ? './uploads' : '/app/uploads';
+			const filepath = `${uploadDir}/${filename}`;
 			const pictureUrl = `/uploads/${filename}`;
 			
 			const pump = util.promisify(pipeline);
@@ -164,11 +167,8 @@ export const profileController = {
 	async getMatchHistory(request, reply) {
 		const { id } = request.params;
 		try {
-			const matchHistory = await profileService.getMatchHistory(parseInt(id));
-			return reply.code(200).send({
-				message: `User ${id}'s match history fetched successfully`,
-				matchHistory,
-			})
+			const matchHistoryData = await profileService.getMatchHistory(parseInt(id));
+			return reply.code(200).send(matchHistoryData);
 		} catch (err) {
 			logger.error(`Failed to fetch user ${id}'s match history: ${err.message}`);
 			request.log.error(err);

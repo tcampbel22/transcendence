@@ -15,9 +15,6 @@ describe("Backend Game API Tests", () => {
 		process.stdout.write("Failed to connect to db");
 		throw new Error("Failed to connect to the database");
 	}
-	// if (prisma.game.count({}) === 0)
-	// 	console.log("No users in db, calling populate db")
-	// 	await populate_users();
 	process.stdout.write("Connected to db");
 
 	app = Fastify();
@@ -79,4 +76,33 @@ describe("Backend Game API Tests", () => {
 	expect(response.status).toBe(201);
 	});
 
+	it("should return 200 with an array of a users game", async () => {
+		await prisma.game.update({
+			where: { id: gameId },
+			data: {
+				player1Id: 1,
+				player2Id: 2,
+				player1Score: 10,
+				player2Score: 1,
+				winnerId: 1,
+			},
+		})
+		await new Promise(resolve => setTimeout(resolve, 100));
+		const response = await supertest(app.server)
+			.get(`/api/user/1`);
+		expect(response.status).toBe(200)
+		 // Check response structure
+		expect(response.body).toHaveProperty('userGames');
+		expect(Array.isArray(response.body.userGames)).toBeTruthy();
+		
+		// Check that our updated game is in the results
+		expect(response.body.userGames.length).toBeGreaterThan(0);
+		
+		// Find our specific game in the results
+		const foundGame = response.body.userGames.find(game => game.id === gameId);
+		expect(foundGame).toBeDefined();
+		expect(foundGame.player1Score).toBe(10);
+		expect(foundGame.player2Score).toBe(1);
+		expect(foundGame.winnerId).toBe(1);
+	});
 });

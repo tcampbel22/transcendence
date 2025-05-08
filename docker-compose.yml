@@ -150,7 +150,7 @@ services:
       - ./backend/libs:/libs
       - ./backend/game_service/logs:/app/logs
     env_file:
-      - .env
+      - ./backend/game_service/.env
     networks:
       - app_network
     restart: unless-stopped
@@ -179,7 +179,7 @@ services:
       - ./backend/libs:/libs
       - ./backend/user_service/logs:/app/logs
     env_file:
-      - .env
+      - ./backend/user_service/.env
     networks:
       - app_network
     restart: unless-stopped

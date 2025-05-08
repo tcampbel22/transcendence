@@ -20,11 +20,11 @@ const Profile = () => {
 		const getUserData = async () => {
 			try {
 				// const gameData = await axios.get(`${API_URL}/user/${userId}/stats`); //product environment
-				const gameData = await axios.get(`${API_DEV_URL}/user/${userId}/stats`); //dev environment
-				// setVictories(gameData.data.wins) //these are the actual ones for the game testing purposes commented out
-				// setLoses(gameData.data.losses)
-				setVictories(5)
-				setLoses(2)
+				const gameData = await axios.get(`${API_DEV_URL}/${userId}/stats`); //dev environment
+				setVictories(gameData.data.wins) //these are the actual ones for the game testing purposes commented out
+				setLoses(gameData.data.losses)
+				// setVictories(5)
+				// setLoses(2)
 			} catch (error) {
 				console.error('error getting data:', error)
 			}

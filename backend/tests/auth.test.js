@@ -1,10 +1,15 @@
 import Fastify from "fastify";
+import multipart from "@fastify/multipart";
 import loginRoutes from "../user_service/api/routes/login.routes.js";
 import registerRoutes from "../user_service/api/routes/register.routes.js";
 import profileRoutes from "../user_service/api/routes/profile.routes.js";
 import supertest from "supertest";
 import { prisma, testConnection } from "../user_service/database/db.js";
 import { populate_users, add_user } from "./populate_db.js";
+import nock from "nock";
+import path from "path";
+import { fileURLToPath } from 'url';
+
 
 describe("Backend User API Tests", () => {
 	let app;
@@ -18,6 +23,7 @@ describe("Backend User API Tests", () => {
 		throw new Error("Failed to connect to the database");
 	}
 	app = Fastify();
+	app.register(multipart);
 	app.register(loginRoutes);
 	app.register(registerRoutes);
 	app.register(profileRoutes);
@@ -129,4 +135,135 @@ describe("Backend User API Tests", () => {
 		expect(response.status).toBe(404);
 	});
 
+	// Update user stats
+	it("should return 201 and update the users stats", async () => {
+		const response = await supertest(app.server)
+			.patch(`/api/${userId}/update-stats`)
+			.send({ isWinner: true })
+		expect(response.status).toBe(201)
+	});
+
+	// add friend and then try to add them again
+	it("Adds a friend and then attempt to add them again", async () => {
+		const response = await supertest(app.server)
+			.post(`/api/${userId}/friends`)
+			.send({ friendUsername: "friend" });
+		expect(response.status).toBe(201)
+		const response2 = await supertest(app.server)
+			.post(`/api/${userId}/friends`)
+			.send({ friendUsername: "friend" });
+		expect(response2.status).toBe(401)
+	});
+
+	// add friend and then delete them
+	it("Should add a friend adn then delete them", async () => {
+		// First add a friend
+		const response = await supertest(app.server)
+			.post(`/api/${userId}/friends`)
+			.send({ friendUsername: "friend" });
+		expect(response.status).toBe(201);
+		// Delete the friend
+		const response2 = await supertest(app.server)
+			.delete(`/api/${userId}/delete-friend`)
+			.send({ friendUsername: "friend" });
+		expect(response2.status).toBe(201);
+	});
+
+	// delete friend that is not a friend
+	it("Should return 404 as there is no friendship", async () => {
+		const response = await supertest(app.server)
+			.delete(`/api/${userId}/delete-friend`)
+			.send({ friendUsername: "friend" });
+		expect(response.status).toBe(404)
+	});
+
+	// delete friend that doesn't exist
+	it("Should return 404 as friend does not exist", async () => {
+		const response = await supertest(app.server)
+			.post(`/api/${userId}/friends`)
+			.send({ friendUsername: "fake_friend" });
+		expect(response.status).toBe(404)
+	});
+
+	// delete friend with current users username
+	it("Should return 409 as user cannot delete themselves", async () => {
+		const response = await supertest(app.server)
+			.post(`/api/${userId}/friends`)
+			.send({ friendUsername: "fake" });
+		expect(response.status).toBe(409)
+	});
+
+	// Get friends list
+	it("Adds a friend and returns a list of all friends", async () => {
+		// First add a friend
+		const response = await supertest(app.server)
+			.post(`/api/${userId}/friends`)
+			.send({ friendUsername: "friend" });
+		expect(response.status).toBe(201);
+			// Get users friend list
+		const response2 = await supertest(app.server)
+			.get(`/api/${userId}/friends`)
+		expect(response2.status).toBe(200)
+		// Get friends friend list
+		const response3 = await supertest(app.server)
+			.get(`/api/${friendId}/friends`)
+		expect(response3.status).toBe(200)
+	});
+	// Get match history
+	it("Returns a users match history", async () => {
+		const mockUserGamesResponse = {
+			message: `User ${userId}'s games fetched successfully`,
+			id: userId,
+			userGames: [
+			  {
+				id: 103,
+				player1Id: userId,
+				player2Id: 57,
+				winnerId: userId,
+				player1Score: 10,
+				player2Score: 7,
+				createdAt: "2025-05-06T14:23:15Z"
+			  },
+			  {
+				id: 98,
+				player1Id: 33,
+				player2Id: userId,
+				winnerId: 33,
+				player1Score: 10,
+				player2Score: 8,
+				createdAt: "2025-05-05T19:45:22Z"
+			  },
+			  {
+				id: 87,
+				player1Id: userId,
+				player2Id: 19,
+				winnerId: userId,
+				player1Score: 10,
+				player2Score: 4,
+				createdAt: "2025-05-03T08:12:37Z"
+			  } 
+			]
+		  };
+		nock(`http://game_service:3001`)
+			.get(`/api/user/${userId}`)
+			.reply(200, mockUserGamesResponse.userGames)
+		const response = await supertest(app.server)
+		  .get(`/api/${userId}/match-history`)
+		expect(response.status).toBe(200);
+	});
+
+	// Get empty match history
+	it("Returns a users match history", async () => {
+		const mockUserGamesResponse = {
+			message: `User ${userId}'s games fetched successfully`,
+			id: userId,
+			userGames: []
+		};
+		nock(`http://game_service:3001`)
+			.get(`/api/user/${userId}`)
+			.reply(200, mockUserGamesResponse.userGames)
+		const response = await supertest(app.server)
+		.get(`/api/${userId}/match-history`)
+		expect(response.status).toBe(200);
+	});
 });
