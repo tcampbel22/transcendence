@@ -30,7 +30,7 @@ const Register = () => {
 		return response.data
 	}
 
-	const uploadProfileImage = async (userId: string) => {
+	const uploadProfileImage = async (userId: number) => {
 		// Don't proceed if no image selected
 		if (!image) return;
 		
@@ -40,15 +40,15 @@ const Register = () => {
 		
 		try {
 			// Send FormData, not the raw image
-			const response = await axios.post(
-				`${API_URL}/users/${userId}/picture`, 
+			const response = await axios.put(
+				`${API_URL}/${userId}/picture`,
 				formData,
 				{
 					headers: {
 						'Content-Type': 'multipart/form-data' // Important!
 					}
-				}
-			);
+				},
+		);
 			console.log("Profile image uploaded:", response.data);
 		} catch (error: any) {
 			console.error("Image upload failed:", error.response?.data || error.message);
@@ -59,8 +59,8 @@ const Register = () => {
 		setError('')
 		
 		try {
-			const userId = await registerUser()
-			
+			const { id: userId } = await registerUser();
+			console.log(userId);
 			if (image) {
 				uploadProfileImage(userId)
 			}

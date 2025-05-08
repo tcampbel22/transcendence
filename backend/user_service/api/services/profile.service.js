@@ -195,7 +195,75 @@ export const profileService = {
 		}
     },
 
-
+    // async getMatchHistory(id) {
+    //     // Fetch the user's basic information
+    //     const user = await prisma.user.findUnique({
+    //         where: { id: id },
+    //         select: {
+    //             id: true,
+    //             username: true,
+    //             picture: true,
+    //         },
+    //     });
+    //     if (!user)
+    //         throw new ErrorNotFound(`getMatchHistory: User ${id} cannot be found`);
+    
+    //     try {
+    //         // Fetch match history from the game service
+    //         const response = await axios.get(`http://game_service:3001/api/user/${id}`);
+    
+    //         if (response.status !== 200)
+    //             throw new ErrorCustom(`Error retrieving match history ${response.statusText}`, response.status);
+    
+    //         // Validate match history response
+    //         if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
+    //             return {
+    //                 ...user,
+    //                 matchHistory: [],
+    //                 message: `No match history found for this user ${id}`,
+    //             };
+    //         }
+    
+    //         // Fetch all opponent information in one query
+    //         const opponentIds = [...new Set(response.data.flatMap(game => [game.player1Id, game.player2Id]))];
+    //         const opponents = await prisma.user.findMany({
+    //             where: { id: { in: opponentIds.map(id => parseInt(id)) } },
+    //             select: {
+    //                 id: true,
+    //                 username: true,
+    //                 picture: true,
+    //             },
+    //         });
+    
+    //         const opponentMap = Object.fromEntries(opponents.map(opp => [opp.id, opp]));
+    
+    //         // Process and format the match history
+    //         const matchHistory = response.data.map((game) => {
+    //             const isPlayer1 = game.player1Id === id;
+    //             const oppId = isPlayer1 ? game.player2Id : game.player1Id;
+    //             const opp = opponentMap[oppId];
+    
+    //             if (!opp) {
+    //                 throw new ErrorNotFound(`Opponent with ID ${oppId} cannot be found`);
+    //             }
+    
+    //             return {
+    //                 gameId: game.id,
+    //                 date: game.createdAt,
+    //                 score: `${game.player1Score} - ${game.player2Score}`,
+    //                 result: game.winnerId === id ? "Winner" : "Loser",
+    //                 opponentId: opp.id,
+    //                 opponentName: opp.username,
+    //                 opponentPicture: opp.picture,
+    //             };
+    //         });
+    
+    //         return { ...user, matchHistory };
+    //     } catch (err) {
+    //         logger.error(`getMatchHistory: Failed to retrieve match history for user ${id}. Error: ${err.message}`);
+    //         throw new ErrorCustom(err.message, err.response?.status || 500);
+    //     }
+    // },
     // Fetches a user's match history
     async getMatchHistory(id) {
         // Fetch the user's basic information
@@ -213,13 +281,13 @@ export const profileService = {
         try {
             // Fetch match history from the game service
             const response = await axios.get(
-                `http://game_service:3001/api/user/${id}`
+                `http://localhost:3001/api/user/${id}`
             );
             if (response.status !== 200)
                 throw new ErrorCustom(`Error retrieving match history ${response.statusText}`, response.status);
 
             // Handle empty match history
-            if (!response.data || response.data.length === 0) {
+            if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
                 return {
                     ...user,
                     matchHistory: [],

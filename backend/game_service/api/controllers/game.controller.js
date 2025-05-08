@@ -50,7 +50,7 @@ export const gameController = {
 		try {
 			const { id: userId } = request.params;
 			const userGames = await gameService.getUserGames(userId);
-			reply.code(200).send({
+			return reply.code(200).send({
 				message: `User ${userId}'s games fetched successfully`,
 				userId,
 				userGames,

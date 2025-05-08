@@ -65,9 +65,9 @@ export const updateUsernameSchema = {
 	params: idParamsSchema,
 	body: {
 		type: 'object',
-		required: ['username'],
+		required: ['newUsername'],
 		properties: {
-			username: {
+			newUsername: {
 				type: 'string',
 				minLength: 3,
             	maxLength: 15

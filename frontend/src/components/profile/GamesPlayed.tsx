@@ -22,6 +22,7 @@ const GamesPlayed = ({userId}: GameStatsInfo) => {
 		const getMatchHistory = async () => {
 			try {
 				const history = await axios.get(`${API_URL}/${userId}/match-history`);
+				console.log(history);
 				setGames(history.data);
 			} catch (err) {
 				const error = err as AxiosError;
@@ -42,7 +43,8 @@ const GamesPlayed = ({userId}: GameStatsInfo) => {
 				<p>Outcome</p>
 				<p>Date</p>
   			</div>
-	{games.map((game, index) => (
+			  {games.length > 0 ? (
+  games.map((game, index) => (
     <div
       key={index}
       className="grid grid-cols-5 border-b py-2 text-center text-black last:border-b-0"
@@ -55,7 +57,12 @@ const GamesPlayed = ({userId}: GameStatsInfo) => {
       </p>
       <p>{new Date(game.played).toLocaleDateString()}</p>
     </div>
-  ))}
+  ))
+) : (
+  <div className="text-center text-gray-500 py-4">
+    {"No match history found"}
+  </div>
+)}
         </div>
     )
 }

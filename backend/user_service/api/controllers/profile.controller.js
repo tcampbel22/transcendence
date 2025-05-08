@@ -69,6 +69,7 @@ export const profileController = {
 	async updatePicture(request, reply) {
 		const { id } = request.params;
 		// const { newPicture } = request.body;
+		
 		try {
 			const data = await request.file();
 			if (!data)
@@ -77,7 +78,7 @@ export const profileController = {
 			if (!['jpg', '.jpeg', '.png'].includes(fileExtension))
 				throw new ErrorUnAuthorized(`File should be jpg, jpeg or png`);
 			const filename = `user_${id}_${Date.now()}${fileExtension}`;
-			const filepath = `/app/uploads/${filename}`;
+			const filepath = `./uploads/${filename}`;
 			const pictureUrl = `/uploads/${filename}`;
 			
 			const pump = util.promisify(pipeline);
@@ -95,6 +96,7 @@ export const profileController = {
 			return handleError(err, reply, `Failed to update user${id}'s profile picture`);
 		}
 	},
+
 	async updatePassword(request, reply) {
 		const { id } = request.params;
 		const { newPassword } = request.body;
