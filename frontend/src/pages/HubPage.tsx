@@ -58,13 +58,13 @@ const Hub = () => {
                     </Link>
                 </div>
                 
-                <div className={baseCardClass} //settings/logout
+                <div className={baseCardClass} //logout
                         style={{
                             backgroundImage: `url("/images/logout.png")`,
                         }}
                     >
                     <Link 
-                        to="/" 
+                        to="/logout" 
 						state={userId}
                         className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">    
                     </Link>

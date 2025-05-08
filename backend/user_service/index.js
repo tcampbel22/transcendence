@@ -27,6 +27,7 @@ const fastify = Fastify({
 fastify.register(cors, {
 	origin: ["http://localhost:5173"],
 	methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+	credentials: true,
 });
 
 fastify.register(multipart, {
