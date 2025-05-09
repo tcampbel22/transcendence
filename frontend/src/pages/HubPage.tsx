@@ -56,7 +56,7 @@ const Hub = () => {
                     >
                     <Link 
                         to="/profile"
-						state={userId}
+						state={userInfo.userId}
                         className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">
 						   
                     </Link>

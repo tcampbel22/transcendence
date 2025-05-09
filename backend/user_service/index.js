@@ -7,7 +7,10 @@ import logger from "@eleekku/logger"
 import cors from '@fastify/cors';
 import fastifyCookie from "@fastify/cookie";
 import fs from "fs";
-import multipart from "@fastify/multipart";
+import multipart from "@fastify/multipart"
+import path from "path";
+import fastifyStatic from '@fastify/static'; // for static file setup
+
 
 const SSL_CERT_PATH = "./ssl/cert.pem";
 const SSL_KEY_PATH = "./ssl/key.pem";
@@ -42,6 +45,10 @@ try {
 	fastify.register(fastifyCookie, {
 		secret: process.env.JWT_SECRET }, // for cookies signature
 	)
+	fastify.register(fastifyStatic, {
+		root: path.join(process.cwd(), "uploads"), // Adjust this path to your uploads directory
+		prefix: "/uploads/", // The URL path prefix for your images
+	});
 } catch (err) {
 	logger.error(err);
 	fastify.log.error(err);

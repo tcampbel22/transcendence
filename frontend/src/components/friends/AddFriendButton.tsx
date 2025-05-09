@@ -22,8 +22,7 @@ const AddFriendButton = ({userId} : Id) => {
     const handleAddFriend = async () => {
         try {
             const payload = {
-                id: userId,
-                friendsName: friendsName,
+                friendUsername: friendsName,
             }
             const res = await axios.post(`${API_URL}/${userId}/friends`, payload);
             setMessage("Friend added successfully!");
