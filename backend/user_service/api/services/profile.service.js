@@ -358,12 +358,12 @@ export const profileService = {
 			select: {
 				friends: {
 					select: {
+                        isOnline: true,
 						friend: {
 							select: {
 								id: true,
 								username: true,
 								picture: true,
-								isOnline: true,
 							},
 						},
 					},
