@@ -68,19 +68,18 @@ export const profileController = {
 	},
 	async updatePicture(request, reply) {
 		const { id } = request.params;
-		// const { newPicture } = request.body;
 		
 		try {
 			const data = await request.file();
 			if (!data)
 				throw new ErrorNotFound(`No file uploaded`);
-			console.log(data.filename)
 			const fileExtension = path.extname(data.filename).toLowerCase();
-			if (!['jpg', '.jpeg', '.png'].includes(fileExtension))
+			if (!['.jpg', '.jpeg', '.png'].includes(fileExtension))
 				throw new ErrorUnAuthorized(`File should be jpg, jpeg or png`);
 			
 			const filename = `user_${id}_${Date.now()}${fileExtension}`;
-			const uploadDir = process.env.NODE_ENV === 'test' ? './uploads' : '/app/uploads';
+
+			const uploadDir = process.env.NODE_ENV === 'production' ? '/app/uploads' : './uploads';
 			const filepath = `${uploadDir}/${filename}`;
 			const pictureUrl = `/uploads/${filename}`;
 			
@@ -96,7 +95,7 @@ export const profileController = {
 			});
 		} catch (err) {
 			request.log.error(err);
-			return handleError(err, reply, `Failed to update user${id}'s profile picture`);
+			return handleError(err, reply, `Failed to update user ${id}'s profile picture`);
 		}
 	},
 

@@ -28,18 +28,18 @@ POST http://localhost:3001/api/create-game
 Content-Type: application/json
 
 {
-  "player1Id": 3848,
-  "player2Id": 3849
+  "player1Id": 1,
+  "player2Id": 27
 }
 
 ### Test G2: Finish Game - Multiplayer
-PATCH http://localhost:3001/api/130/finish-game
+PATCH http://localhost:3001/api/1/finish-game
 Content-Type: application/json
 
 {
   "p1score": 3848,
   "p2score": 1,
-  "winnerId": 3848
+  "winnerId": 27
 }
 
 ### Add Friend Tests ###
@@ -65,11 +65,11 @@ GET http://localhost:3002/api/3849
 
 ### Get user stats
 
-GET http://localhost:3002/api/4320/stats
+GET http://localhost:3002/api/27/stats
 
 ### Update user stats
 
-PATCH http://localhost:3002/api/4320/update-stats
+PATCH http://localhost:3002/api/1/update-stats
 Content-Type: application/json
 
 {
@@ -91,7 +91,7 @@ GET http://localhost:3001/api/user/2962
 
 ### Get user match history
 
-GET http://localhost:3002/api/3181/match-history
+GET http://localhost:3002/api/27/match-history
 
 
 

@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { error } from 'console';
 
 const Register = () => {
 	const API_URL = import.meta.env.VITE_API_USER;
@@ -36,8 +37,7 @@ const Register = () => {
 		
 		// Create proper FormData
 		const formData = new FormData();
-		formData.append("file", image);
-		
+		formData.append("file", image, image.name);
 		try {
 			// Send FormData, not the raw image
 			const response = await axios.put(
@@ -47,30 +47,36 @@ const Register = () => {
 					headers: {
 						'Content-Type': 'multipart/form-data' // Important!
 					}
-				},
-		);
+				},	
+			);
 			console.log("Profile image uploaded:", response.data);
 		} catch (error: any) {
 			console.error("Image upload failed:", error.response?.data || error.message);
+			throw new Error(error.response?.data?.message || "Image upload failed");
 		}
 	}
+
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		setError('')
-		
+		let userId : number;
 		try {
-			const { id: userId } = await registerUser();
-			console.log(userId);
+			userId = await registerUser();
 			if (image) {
-				uploadProfileImage(userId)
+				try {
+					await uploadProfileImage(userId)
+				} catch (error: any) {
+					await axios.delete((`${API_URL}/${userId}/delete-user`));
+					setError(error.response?.data?.message || 'Failed to upload image, please try again')
+					return;
+				}
 			}
-		
 			setRegistered(true);
 			setTimeout(() => {
 			  navigate('/');
 			}, 1500);
 		} catch (error: any) {
-			console.error("Error:", error.response?.data || error.message);
+			// console.error("Error:", error.response?.data || error.message);
 			setError(error.response?.data?.message || 'Registration failed')
 		}
 	}
@@ -106,13 +112,13 @@ const Register = () => {
 						onChange={(e) => setPassword(e.target.value)}
 				/>
 				{preview && (
-					<div className="w-24 h-24 rounded-full overflow-hidden border-2 border-blue-500 shadow-md">
-						<img
-							src={preview}
-							alt="Profile Preview"
-							className="w-full h-full object-cover"
-						/>
-					</div>
+						<div className="w-24 h-24 rounded-full overflow-hidden border-2 border-blue-500 shadow-md">
+							<img
+								src={preview}
+								alt="Profile Preview"
+								className="w-full h-full object-cover"
+							/>
+						</div>
 				)}
 				<input 	type="file"
 						accept='image/*'
