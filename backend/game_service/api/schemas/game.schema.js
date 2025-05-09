@@ -74,7 +74,7 @@ export const getUserGamesSchema = {
 	response: {
 		200: {
 			type: 'object',
-			required: ['userId', 'userGames'],
+			required: ['id', 'userGames'],
 			properties: {
 				userId: { type: 'integer', minimum: 1 },
 				userGames: { 

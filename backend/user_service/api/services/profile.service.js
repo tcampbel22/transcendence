@@ -287,7 +287,7 @@ export const profileService = {
                 throw new ErrorCustom(`Error retrieving match history ${response.statusText}`, response.status);
 
             // Handle empty match history
-            if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
+            if (!response.data.userGames || response.data.userGames.length === 0) {
                 return {
                     ...user,
                     matchHistory: [],
@@ -297,7 +297,7 @@ export const profileService = {
 
             // Process and format the match history
             const matchHistory = await Promise.all(
-                response.data.map(async (game) => {
+                response.data.userGames.map(async (game) => {
                     if (
                         !game.id ||
                         !game.createdAt ||
@@ -358,12 +358,12 @@ export const profileService = {
 			select: {
 				friends: {
 					select: {
+						isOnline: true,
 						friend: {
 							select: {
 								id: true,
 								username: true,
 								picture: true,
-								isOnline: true,
 							},
 						},
 					},

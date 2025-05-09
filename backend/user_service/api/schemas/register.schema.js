@@ -20,13 +20,7 @@ export const registerSchema = {
             email: { 
                 type: 'string',
                 format: 'email'
-            },
-			picture: {
-				type: 'string',
-				minLength: 5,
-				maxLength: 100,
-				format: 'binary'
-			}
+            }
         },
         additionalProperties: false
     },
