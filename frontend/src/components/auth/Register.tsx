@@ -27,7 +27,7 @@ const Register = () => {
 		};
 
 		const response = await axios.post(`${API_URL}/register`, payload) //product
-		return response.data
+		return response.data.id
 	}
 
 	const uploadProfileImage = async (userId: string) => {
@@ -36,12 +36,13 @@ const Register = () => {
 		
 		// Create proper FormData
 		const formData = new FormData();
-		formData.append("picture", image); // Change field name to 'picture' to match backend
+		formData.append("file", image);
 		
 		try {
 			// Send FormData, not the raw image
-			const response = await axios.post(
-				`${API_URL}/users/${userId}/picture`, 
+			console.log(`${API_URL}`)
+			const response = await axios.put(
+				`${API_URL}/${userId}/picture`, 
 				formData,
 				{
 					headers: {
