@@ -15,8 +15,8 @@ export const loginController = {
 
 			reply.setCookie("token", login.token, {
 				httpOnly: true,
-				secure: true,
-				sameSite: "strict",
+				secure: process.env.NODE_ENV === "production",
+				sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax",
 				maxAge: 3600,
 			});
 			logger.info(`User logged in: ${login.user.username}, ID: ${login.user.id}`);
@@ -33,6 +33,7 @@ export const loginController = {
 
 	async logoutUser(request, reply) {
 		try {
+			logger.info("Cookies: ", request.cookies);
 			const token = request.cookies.token;
 			// Decode the token to get user information
 			const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
