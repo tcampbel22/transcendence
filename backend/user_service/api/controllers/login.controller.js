@@ -33,7 +33,6 @@ export const loginController = {
 
 	async logoutUser(request, reply) {
 		try {
-			logger.info("Cookies: ", request.cookies);
 			const token = request.cookies.token;
 			// Decode the token to get user information
 			const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
