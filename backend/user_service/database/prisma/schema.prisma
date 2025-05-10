@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output = "../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Users Table - Stores user info
+model User {
+  id       Int      @id @default(autoincrement())
+  username String   @unique
+  email    String
+  password String
+  picture  String   @default("uploads/default.png") // Enforce PNG/JPG in validation
+
+  // Relations
+  friends        Friend[]      @relation("UserFriends") //other users that are friends with the current user (1 to many)
+  friendOf       Friend[]      @relation("FriendOf") //users where the current user is friends with (1 to many)
+  stats          UserStats?     // relation to the current users stats table (1 to 1)
+}
+
+// User Stats Table - Tracks overall performance
+model UserStats {
+  id            Int   @id @default(autoincrement())
+  userId        Int   @unique
+  wins          Int   @default(0)
+  losses        Int   @default(0)
+  matchesPlayed Int   @default(0)
+
+  // Relation
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Friends Table - Tracks user friendships
+model Friend {
+  id        Int  @id @default(autoincrement())
+  userId    Int
+  friendId  Int
+  isOnline  Boolean @default(false)
+
+  // Relations
+  user   User @relation("UserFriends", fields: [userId], references: [id], onDelete: Cascade)
+  friend User @relation("FriendOf", fields: [friendId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, friendId])
+}

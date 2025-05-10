@@ -1,30 +1,122 @@
 services:
-  # setup:
-  #   profiles:
-  #     - setup
-  #   build:
-  #     context: backend/setup
-  #     args:
-  #       ELASTIC_VERSION: ${ELASTIC_VERSION}
-  #   init: true
-  #   volumes:
-  #     - ./backend/setup/entrypoint.sh:/entrypoint.sh:ro,Z
-  #     - ./backend/setup/lib.sh:/lib.sh:ro,Z
-  #     - ./backend/setup/roles:/roles:ro,Z
-  #   container_name: setup
-  #   environment:
-  #     ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
-  #     LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
-  #     KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
-  #     MONITORING_INTERNAL_PASSWORD: ${MONITORING_INTERNAL_PASSWORD:-}
-  #     METRICBEAT_INTERNAL_PASSWORD: ${METRICBEAT_INTERNAL_PASSWORD:-}
-  #     FILEBEAT_INTERNAL_PASSWORD: ${FILEBEAT_INTERNAL_PASSWORD:-}
-  #     HEARTBEAT_INTERNAL_PASSWORD: ${HEARTBEAT_INTERNAL_PASSWORD:-}
-  #     BEATS_SYSTEM_PASSWORD: ${BEATS_SYSTEM_PASSWORD:-}
-  #   networks:
-  #     - app_network
-  #   depends_on:
-  #     - elasticsearch
+  setup:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+      - ./backend/setup:/usr/local/bin/setup
+    user: "0"
+    environment:
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - KIBANA_PASSWORD=${KIBANA_PASSWORD}
+    command: ["/usr/local/bin/setup/setup-elk.sh"]
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f config/certs/es01/es01.crt ]"]
+      interval: 1s
+      timeout: 5s
+      retries: 120
+    networks:
+      - app_network
+
+  es01:
+    depends_on:
+      setup:
+        condition: service_healthy
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    container_name: elasticsearch
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+      - esdata01:/usr/share/elasticsearch/data
+    ports:
+      - ${ES_PORT}:9200
+    environment:
+      - node.name=es01
+      - cluster.name=${CLUSTER_NAME}
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=certs/es01/es01.key
+      - xpack.security.http.ssl.certificate=certs/es01/es01.crt
+      - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.key=certs/es01/es01.key
+      - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
+      - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.license.self_generated.type=${LICENSE}
+      - xpack.ml.use_auto_machine_memory_percent=true
+    mem_limit: 1g
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+    networks:
+      - app_network
+
+  kibana:
+    depends_on:
+      es01:
+        condition: service_healthy
+    image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
+    container_name: kibana
+    volumes:
+      - certs:/usr/share/kibana/config/certs
+      - kibanadata:/usr/share/kibana/data
+    ports:
+      - ${KIBANA_PORT}:5601
+    environment:
+      - SERVERNAME=kibana
+      - ELASTICSEARCH_HOSTS=https://es01:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+    networks:
+      - app_network
+
+  logstash:
+    depends_on:
+      es01:
+        condition: service_healthy
+    image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
+    container_name: logstash
+    user: root
+    volumes:
+      - certs:/usr/share/logstash/config/certs
+      - ./backend/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
+      - ./backend/logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
+      - ./backend/nginx/log:/var/log/nginx:ro
+      - ./backend/user_service/logs:/var/log/user_service:ro
+    ports:
+      - 5044:5044
+    environment:
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s -I http://localhost:9600 | grep -q 'HTTP/1.1 200 OK'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+    mem_limit: 1g
+    networks:
+      - app_network
 
   nginx:
     build:
@@ -34,89 +126,87 @@ services:
       - "4433:4433"
       - "8080:8080"
     depends_on:
-      - nodejs
+      - game_service
     container_name: nginx
+    volumes:
+      - ./backend/nginx/log:/var/log/nginx
+      - ./backend/user_service/uploads:/app/uploads:ro
+    networks:
+      - app_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: unless-stopped
+
+  game_service:
+    build:
+      context: ./backend/game_service
+      dockerfile: Dockerfile
+    container_name: game_service
+    volumes:
+      - ./backend/game_service/database/data:/app/database/data
+      - ./backend/libs:/libs
+      - ./backend/game_service/logs:/app/logs
+    env_file:
+      - ./backend/game_service/.env
     networks:
       - app_network
     restart: unless-stopped
 
-  nodejs:
+  file_service:
     build:
-      context: ./backend/fastify
+      context: ./backend/file_service
       dockerfile: Dockerfile
-    container_name: nodejs
+    container_name: file_service
+    volumes:
+      - ./backend/libs:/libs
+      - ./backend/file_service/logs:/app/logs
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  user_service:
+    build:
+      context: ./backend/user_service
+      dockerfile: Dockerfile
+    container_name: user_service
+    volumes:
+      - ./backend/user_service/uploads:/app/uploads
+      - ./backend/user_service/database/data:/app/database/data
+      - ./backend/libs/error_lib:/app/node_modules/@app/errors
+      - ./backend/libs:/libs
+      - ./backend/user_service/logs:/app/logs
+    env_file:
+      - ./backend/user_service/.env
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  googlesignin:
+    build:
+      context: backend/googleAuth
+      dockerfile: Dockerfile
+    depends_on:
+      - game_service
+    container_name: GoogleSignIn
     volumes:
       - ./backend/fastify/database/data:/app/database/data
     env_file:
-        - backend/fastify/.env
+      - .env
     networks:
       - app_network
     restart: unless-stopped
-
-  # elasticsearch:
-  #   build:
-  #     context: backend/elasticsearch
-  #     args:
-  #       ELASTIC_VERSION: ${ELASTIC_VERSION}
-  #   volumes:
-  #     - ./backend/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
-  #     - elasticsearch:/usr/share/elasticsearch/data:Z
-  #   container_name: elasticsearch
-  #   environment:
-  #     node.name: elasticsearch
-  #     ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
-  #     discovery.type: single-node
-  #   ports:
-  #     - "9200:9200"
-  #     - "9300:9300"
-  #   networks:
-  #     - app_network
-  #   restart: unless-stopped
-
-  # logstash:
-  #   build:
-  #     context: backend/logstash
-  #     args:
-  #       ELASTIC_VERSION: ${ELASTIC_VERSION}
-  #   volumes:
-  #     - ./backend/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
-  #     - ./backend/logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
-  #   container_name: logstash
-  #   ports:
-  #     - "5044:5044"
-  #     - "50000:50000/tcp"
-  #     - "50000:50000/udp"
-  #     - "9600:9600"
-  #   environment:
-  #     LS_JAVA_OPTS: "-Xms256m -Xmx256m"
-  #     LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
-  #   networks:
-  #     - app_network
-  #   depends_on:
-  #     - elasticsearch
-  #   restart: unless-stopped
-
-  # kibana:
-  #   build:
-  #     context: backend/kibana
-  #     args:
-  #       ELASTIC_VERSION: ${ELASTIC_VERSION}
-  #   volumes:
-  #     - ./backend/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
-  #   container_name: kibana
-  #   ports:
-  #     - "5601:5601"
-  #   environment:
-  #     KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
-  #   networks:
-  #     - app_network
-  #   depends_on:
-  #     - elasticsearch
-  #   restart: unless-stopped
 
 networks:
   app_network:
     driver: bridge
 
-#volumes:
-#  elasticsearch:
+volumes:
+  certs:
+    driver: local
+  esdata01:
+    driver: local
+  kibanadata:
+    driver: local

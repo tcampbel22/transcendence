@@ -1,0 +1,6 @@
+{
+	"name": "@app/errors",
+	"version": "1.0.0",
+	"main": "error.js",
+	"type": "module"
+  }
