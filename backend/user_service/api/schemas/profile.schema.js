@@ -1,5 +1,24 @@
 import { errorResponseSchema, idParamsSchema } from "./templates.schema.js";
 
+
+export const validateUserSchema = {
+	params: idParamsSchema,
+	additionalProperties: false,
+	response: {
+		200: {
+			type: 'object',
+			required: ['id'],
+			properties: {
+				id: { type: 'integer' }
+			}
+		},
+		400: errorResponseSchema,
+		401: errorResponseSchema,
+		404: errorResponseSchema,
+		500: errorResponseSchema,
+	}
+};
+
 export const getUserProfileSchema = {
 	params: idParamsSchema,
 	response: {
@@ -20,13 +39,35 @@ export const getUserProfileSchema = {
 	}
 };
 
+export const getUserListSchema = {
+	response: {
+		200: {
+			type: 'array',
+			items: {
+				type: 'object',
+				required: ['id', 'username'],
+				properties: {
+					id: { type: 'integer' },
+					username: { type: 'string' }
+				},
+				additionalProperties: false,
+			}
+		},
+		400: errorResponseSchema,
+		401: errorResponseSchema,
+		404: errorResponseSchema,
+		500: errorResponseSchema,
+	}
+};
+
+
 export const updateUsernameSchema = {
 	params: idParamsSchema,
 	body: {
 		type: 'object',
-		required: ['username'],
+		required: ['newUsername'],
 		properties: {
-			username: {
+			newUsername: {
 				type: 'string',
 				minLength: 3,
             	maxLength: 15
@@ -95,7 +136,8 @@ export const updatePasswordSchema = {
 				type: 'string',
 				minLength: 5,
                 // Requires 1 uppercase, 1 number and cannot contain the word password
-                pattern: '^(?!.*password)(?=.*[A-Z])(?=.*\\d).{5,}$'
+                // pattern: '^(?!.*password)(?=.*[A-Z])(?=.*\\d).{5,}$'
+				pattern: '^[A-Za-z0-9]+$'
 			}
 		},
 		additionalProperties: false
@@ -116,6 +158,38 @@ export const updatePasswordSchema = {
 		502: errorResponseSchema,
 	}
 };
+
+export const validatePasswordSchema = {
+	body: {
+		type: 'object',
+		required: ['id', 'password'],
+		properties: {
+			id: { type: 'integer' },
+			password: {
+				type: 'string',
+				minLength: 5,
+				// Requires 1 uppercase, 1 number and cannot contain the word password
+                // pattern: '^(?!.*password)(?=.*[A-Z])(?=.*\\d).{5,}$'
+				pattern: '^[A-Za-z0-9]+$'
+			}
+		},
+		additionalProperties: false
+	},
+	response: {
+		200: {
+			type: 'object',
+			required: ['id'],
+			properties: {
+				id: { type: 'integer' },
+			}
+		},
+		400: errorResponseSchema,
+		401: errorResponseSchema,
+		404: errorResponseSchema,
+		500: errorResponseSchema,
+		502: errorResponseSchema,
+	}
+}
 
 export const getStatsSchema = {
 	params: idParamsSchema,
@@ -141,28 +215,24 @@ export const matchHistorySchema = {
 	params: idParamsSchema,
 	response: {
 		200: {
-			type: 'object',
-			required: ['matchHistory'],
-			properties: {
-				matchHistory: { 
-					type: 'object', 
-					required: ['id', 'username', 'picture', 'gameId', 'date', 'score', 'result', 'opponentId', 'opponentName', 'opponentPicture'],
-					properties: {
-						id: { type: 'integer'},
-						username: { type: 'string' },
-						picture: { type: 'string' },
-						gameId: { type: 'integer' },
-						date: { type: 'string', format: 'date-time' },
-						score: { type: 'string' },
-						result: {type: 'string'},
-						opponentId: { type: 'integer'},
-						opponentName: { type: 'string'},
-						opponentPicture: { type: 'string'},
-					},
-					additionalProperties: false,
-				}
-			},
-			additionalProperties: false,
+			type: 'array',
+			items: {
+				type: 'object', 
+				required: ['id', 'username', 'picture', 'gameId', 'date', 'score', 'result', 'opponentId', 'opponentName', 'opponentPicture'],
+				properties: {
+					id: { type: 'integer'},
+					username: { type: 'string' },
+					picture: { type: 'string' },
+					gameId: { type: 'integer' },
+					date: { type: 'string', format: 'date-time' },
+					score: { type: 'string' },
+					result: {type: 'string'},
+					opponentId: { type: 'integer'},
+					opponentName: { type: 'string'},
+					opponentPicture: { type: 'string'},
+				},
+				additionalProperties: false,
+			}
 		},
 		400: errorResponseSchema,
 		401: errorResponseSchema,
@@ -223,18 +293,20 @@ export const deleteUserSchema = {
 	params: idParamsSchema,
 	body: {
 	  type: 'object',
-	  required: ['friendId'],
+	  required: ['friendUsername'],
 	  properties: {
-		friendId: { type: 'integer', minimum: 1 }
+		friendUsername: { type: 'string' }
 	  },
 	  additionalProperties: false
 	},
 	response: {
 	  201: {
 		type: 'object',
-		required: ['message'],
+		required: ['message', 'friendId', 'friendUsername'],
 		properties: {
-		  message: { type: 'string' }
+		  message: { type: 'string' },
+		  friendId: { type: 'integer', minimum: 1 },
+		  friendUsername: { type: 'string' }
 		}
 	  },
 	  400: errorResponseSchema,
@@ -249,14 +321,14 @@ export const deleteUserSchema = {
 	params: idParamsSchema,
 	body: {
 	  type: 'object',
-	  required: ['friendId'],
+	  required: ['friendUsername'],
 	  properties: {
-		friendId: { type: 'integer', minimum: 1 }
+		friendUsername: { type: 'string' }
 	  },
 	  additionalProperties: false
 	},
 	response: {
-	  204: {
+	  201: {
 		type: 'object',
 		properties: {
 		  message: { type: 'string' }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios, { AxiosError } from "axios";
 
 type EditProfileProps = {
@@ -17,8 +17,14 @@ const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
 	const handleSave = async () => {
 		setLoading(true); 
 		try {
+			const payload = {
+				newUsername: newUsername,
+			};
+
+			console.log(payload);
 			//need to check with Tim that this is the correct place where to change the username
-			// await axios.put(`${API_URL}/api/users/${userId}/name`, {username: newUsername}); //product version
+			const res = await axios.put(`${API_URL}/${userId}`, {newUsername: newUsername}, {withCredentials: true}); //product version
+			console.log(res);
 			setMessage("Username changed succesfully");
 			setMessageType('success')
 			onSave();

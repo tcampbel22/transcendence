@@ -44,14 +44,14 @@ const Login = () => {
 			password,
 		}
 		try {
-			const response = await axios.post(`${API_URL}/login`, loginInput)
-			//console.log("logged in succesfully", response.data)
+			const response = await axios.post(`${API_URL}/login`, loginInput , { withCredentials: true });
+			//console.log("logged in succesfully", response.data);
 			const userEmail = response.data.email;
 
 			// Request OTP
 			const otpToken = await axios.post("https://localhost:3003/send-email", { to: userEmail });
 			navigate('/2fa', { state: { userData: response.data, otpToken: otpToken.data.token } });
-
+; 
 		} catch (error: any) {
 			console.error("Error:", error.response?.data || error.message);
 			// navigate('/hub')

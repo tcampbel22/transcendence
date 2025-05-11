@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { ContainerWithChildren } from 'postcss/lib/container';
 
 const Register = () => {
 	const API_URL = import.meta.env.VITE_API_USER;
@@ -26,31 +27,42 @@ const Register = () => {
 			password,
 		};
 
-		const response = await axios.post(`${API_URL}/register`, payload) //product
+		const response = await axios.post(`${API_URL}/register`, payload, {withCredentials: true}) //product
 		return response.data
 	}
 
-	const uploadProfileImage = async (userId: string) => {
-		const formData = new FormData()
-		if (!image) return 
-		formData.append("image", image)
-
+	const uploadProfileImage = async (userId: number) => {
+		// Don't proceed if no image selected
+		if (!image) return;
+		
+		// Create proper FormData
+		const formData = new FormData();
+		formData.append("picture", image); // Change field name to 'picture' to match backend
+		
 		try {
-			const response = await axios.post(`${API_URL}/${userId}/picture`, image) //the post location might change
+			// Send FormData, not the raw image
+			const response = await axios.put(
+				`${API_URL}/${userId}/picture`,
+				formData,
+				{
+					headers: {
+						'Content-Type': 'multipart/form-data', // Important!
+					},
+					withCredentials: true // Include credentials
+				}
+		);
 			console.log("Profile image uploaded:", response.data);
-			
 		} catch (error: any) {
 			console.error("Image upload failed:", error.response?.data || error.message);
 		}
 	}
-
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		setError('')
 		
 		try {
-			const userId = await registerUser()
-			
+			const { id: userId } = await registerUser();
+			console.log(userId);
 			if (image) {
 				uploadProfileImage(userId)
 			}

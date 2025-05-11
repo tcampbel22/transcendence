@@ -1,4 +1,5 @@
 import { loginService } from "../services/login.service.js";
+import jsonwebtoken from "jsonwebtoken";
 import logger from "@eleekku/logger"
 
 export const loginController = {
@@ -14,8 +15,8 @@ export const loginController = {
 
 			reply.setCookie("token", login.token, {
 				httpOnly: true,
-				secure: true,
-				sameSite: "strict",
+				secure: process.env.NODE_ENV === "production",
+				sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax",
 				maxAge: 3600,
 			});
 			logger.info(`User logged in: ${login.user.username}, ID: ${login.user.id}`);
@@ -28,6 +29,21 @@ export const loginController = {
 			logger.error(`Error logging in user: ${err.message}`);
 			request.log.error(err);
 			reply.status(500).send({ message: "loginUser: Internal server error!" });
+		}
+	},
+
+	async logoutUser(request, reply) {
+		try {
+			const token = request.cookies.token;
+			// Decode the token to get user information
+			const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+			logger.info(`User logged out: ${decoded.username}, ID: ${decoded.id}`);
+			reply.clearCookie("token");
+			reply.status(200).send({ message: "Logged out successfully" });
+		} catch (err) {
+			logger.error(`Error logging out user: ${err.message}`);
+			request.log.error(err);
+			reply.status(500).send({ message: "logoutUser: Internal server error!" });
 		}
 	}
 };

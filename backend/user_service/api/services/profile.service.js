@@ -2,7 +2,7 @@ import { prisma } from "../../database/db.js";
 import argon2 from "argon2";
 import axios from "axios";
 import logger from "@eleekku/logger";
-import { ErrorConflict, ErrorNotFound, ErrorCustom, ErrorUnAuthorized } from "@app/errors";
+import { ErrorConflict, ErrorNotFound, ErrorCustom, ErrorUnAuthorized, ErrorBadRequest } from "@app/errors";
 
 export const profileService = {
 	// Check if user is in db
@@ -104,7 +104,6 @@ export const profileService = {
         });
         return newUser;
     },
-
     // Updates a user's password
     async updatePassword(id, newPassword) {
         // Check if the user exists
@@ -133,23 +132,27 @@ export const profileService = {
         return newUser;
     },
 	async validatePassword(id, password) {
-		const user = await prisma.user.findFirst( { 
-			where: id,
-			select: { 
-				username: true,
-				id: true,
-				password: true
-			 }
-		});
-		if (!user) {
-			throw new ErrorNotFound(`User ${id} cannot be found`);
+		try {
+			const user = await prisma.user.findUnique( { 
+				where: { id: id },
+				select: { 
+					username: true,
+					id: true,
+					password: true
+				}
+			});
+			if (!user) {
+				throw new ErrorNotFound(`User ${id} cannot be found`);
+			}
+			const isMatch = await argon2.verify(user.password, password);
+			if (!isMatch) {
+				throw new ErrorUnAuthorized(`User ${id} password is incorrect`);
+			}
+			const { password: _, ...noPasswordUser} = user;
+			return { user: noPasswordUser };
+		} catch (err) {
+			throw (err);
 		}
-		const isMatch = await argon2.verify(user.password, password);
-		if (!isMatch) {
-			throw new ErrorUnAuthorized(`User ${id} password is incorrect`);
-		}
-		const { password: _, ...noPasswordUser} = user;
-		return { user: noPasswordUser };
 	},
     // Fetches a user's stats
     async getStats(id) {
@@ -192,7 +195,75 @@ export const profileService = {
 		}
     },
 
-
+    // async getMatchHistory(id) {
+    //     // Fetch the user's basic information
+    //     const user = await prisma.user.findUnique({
+    //         where: { id: id },
+    //         select: {
+    //             id: true,
+    //             username: true,
+    //             picture: true,
+    //         },
+    //     });
+    //     if (!user)
+    //         throw new ErrorNotFound(`getMatchHistory: User ${id} cannot be found`);
+    
+    //     try {
+    //         // Fetch match history from the game service
+    //         const response = await axios.get(`http://game_service:3001/api/user/${id}`);
+    
+    //         if (response.status !== 200)
+    //             throw new ErrorCustom(`Error retrieving match history ${response.statusText}`, response.status);
+    
+    //         // Validate match history response
+    //         if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
+    //             return {
+    //                 ...user,
+    //                 matchHistory: [],
+    //                 message: `No match history found for this user ${id}`,
+    //             };
+    //         }
+    
+    //         // Fetch all opponent information in one query
+    //         const opponentIds = [...new Set(response.data.flatMap(game => [game.player1Id, game.player2Id]))];
+    //         const opponents = await prisma.user.findMany({
+    //             where: { id: { in: opponentIds.map(id => parseInt(id)) } },
+    //             select: {
+    //                 id: true,
+    //                 username: true,
+    //                 picture: true,
+    //             },
+    //         });
+    
+    //         const opponentMap = Object.fromEntries(opponents.map(opp => [opp.id, opp]));
+    
+    //         // Process and format the match history
+    //         const matchHistory = response.data.map((game) => {
+    //             const isPlayer1 = game.player1Id === id;
+    //             const oppId = isPlayer1 ? game.player2Id : game.player1Id;
+    //             const opp = opponentMap[oppId];
+    
+    //             if (!opp) {
+    //                 throw new ErrorNotFound(`Opponent with ID ${oppId} cannot be found`);
+    //             }
+    
+    //             return {
+    //                 gameId: game.id,
+    //                 date: game.createdAt,
+    //                 score: `${game.player1Score} - ${game.player2Score}`,
+    //                 result: game.winnerId === id ? "Winner" : "Loser",
+    //                 opponentId: opp.id,
+    //                 opponentName: opp.username,
+    //                 opponentPicture: opp.picture,
+    //             };
+    //         });
+    
+    //         return { ...user, matchHistory };
+    //     } catch (err) {
+    //         logger.error(`getMatchHistory: Failed to retrieve match history for user ${id}. Error: ${err.message}`);
+    //         throw new ErrorCustom(err.message, err.response?.status || 500);
+    //     }
+    // },
     // Fetches a user's match history
     async getMatchHistory(id) {
         // Fetch the user's basic information
@@ -210,13 +281,13 @@ export const profileService = {
         try {
             // Fetch match history from the game service
             const response = await axios.get(
-                `http://game_service:3001/api/user/${id}`
+                `http://localhost:3001/api/user/${id}`
             );
             if (response.status !== 200)
                 throw new ErrorCustom(`Error retrieving match history ${response.statusText}`, response.status);
 
             // Handle empty match history
-            if (!response.data || response.data.length === 0) {
+            if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
                 return {
                     ...user,
                     matchHistory: [],
@@ -280,26 +351,27 @@ export const profileService = {
             where: { id: id },
         });
     },
+	//Returns friends of user object 
 	async getFriendsList(id) {
 		const rawFriendsData = await prisma.user.findUnique ({
 			where: { id: id},
 			select: {
 				friends: {
 					select: {
+                        isOnline: true,
 						friend: {
 							select: {
 								id: true,
 								username: true,
 								picture: true,
-								isOnline: true,
 							},
 						},
 					},
 				},
 			},
 		});
-		if (rawFriendsData.length === 0)
-			return;
+		if (!rawFriendsData)
+			return [];
 		const friendsList = rawFriendsData.friends.map((formatFriends) => ({
 			id: formatFriends.friend.id,
 			username: formatFriends.friend.username,
@@ -308,64 +380,82 @@ export const profileService = {
 		}));
 		return friendsList;
 	},
-	async addFriend(id, friendId) {
-		if (id === friendId) {
+	async addFriend(id, friendUsername) {
+		const friend = await prisma.user.findUnique({ 
+			where: { username: friendUsername },
+			select: {
+				id: true
+			}
+		});
+		if (!friend)
+			throw new ErrorNotFound(`User ${friendUsername} not found`)
+		const user = await prisma.user.findUnique({ 
+			where: { id : id },
+			select: {
+				id: true
+			}
+		});
+		if (!user)
+			throw new ErrorNotFound(`User ${id} not found`)
+		if (id === friend.id) {
 			throw new ErrorConflict("A user cannot add themselves as a friend");
 		};
-		const temp = await prisma.user.findMany({ 
-			where: {
-				id: {
-					in: [id, friendId],
-				},
-			},
-		});
-		if (temp.length !== 2)
-			throw new ErrorNotFound(`User or friend id cannot be found`);
 		const duplicate = await prisma.friend.findUnique({
 			where: {
-				id_friendId: {
-					id: id,
-					friendId: friendId,
+				userId_friendId: {
+					userId: id,
+					friendId: friend.id,
 				}
 			},
 		});
 		if (duplicate)
-			throw new ErrorUnAuthorized(`User ${id} is already friends with friend ${friendId}`);
+			throw new ErrorUnAuthorized(`User ${id} is already friends with friend ${friend.id}`);
 		//Create friendship for friend
 		await prisma.friend.createMany({
 			data: [
-				{ id: id, friendId: friendId, isOnline: false },
-				{ id: friendId, friendId: id, isOnline: false },
+				{ userId: id, friendId: friend.id, isOnline: false },
+				{ userId: friend.id, friendId: id, isOnline: false },
 			],
 		});
+		return friend.id
 	},
-	async deleteFriend(id, friendId) {
-		if (id === friendId) {
-			throw new ErrorConflict("A user cannot delete themselves... TWICE");
+	async deleteFriend(id, friendUsername) {
+		const user = await prisma.user.findUnique({ 
+			where: { id : id },
+			select: {
+				id: true
+			}
+		});
+		if (!user)
+			throw new ErrorNotFound(`User ${id} not found`)
+		const friend = await prisma.user.findUnique({ 
+			where: { username: friendUsername },
+			select: {
+				id: true
+			}
+		});
+		if (!friend)
+			throw new ErrorNotFound(`User ${friendUsername} not found`)
+		if (id === friend.id) {
+			throw new ErrorConflict("A user cannot delete themselves...");
 		};
-		const temp = await prisma.user.findMany({ 
+		const deleted = await prisma.friend.deleteMany({
 			where: {
-				id: {
-					in: [id, friendId],
-				},
-			},
-		});
-		if (temp.length !== 2)
-			throw new ErrorNotFound(`User or friend id cannot be found`);
-		deleted = await prisma.friend.deleteMany({
-			where: {
-				AND: [{
-						id: id,
-						friendId: friendId
-					},
-					{
-						id: friendId,
-						friendId: id	
-				}]
-			},
-		});
+				OR: [
+				  {
+					userId: id,
+					friendId: friend.id
+				  },
+				  {
+					userId: friend.id,
+					friendId: id  
+				  }
+				]
+			  },
+			});
 		if (deleted.count === 0) {
-			throw new ErrorNotFound(`No friendship exists between user ${id} and user ${friendId}`);
+			throw new ErrorNotFound(`No friendship exists between user ${id} and user ${friend.id}`);
 		}
+		return friend.id
 	}
 }
