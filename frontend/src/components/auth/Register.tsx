@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { ContainerWithChildren } from 'postcss/lib/container';
 
 const Register = () => {
 	const API_URL = import.meta.env.VITE_API_USER;
@@ -26,7 +27,7 @@ const Register = () => {
 			password,
 		};
 
-		const response = await axios.post(`${API_URL}/register`, payload) //product
+		const response = await axios.post(`${API_URL}/register`, payload, {withCredentials: true}) //product
 		return response.data
 	}
 
@@ -45,9 +46,10 @@ const Register = () => {
 				formData,
 				{
 					headers: {
-						'Content-Type': 'multipart/form-data' // Important!
-					}
-				},
+						'Content-Type': 'multipart/form-data', // Important!
+					},
+					withCredentials: true // Include credentials
+				}
 		);
 			console.log("Profile image uploaded:", response.data);
 		} catch (error: any) {

@@ -44,7 +44,7 @@ const Login = () => {
 			password,
 		}
 		try {
-			const response = await axios.post(`${API_URL}/login`, loginInput);
+			const response = await axios.post(`${API_URL}/login`, loginInput , { withCredentials: true });
 			console.log("logged in succesfully", response.data);
 			navigate('/hub', {state: response.data}); 
 		} catch (error: any) {

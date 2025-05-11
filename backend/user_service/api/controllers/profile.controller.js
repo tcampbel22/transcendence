@@ -204,6 +204,7 @@ export const profileController = {
 				friendList,
 			});
 		} catch (err) {
+			logger.error(`Failed to fetch user ${id}'s friend list: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to fetch user ${id}'s friend list`);
 		}

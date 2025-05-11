@@ -15,8 +15,8 @@ export const useFriendslist = (userId : number) => {
     useEffect (() => {
             const getFriendsList = async () => {
                 try {
-                    const res = await axios.get(`${API_URL}/${userId}/friends`); //get friends list
-                    setFriendsList(res.data); //set it for usage in the dropdown list
+                    const res = await axios.get(`${API_URL}/${userId}/friends`, {withCredentials: true}); //get friends list
+                    setFriendsList(res.data.friendList || []); //set it for usage in the dropdown list
                     // setFriendsList(mockFriends);
     
                 } catch (err) {
@@ -26,7 +26,7 @@ export const useFriendslist = (userId : number) => {
                 }
             }
             getFriendsList();
-        }, []);
+        }, [userId]);
 
     return friendsList;
 };
