@@ -99,7 +99,7 @@ export const gameService = {
 			orderBy: { createdAt: 'desc' },
 		});
 		if (!games || games.length === 0)
-			games = []
+			return []
 		return games;
 
 	},

@@ -10,27 +10,27 @@ type AvatarInfo = {
 
 const Avatar = ({userId}: AvatarInfo) => {
 	const API_URL = import.meta.env.VITE_API_USER;
-	const BASE_URL = import.meta.env.VITE_BASE_URL || '';
+	const BASE_URL = import.meta.env.VITE_BASE_USER_URL || '';
 	const [editIsOpen, setEditOpen] = useState(false);
 	const [passwordIsOpen, setPasswordOpen] = useState(false);
 	const [deleteIsOpen, setDeleteOpen] = useState(false);
 	const [username, setUsername] = useState('');
 	const [email, setEmail] = useState('');
 	const [refreshUser, setRefreshUser] = useState(false);
-	const [imageUrl, setImageUrl] = useState<string>(`${API_URL}/uploads/default.png`);
+	const [imageUrl, setImageUrl] = useState<string>(`${BASE_URL}/uploads/default.png`);
 	const [imageFile, setImageFile] = useState<File | null>(null);
 	//need to add actual values to the userId.
 
 	useEffect(() => {
-		console.log(API_URL);
 		const fetchUserInfo = async () => {
 			try {
+				console.log(`Base url: ${BASE_URL}`)
 				const response = await axios.get(`${API_URL}/${userId}`);
 				console.log("user status:" ,response.data)
 				setUsername(response.data.username);
 				setEmail(response.data.email);
 				if (response.data.picture) {
-					setImageUrl(`${BASE_URL}${response.data.picture}`);
+					setImageUrl(`${BASE_URL}${response.data.picture}?${Date.now()}`);
 				  } else {
 					setImageUrl(`${BASE_URL}/uploads/default.png`);
 				  }
@@ -61,7 +61,7 @@ const Avatar = ({userId}: AvatarInfo) => {
 		
 		try {
 			const response = await axios.put(`${API_URL}/${userId}/picture`, formData);
-			setImageUrl(`${BASE_URL}${response.data.newPicture}`);
+			setImageUrl(`${BASE_URL}${response.data.newPicture}?${Date.now()}`);
 			setImageFile(null);
 			setRefreshUser(prev => !prev); // Trigger refresh to get latest data
 		} catch (error: any) {

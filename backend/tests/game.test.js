@@ -32,7 +32,7 @@ describe("Backend Game API Tests", () => {
 	});
 
 	beforeEach( async () => {
-		nock(`http://user_service:3002`)
+		nock(`http://localhost:3002`)
 		.get("/api/validate/1")
 		.reply(200, { id: 1 })
 		.get("/api/validate/2")

@@ -77,7 +77,7 @@ export const profileController = {
 			if (!['.jpg', '.jpeg', '.png'].includes(fileExtension))
 				throw new ErrorUnAuthorized(`File should be jpg, jpeg or png`);
 			
-			const filename = `user_${id}_${Date.now()}${fileExtension}`;
+			const filename = `user_${id}${fileExtension}`;
 
 			const uploadDir = process.env.NODE_ENV === 'production' ? '/app/uploads' : './uploads';
 			const filepath = `${uploadDir}/${filename}`;

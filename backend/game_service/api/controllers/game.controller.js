@@ -47,21 +47,10 @@ export const gameController = {
 		}
 
 	},
-
-    // {
-	//  player1Id: 1,
-	//  player2Id: 27,
-	//  id: 2,
-	//  winnerId: 1,
-	//  player1Score: 0,
-	//  player2Score: 0,
-	//  createdAt: '2025-05-09T12:30:10.916Z'
-	//  },
-	
 	async getUserGames(request, reply) {
 		try {
 			const { id } = request.params;
-			const userGames = await gameService.getUserGames(id);
+			const userGames = await gameService.getUserGames(parseInt(id));
 			return reply.code(200).send({
 				message: `User ${id}'s games fetched successfully`,
 				id,
