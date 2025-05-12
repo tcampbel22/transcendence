@@ -17,7 +17,7 @@ const DeleteProfile = ({userId, onClose}: DeleteProfileProps) => {
 	const handleDelete = async () => {
 		setLoading(true); 
 		try {
-			await axios.delete(`${API_URL}/${userId}/delete-user`);
+			await axios.delete(`${API_URL}/${userId}/delete-user`, {withCredentials: true});
             setMessageType('success');
             setMessage("gg my guy");
 			setTimeout(() => {

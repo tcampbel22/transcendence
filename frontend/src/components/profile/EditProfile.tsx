@@ -23,7 +23,7 @@ const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
 
 			console.log(payload);
 			//need to check with Tim that this is the correct place where to change the username
-			const res = await axios.put(`${API_URL}/${userId}`, {newUsername: newUsername}); //product version
+			const res = await axios.put(`${API_URL}/${userId}`, {newUsername: newUsername}, {withCredentials: true}); //product version
 			console.log(res);
 			setMessage("Username changed succesfully");
 			setMessageType('success')
