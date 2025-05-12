@@ -1,13 +1,11 @@
+
+
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
 
 
 
-type Id = {
-    userId: number;
-};
-
-const AddFriendButton = ({userId} : Id) => {
+const DeleteFriendButton = (userId : number) => {
     const API_URL = import.meta.env.VITE_API_USER;
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
@@ -25,11 +23,11 @@ const AddFriendButton = ({userId} : Id) => {
             const payload = {
                 friendUsername: friendsName,
             }
-            const res = await axios.post(`${API_URL}/${userId}/friends`, payload, {withCredentials: true});
-            setMessage("Friend added successfully!");
+            const res = await axios.delete(`${API_URL}/${userId}/delete-friend`, {data: {friendUsername: friendsName}, withCredentials: true});
+            setMessage("Friend removed successfully!");
             setIsError(false);
         } catch (err) {
-            const error = err as AxiosError
+            const error = err as AxiosError;
             setMessage("Failed to add friend.");
             setIsError(true);
         }
@@ -37,7 +35,7 @@ const AddFriendButton = ({userId} : Id) => {
 
     return (
         <div className="relative z-50 inline-block px-3">
-            <button title="Add Friend" className={`transition-all duration-200 ease-in-out 
+            <button title="Remove Friend" className={`transition-all duration-200 ease-in-out 
           ${'w-12 rounded bg-beige'} 
              bg-beige text-white py-2 shadow text-2xl flex items-center justify-center`} 
             onClick={handleClick}
@@ -68,4 +66,5 @@ const AddFriendButton = ({userId} : Id) => {
     )
 };
 
-export default AddFriendButton;
+
+export default DeleteFriendButton;
