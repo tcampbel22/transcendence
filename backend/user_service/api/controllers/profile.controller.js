@@ -166,7 +166,9 @@ export const profileController = {
 	async getMatchHistory(request, reply) {
 		const { id } = request.params;
 		try {
-			const matchHistory = await profileService.getMatchHistory(parseInt(id));
+			const matchHistory = await profileService.getMatchHistory(parseInt(id));	
+			logger.info(`User ${id}'s match history fetched successfully`);
+			logger.info(matchHistory);	
 			return reply.code(200).send({
 				message: `User ${id}'s match history fetched successfully`,
 				matchHistory,

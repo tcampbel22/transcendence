@@ -17,7 +17,6 @@ const GamesPlayed = ({userId}: GameStatsInfo) => {
 	const API_URL = import.meta.env.VITE_API_USER;
 	const [games, setGames] = useState<Game[]>([]);
 
-
 	useEffect (() => {
 		const getMatchHistory = async () => {
 			try {

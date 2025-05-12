@@ -266,6 +266,9 @@ export const profileService = {
     // },
     // Fetches a user's match history
     async getMatchHistory(id) {
+        const gameServiceBaseUrl = process.env.NODE_ENV === "production"
+        ? "https://game_service"
+        : "http://localhost";
         // Fetch the user's basic information
         const user = await prisma.user.findUnique({
             where: { id: id },
@@ -281,13 +284,16 @@ export const profileService = {
         try {
             // Fetch match history from the game service
             const response = await axios.get(
-                `http://localhost:3001/api/user/${id}`
+                `${gameServiceBaseUrl}:3001/api/user/${id}`
             );
             if (response.status !== 200)
                 throw new ErrorCustom(`Error retrieving match history ${response.statusText}`, response.status);
 
-            // Handle empty match history
-            if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
+            const games = response.data.userGames;
+
+                // Handle empty match history
+            if (!games || !Array.isArray(games) || games.length === 0) {
+                logger.info(`getMatchHistory: No match history found for user ${id}`);
                 return {
                     ...user,
                     matchHistory: [],
@@ -297,20 +303,21 @@ export const profileService = {
 
             // Process and format the match history
             const matchHistory = await Promise.all(
-                response.data.map(async (game) => {
+                games.map(async (game) => {
                     if (
-                        !game.id ||
-                        !game.createdAt ||
-                        !game.player1Score ||
-                        !game.player2Score
+                        game.id == null || // Check for null or undefined
+                        game.createdAt == null ||
+                        game.player1Score == null || // Allow 0 as a valid value
+                        game.player2Score == null
                     ) {
-                        throw new ErrorNotFound(`Invalid game data received from game service`);
+                        logger.error(`Invalid game data: ${JSON.stringify(game)}`);
+                        return null; // Skip invalid games
                     }
+
                     const isPlayer1 = game.player1Id === id;
-                    const oppId =
-                        game.player1Id !== id
-                            ? game.player1Id
-                            : game.player2Id;
+                    const oppId = isPlayer1 ? game.player2Id : game.player1Id;
+
+                    // Fetch opponent information
                     const oppName = await prisma.user.findUnique({
                         where: { id: parseInt(oppId) },
                         select: {
@@ -318,17 +325,18 @@ export const profileService = {
                             picture: true,
                         },
                     });
+
                     return {
+                        id: id, 
+                        username: user.username, // Add username
+                        picture: user.picture, // Add user picture
                         gameId: game.id,
                         date: game.createdAt,
                         score: `${game.player1Score} - ${game.player2Score}`,
-                        result:
-                            game.winnerId === id ? "Winner" : "Loser",
-                        opponentId: isPlayer1
-                            ? game.player2Id
-                            : game.player1Id,
-                        opponentName: oppName.username,
-                        opponentPicture: oppName.picture,
+                        result: game.winnerId === id ? "Winner" : "Loser",
+                        opponentId: oppId,
+                        opponentName: oppName?.username || "Unknown",
+                        opponentPicture: oppName?.picture || null,
                     };
                 })
             );
@@ -339,6 +347,7 @@ export const profileService = {
             throw new ErrorCustom(err.message, err.statusCode);
         }
     },
+
     // Deletes a user
     async deleteUser(id) {
         const user = await prisma.user.findUnique({

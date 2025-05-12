@@ -212,35 +212,45 @@ export const getStatsSchema = {
 };
 
 export const matchHistorySchema = {
-	params: idParamsSchema,
-	response: {
-		200: {
-			type: 'array',
-			items: {
-				type: 'object', 
-				required: ['id', 'username', 'picture', 'gameId', 'date', 'score', 'result', 'opponentId', 'opponentName', 'opponentPicture'],
-				properties: {
-					id: { type: 'integer'},
-					username: { type: 'string' },
-					picture: { type: 'string' },
-					gameId: { type: 'integer' },
-					date: { type: 'string', format: 'date-time' },
-					score: { type: 'string' },
-					result: {type: 'string'},
-					opponentId: { type: 'integer'},
-					opponentName: { type: 'string'},
-					opponentPicture: { type: 'string'},
-				},
-				additionalProperties: false,
-			}
-		},
-		400: errorResponseSchema,
-		401: errorResponseSchema,
-		403: errorResponseSchema,
-		404: errorResponseSchema,
-		500: errorResponseSchema,
-		502: errorResponseSchema,
-	}
+    params: idParamsSchema,
+    response: {
+        200: {
+            type: 'object',
+            required: ['message', 'matchHistory'],
+            properties: {
+                message: { type: 'string' },
+                matchHistory: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        required: [
+                            'id', 'username', 'picture', 'gameId', 'date', 
+                            'score', 'result', 'opponentId', 'opponentName', 'opponentPicture'
+                        ],
+                        properties: {
+                            id: { type: 'integer' },
+                            username: { type: 'string' },
+                            picture: { type: 'string' },
+                            gameId: { type: 'integer' },
+                            date: { type: 'string' }, // , format: 'date-time' },
+                            score: { type: 'string' },
+                            result: { type: 'string' },
+                            opponentId: { type: 'integer' },
+                            opponentName: { type: 'string' },
+                            opponentPicture: { type: ['string', 'null'] },
+                        },
+                        additionalProperties: false,
+                    },
+                },
+            },
+        },
+        400: errorResponseSchema,
+        401: errorResponseSchema,
+        403: errorResponseSchema,
+        404: errorResponseSchema,
+        500: errorResponseSchema,
+        502: errorResponseSchema,
+    },
 };
 
 export const deleteUserSchema = {

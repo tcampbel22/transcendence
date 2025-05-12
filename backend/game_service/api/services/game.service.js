@@ -1,18 +1,26 @@
 import { prisma } from "../../database/db.js";
 import axios from "axios";
+import logger from "@eleekku/logger";
+
+
+const userServiceBaseUrl = process.env.NODE_ENV === "production"
+    ? "https://user_service"
+    : "http://localhost";
 
 export const gameService = {
 
 	async startGame(player1Id, player2Id) {
-		try {	
-			const p1Response = await axios.get(`http://user_service:3002/api/validate/${player1Id}`);
+		try {
+			logger.info(`Starting game for players ${player1Id} and ${player2Id}`);	
+			const p1Response = await axios.get(`${userServiceBaseUrl}:3002/api/validate/${player1Id}`);
 			console.log(p1Response.status);
 			if (p1Response.status !== 200)
 					throw new Error(`${p1Response.status}: Error retrieving player: ${p1Response.statusText}`);
-			const p2Response = await axios.get(`http://user_service:3002/api/validate/${player2Id}`)
+			const p2Response = await axios.get(`${userServiceBaseUrl}:3002/api/validate/${player2Id}`)
 			if (p2Response.status !== 200)
 				throw new Error(`${p2Response.status}: Error retrieving player: ${p2Response.statusText}`);
 			//Create default game row
+			logger.info(`Creating game for players ${player1Id} and ${player2Id}`);
 			const newGame = await prisma.game.create({
 				data: {
 					player1Id: player1Id,
@@ -24,6 +32,7 @@ export const gameService = {
 			});
 			return newGame;
 		} catch (err) {
+			logger.error("Game creation failed:", err.message);
 			console.error("Game creation failed:", err.message);
 			throw err;
 		}
@@ -54,7 +63,7 @@ export const gameService = {
 
 			//Update P1 userstats
 			try {
-				await axios.patch(`http://user_service:3002/api/${game.player1Id}/update-stats`, {
+				await axios.patch(`${userServiceBaseUrl}:3002/api/${game.player1Id}/update-stats`, {
 				 	isWinner: game.player1Id === winnerId,
 					gameId: id });
 			} catch (err) {
@@ -64,7 +73,7 @@ export const gameService = {
 			//Update P2 userstats, if it exists
 			if (game.player2Id) {
 				try {
-					await axios.patch(`http://user_service:3002/api/${game.player2Id}/update-stats`, {
+					await axios.patch(`${userServiceBaseUrl}:3002/api/${game.player2Id}/update-stats`, {
 						isWinner: game.player2Id === winnerId,
 						gameId: id });
 				} catch (err) {
