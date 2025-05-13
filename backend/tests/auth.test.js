@@ -159,7 +159,7 @@ describe("Backend User API Tests", () => {
 	});
 
 	// add friend and then delete them
-	it("Should add a friend adn then delete them", async () => {
+	it("Should add a friend and then delete them", async () => {
 		// First add a friend
 		const response = await supertest(app.server)
 			.post(`/api/${userId}/friends`)
