@@ -47,7 +47,7 @@ export const loginController = {
 			});
 		} catch (err) {
 			logger.error(`Error logging out user: ${err.message}`);
-			return handleError(err, reply, `Failed to logout user`);;
+			return handleError(err, reply, `Failed to logout user`);
 		}
 	}
 };
