@@ -4,8 +4,7 @@ WORKDIR /app/
 
 COPY package*.json /app/
 COPY index.js /app/
-COPY ssl/cert.pem /app/ssl/cert.pem
-COPY ssl/key.pem /app/ssl/key.pem
+COPY ssl/ /app/ssl/
 RUN npm install
 
 COPY ./api /app/api/
