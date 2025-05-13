@@ -34,8 +34,9 @@ fastify.register(cors, {
 });
 
 fastify.register(multipart, {
+	addToBody: false,
 	limits: {
-	  fileSize: 10 * 1024 * 1024 // 5MB limit, maybe change later
+	  fileSize: 10 * 1024 * 1024
 	}
 });
 try {

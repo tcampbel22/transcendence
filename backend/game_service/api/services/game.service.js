@@ -1,15 +1,23 @@
 import { prisma } from "../../database/db.js";
 import axios from "axios";
+<<<<<<< HEAD
 import logger from "@eleekku/logger";
 
 
 const userServiceBaseUrl = process.env.NODE_ENV === "production"
     ? "https://user_service"
     : "http://localhost";
+=======
+import { ErrorConflict, ErrorNotFound, ErrorCustom, ErrorUnAuthorized, ErrorBadRequest } from "@app/errors";
+
+const isProduction = process.env.NODE_ENV === 'production'
+const SERVICE_URL = isProduction ? 'user_service' : 'localhost' 
+>>>>>>> development
 
 export const gameService = {
 
 	async startGame(player1Id, player2Id) {
+<<<<<<< HEAD
 		try {
 			logger.info(`Starting game for players ${player1Id} and ${player2Id}`);	
 			const p1Response = await axios.get(`${userServiceBaseUrl}:3002/api/validate/${player1Id}`);
@@ -17,8 +25,15 @@ export const gameService = {
 			if (p1Response.status !== 200)
 					throw new Error(`${p1Response.status}: Error retrieving player: ${p1Response.statusText}`);
 			const p2Response = await axios.get(`${userServiceBaseUrl}:3002/api/validate/${player2Id}`)
+=======
+		try {	
+			const p1Response = await axios.get(`http://${SERVICE_URL}:3002/api/validate/${player1Id}`);
+			if (p1Response.status !== 200)
+					throw new ErrorCustom(`Error retrieving player`, p1Response.status);
+			const p2Response = await axios.get(`http://${SERVICE_URL}:3002/api/validate/${player2Id}`)
+>>>>>>> development
 			if (p2Response.status !== 200)
-				throw new Error(`${p2Response.status}: Error retrieving player: ${p2Response.statusText}`);
+				throw new ErrorCustom(`Error retrieving player`, p2Response.status);
 			//Create default game row
 			logger.info(`Creating game for players ${player1Id} and ${player2Id}`);
 			const newGame = await prisma.game.create({
@@ -49,7 +64,7 @@ export const gameService = {
 				}
 			})
 			if (!game)
-				throw new Error(`Game ${id} not found`);
+				throw new ErrorNotFound(`Game ${id} not found`);
 			//Update game
 			const updatedGame = await prisma.game.update(
 			{
@@ -63,7 +78,11 @@ export const gameService = {
 
 			//Update P1 userstats
 			try {
+<<<<<<< HEAD
 				await axios.patch(`${userServiceBaseUrl}:3002/api/${game.player1Id}/update-stats`, {
+=======
+				await axios.patch(`http://${SERVICE_URL}:3002/api/${game.player1Id}/update-stats`, {
+>>>>>>> development
 				 	isWinner: game.player1Id === winnerId,
 					gameId: id });
 			} catch (err) {
@@ -73,7 +92,11 @@ export const gameService = {
 			//Update P2 userstats, if it exists
 			if (game.player2Id) {
 				try {
+<<<<<<< HEAD
 					await axios.patch(`${userServiceBaseUrl}:3002/api/${game.player2Id}/update-stats`, {
+=======
+					await axios.patch(`http://${SERVICE_URL}:3002/api/${game.player2Id}/update-stats`, {
+>>>>>>> development
 						isWinner: game.player2Id === winnerId,
 						gameId: id });
 				} catch (err) {
@@ -90,7 +113,7 @@ export const gameService = {
 	async getGameById(gameId) {
 		const game = await prisma.game.findUnique({ where: { id: parseInt(gameId) }})
 		if (!game)
-			throw new Error(`getGameById: gameId ${gameId} does not exist`);
+			throw new ErrorNotFound(`getGameById: gameId ${gameId} does not exist`);
 		return game;
 	},
     // Fetches all games a user has played in
@@ -104,8 +127,13 @@ export const gameService = {
 			},
 			orderBy: { createdAt: 'desc' },
 		});
+<<<<<<< HEAD
 	//	if (!games || games.length === 0)
 	//		throw new Error(`getUserGames: user ${userId} does not have a game history`);
+=======
+		if (!games || games.length === 0)
+			return []
+>>>>>>> development
 		return games;
 
 	},

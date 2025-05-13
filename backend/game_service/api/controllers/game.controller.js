@@ -1,5 +1,9 @@
 import { gameService } from "../services/game.service.js"
+<<<<<<< HEAD
 import logger from "@eleekku/logger"
+=======
+import { handleError } from "@app/errors";
+>>>>>>> development
 
 export const gameController = {
 
@@ -7,7 +11,7 @@ export const gameController = {
 		try {
 			const { player1Id, player2Id } = request.body;
 			const game = await gameService.startGame(parseInt(player1Id), parseInt(player2Id));
-			reply.code(201).send({
+			return reply.code(201).send({
 				message: `Game ${game.id} started successfully`,
 				gameId: game.id,
 				time: game.createdAt,
@@ -15,7 +19,7 @@ export const gameController = {
 		} catch (err) {
 			logger.error(`createGame: failed to create game`, err);
 			request.log.error(`createGame: failed to create game`, err);
-			return reply.code(500).send(`Failed to start the game: `, err);
+			return handleError(err, reply, `Failed to create the game`);
 		}
 
 	},
@@ -32,14 +36,14 @@ export const gameController = {
 		} catch (err) {
 			logger.error(`finishGame: failed to update finished game ${request.params.id}`, err);
 			request.log.error(`finishGame: failed to update finished game ${request.params.id}`);
-			return reply.code(500).send({ message: `Failed to update finished game ${request.params.id}` });
+			return handleError(err, reply, `Failed to update the game`);
 		}
 	},
 	async getGame(request, reply) {
 		try {
 			const { id: gameId } = request.params;
 			const game = await gameService.getGameById(gameId);
-			reply.code(200).send({
+			return reply.code(200).send({
 				message: `Game ${gameId} fetched successfully`,
 				gameId: game.id,
 			})
@@ -47,15 +51,16 @@ export const gameController = {
 		} catch(err) {
 			logger.error(`getGame: failed to fetch game ${request.params.id}`, err);
 			request.log.error(`getGame: failed to fetch game ${request.params.id}`);
-			return reply.code(500).send({ message: `Failed to fetch game ${request.params.id}`});
+			return handleError(err, reply, `Failed to fetch the game`);
 		}
 
 	},
 	async getUserGames(request, reply) {
 		try {
-			const { id: userId } = request.params;
-			const userGames = await gameService.getUserGames(userId);
+			const { id } = request.params;
+			const userGames = await gameService.getUserGames(parseInt(id));
 			return reply.code(200).send({
+<<<<<<< HEAD
 				message: `User ${userId}'s games fetched successfully`,
 				userId,
 				userGames,
@@ -64,6 +69,15 @@ export const gameController = {
 			logger.error(`getGame: failed to fetch user ${request.params.id}'s games`, err);
 			request.log.error(`getGame: failed to fetch user ${request.params.id}'s games`);
 			return reply.code(500).send({ message: `Failed to fetch user ${request.params.id}'s games`});
+=======
+				message: `User ${id}'s games fetched successfully`,
+				id,
+				userGames,
+			});
+		} catch (err) {
+			console.log(`getGame: failed to fetch user ${request.params.id}'s games`, err);
+			return handleError(err, reply, `Failed to fetch users game`);
+>>>>>>> development
 		}
 	},
 }
