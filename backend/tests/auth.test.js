@@ -10,6 +10,8 @@ import nock from "nock";
 import path from "path";
 import { fileURLToPath } from 'url';
 
+const isProduction = process.env.NODE_ENV === 'production'
+const SERVICE_URL = isProduction ? 'game_service' : 'localhost'
 
 describe("Backend User API Tests", () => {
 	let app;
@@ -17,7 +19,8 @@ describe("Backend User API Tests", () => {
 	let friendId;
 	
 	beforeAll(async () => {
-	const dbConnected = await testConnection();
+		
+		const dbConnected = await testConnection();
 	if (!dbConnected) {
 		process.stdout.write("Failed to connect to db");
 		throw new Error("Failed to connect to the database");
@@ -244,7 +247,7 @@ describe("Backend User API Tests", () => {
 			  } 
 			]
 		  };
-		nock(`http://game_service:3001`)
+		nock(`http://${SERVICE_URL}:3001`)
 			.get(`/api/user/${userId}`)
 			.reply(200, mockUserGamesResponse.userGames)
 		const response = await supertest(app.server)
@@ -259,7 +262,7 @@ describe("Backend User API Tests", () => {
 			id: userId,
 			userGames: []
 		};
-		nock(`http://game_service:3001`)
+		nock(`http://${SERVICE_URL}:3001`)
 			.get(`/api/user/${userId}`)
 			.reply(200, mockUserGamesResponse.userGames)
 		const response = await supertest(app.server)

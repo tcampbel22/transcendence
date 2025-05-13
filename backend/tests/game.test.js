@@ -5,11 +5,14 @@ import { prisma, testConnection } from "../game_service/database/db.js";
 // import { populate_games } from "./populate_db.js";
 import nock from "nock"
 
+const isProduction = process.env.NODE_ENV === 'production'
+const SERVICE_URL = isProduction ? 'user_service' : 'localhost' 
 
 describe("Backend Game API Tests", () => {
 	let app;
 	let gameId;
 	beforeAll(async () => {
+	
 	const dbConnected = await testConnection();
 	if (!dbConnected) {
 		process.stdout.write("Failed to connect to db");
@@ -32,7 +35,7 @@ describe("Backend Game API Tests", () => {
 	});
 
 	beforeEach( async () => {
-		nock(`http://localhost:3002`)
+		nock(`http://${SERVICE_URL}:3002`)
 		.get("/api/validate/1")
 		.reply(200, { id: 1 })
 		.get("/api/validate/2")
