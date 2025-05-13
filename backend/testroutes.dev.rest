@@ -1,8 +1,7 @@
 ### Database Population ###
 
 
-###
-#Add user1
+### Add user1
 POST http://localhost:3002/api/register
 Content-Type: application/json
 
@@ -13,8 +12,7 @@ Content-Type: application/json
   "picture": "alice.jpg"
 }
 
-###
-#Add user2
+### Add user2
 POST http://localhost:3002/api/register
 Content-Type: application/json
 
@@ -31,23 +29,70 @@ Content-Type: application/json
 
 {
   "player1Id": 1,
-  "player2Id": 2
+  "player2Id": 27
+}
+
+### Test G2: Finish Game - Multiplayer
+PATCH http://localhost:3001/api/1/finish-game
+Content-Type: application/json
+
+{
+  "p1score": 3848,
+  "p2score": 1,
+  "winnerId": 27
 }
 
 ### Add Friend Tests ###
 
 ### Test 23: Add Friend - Success
-POST http://localhost:3002/api/1/friends
+POST http://localhost:3002/api/1032/friends
 Content-Type: application/json
 
 {
   "friendUsername": "bob"
 }
 
-### Test 23: Add Friend - Success
-DELETE http://localhost:3002/api/1/delete-friend
+### Delete Friend 
+DELETE http://localhost:3002/api/836/delete-friend
 Content-Type: application/json
 
 {
   "friendUsername": "bob"
 }
+
+### Get user
+GET http://localhost:3002/api/3849
+
+### Get user stats
+
+GET http://localhost:3002/api/27/stats
+
+### Update user stats
+
+PATCH http://localhost:3002/api/1/update-stats
+Content-Type: application/json
+
+{
+	"isWinner": false
+}
+
+
+### Get all users
+GET http://localhost:3002/api/user-list
+
+### Get friends list
+
+GET http://localhost:3002/api/1032/friends
+
+
+### Get user games
+
+GET http://localhost:3001/api/user/2962
+
+### Get user match history
+
+GET http://localhost:3002/api/27/match-history
+
+
+
+

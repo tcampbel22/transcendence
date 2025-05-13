@@ -10,34 +10,35 @@ type AvatarInfo = {
 
 const Avatar = ({userId}: AvatarInfo) => {
 	const API_URL = import.meta.env.VITE_API_USER;
+	const BASE_URL = import.meta.env.VITE_BASE_USER_URL || '';
 	const [editIsOpen, setEditOpen] = useState(false);
 	const [passwordIsOpen, setPasswordOpen] = useState(false);
 	const [deleteIsOpen, setDeleteOpen] = useState(false);
 	const [username, setUsername] = useState('');
 	const [email, setEmail] = useState('');
 	const [refreshUser, setRefreshUser] = useState(false);
-	const [imageUrl, setImageUrl] = useState<string>(`http://localhost:3002/uploads/default.png`);
+	const [imageUrl, setImageUrl] = useState<string>(`${BASE_URL}/uploads/default.png`);
 	const [imageFile, setImageFile] = useState<File | null>(null);
 	//need to add actual values to the userId.
 
 	useEffect(() => {
 		const fetchUserInfo = async () => {
 			try {
+				console.log(`Base url: ${BASE_URL}`)
 				const response = await axios.get(`${API_URL}/${userId}`);
 				console.log("user status:" ,response.data)
 				setUsername(response.data.username);
 				setEmail(response.data.email);
 				if (response.data.picture) {
-					setImageUrl(`http://localhost:3002${response.data.picture}`);
+					setImageUrl(`${BASE_URL}${response.data.picture}?${Date.now()}`);
 				  } else {
-					setImageUrl(`http://localhost:3002/uploads/default.png`);
+					setImageUrl(`${BASE_URL}/uploads/default.png`);
 				  }
 				  
 				console.log("user picture status:" , `${imageUrl}`)
 			} 
 			catch (err) {
 				const error = err as AxiosError;
-				console.log("HERE")
 				console.error("Error:", error.message);
 			}
 		};
@@ -56,15 +57,11 @@ const Avatar = ({userId}: AvatarInfo) => {
 		if (!imageFile) return;
 		
 		const formData = new FormData();
-		formData.append("picture", imageFile);
+		formData.append("file", imageFile);
 		
 		try {
-			const response = await axios.put(`${API_URL}/${userId}/picture`, formData, {
-				headers: {
-					'Content-Type': 'multipart/form-data'
-				}
-			});
-			setImageUrl(`http://localhost:3002${response.data.newPicture}`);
+			const response = await axios.put(`${API_URL}/${userId}/picture`, formData);
+			setImageUrl(`${BASE_URL}${response.data.newPicture}?${Date.now()}`);
 			setImageFile(null);
 			setRefreshUser(prev => !prev); // Trigger refresh to get latest data
 		} catch (error: any) {
@@ -81,7 +78,7 @@ const Avatar = ({userId}: AvatarInfo) => {
 					<img 
 						src={imageUrl} 
 						alt="Profile Picture"
-						onError={() => setImageUrl(`http://localhost:3002/uploads/default.png`)} 
+						onError={() => setImageUrl(`${BASE_URL}/uploads/default.png`)} 
 						className="w-80 h-80 rounded-full object-cover"
 					/>
 				</div>
