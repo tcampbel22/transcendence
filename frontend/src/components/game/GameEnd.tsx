@@ -1,7 +1,9 @@
 import { useState, useRef } from 'react';
 import  {useUsername} from '../../hooks/useUsername'
-import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../../lib/api';
+import { AxiosError } from 'axios';
+
 
 type userObj = {
     userId: number;
@@ -43,7 +45,7 @@ const GameEnd = ({user, opponentUserId, winner, p1score, p2score, gameId} : EndG
         }
 
         try {
-            const res = await axios.patch(`${API_URL}/${gameId}/finish-game`, payload);
+            const res = await api.patch(`${API_URL}/${gameId}/finish-game`, payload);
             console.log("match finished", res.data);
             navigate('/hub', {state:user});
         } catch (err) {

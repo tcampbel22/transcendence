@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import api from '../../lib/api'
 import { error } from 'console';
 import { ContainerWithChildren } from 'postcss/lib/container';
 
@@ -28,7 +28,7 @@ const Register = () => {
 			password,
 		};
 
-		const response = await axios.post(`${API_URL}/register`, payload, {withCredentials: true}) //product
+		const response = await api.post(`${API_URL}/register`, payload, {withCredentials: true}) //product
 		return response.data
 	}
 
@@ -41,7 +41,7 @@ const Register = () => {
 		formData.append("file", image, image.name);
 		try {
 			// Send FormData, not the raw image
-			const response = await axios.put(
+			const response = await api.put(
 				`${API_URL}/${userId}/picture`,
 				formData,
 				{
@@ -68,7 +68,7 @@ const Register = () => {
 				try {
 					await uploadProfileImage(userId)
 				} catch (error: any) {
-					await axios.delete((`${API_URL}/${userId}/delete-user`));
+					await api.delete((`${API_URL}/${userId}/delete-user`));
 					setError(error.response?.data?.message || 'Failed to upload image, please try again')
 					return;
 				}

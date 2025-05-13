@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../../lib/api';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,7 +9,7 @@ const Logout = () => {
 	useEffect(() => {
 		const performLogout = async () => {
 			try {
-				await axios.get(`${API_URL}/logout`, { withCredentials: true });
+				await api.get(`${API_URL}/logout`, { withCredentials: true });
 				// Optionally clear frontend state (user context, etc.)
 				navigate('/'); // Redirect to front page after logout
 			} catch (error: any) {
