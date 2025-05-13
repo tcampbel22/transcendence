@@ -349,8 +349,8 @@ export const profileService = {
 		//Create friendship for friend
 		await prisma.friend.createMany({
 			data: [
-				{ userId: id, friendId: friend.id, isOnline: false },
-				{ userId: friend.id, friendId: id, isOnline: false },
+				{ userId: id, friendId: friend.id },
+				{ userId: friend.id, friendId: id },
 			],
 		});
 		return friend.id
