@@ -1,6 +1,6 @@
 DOCKER_COMPOSE_FILE = docker-compose.yml
 ENV_FILE = .env
-DIR_NAMES = nginx game_service user_service file_service googleAuth
+DIR_NAMES = game_service user_service file_service googleAuth nginx
 
 # Colors for better output
 GREEN = $$(printf '\033[0;32m')
@@ -11,6 +11,7 @@ RESET = $$(printf '\033[0m')
 all: ssl_cert build-frontend up
 
 ssl_cert:
+	@mkdir -p ./backend/nginx/ssl
 	@for name in $(DIR_NAMES); do \
 	SSL_DIR=./backend/$$name/ssl; \
 	mkdir -p $$SSL_DIR; \
@@ -30,6 +31,9 @@ ssl_cert:
 	if [ "$$name" != "nginx" ]; then \
 		cp $$SSL_CERT ./backend/nginx/ssl/$$name.cert.pem; \
 		cp $$SSL_KEY ./backend/nginx/ssl/$$name.key.pem; \
+	else \
+		cp $$SSL_CERT ./backend/user_service/ssl/nginx.cert.pem; \
+		cp $$SSL_CERT ./backend/game_service/ssl/nginx.cert.pem; \
 	fi; \
 	done
 
@@ -52,7 +56,7 @@ down:
 
 basic: ssl_cert build-frontend
 		@echo "$(YELLOW)Building docker images...$(RESET)"
-	@docker-compose -f $(DOCKER_COMPOSE_FILE) up -d nginx file_service user_service  game_service googlesignin 
+	@docker-compose -f $(DOCKER_COMPOSE_FILE) up -d nginx file_service user_service  game_service googlesignin
 	@echo "$(GREEN)Docker images built.$(RESET)"
 
 clean: down
