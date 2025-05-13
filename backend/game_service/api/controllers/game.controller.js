@@ -1,9 +1,6 @@
 import { gameService } from "../services/game.service.js"
-<<<<<<< HEAD
 import logger from "@eleekku/logger"
-=======
 import { handleError } from "@app/errors";
->>>>>>> development
 
 export const gameController = {
 
@@ -60,24 +57,14 @@ export const gameController = {
 			const { id } = request.params;
 			const userGames = await gameService.getUserGames(parseInt(id));
 			return reply.code(200).send({
-<<<<<<< HEAD
-				message: `User ${userId}'s games fetched successfully`,
-				userId,
+				message: `User ${id}'s games fetched successfully`,
+				id,
 				userGames,
 			});
 		} catch (err) {
 			logger.error(`getGame: failed to fetch user ${request.params.id}'s games`, err);
 			request.log.error(`getGame: failed to fetch user ${request.params.id}'s games`);
 			return reply.code(500).send({ message: `Failed to fetch user ${request.params.id}'s games`});
-=======
-				message: `User ${id}'s games fetched successfully`,
-				id,
-				userGames,
-			});
-		} catch (err) {
-			console.log(`getGame: failed to fetch user ${request.params.id}'s games`, err);
-			return handleError(err, reply, `Failed to fetch users game`);
->>>>>>> development
 		}
 	},
 }
