@@ -1,6 +1,7 @@
 import { prisma } from "../../database/db.js";
 import axios from "axios";
 import { ErrorConflict, ErrorNotFound, ErrorCustom, ErrorUnAuthorized, ErrorBadRequest } from "@app/errors";
+import logger from "@eleekku/logger";
 
 const isProduction = process.env.NODE_ENV === 'production'
 const SERVICE_URL = isProduction ? 'user_service' : 'localhost' 
@@ -16,6 +17,7 @@ export const gameService = {
 			if (p2Response.status !== 200)
 				throw new ErrorCustom(`Error retrieving player`, p2Response.status);
 			//Create default game row
+			logger.info(`Creating game for players ${player1Id} and ${player2Id}`);
 			const newGame = await prisma.game.create({
 				data: {
 					player1Id: player1Id,
@@ -27,6 +29,7 @@ export const gameService = {
 			});
 			return newGame;
 		} catch (err) {
+			logger.error("Game creation failed:", err.message);
 			console.error("Game creation failed:", err.message);
 			throw err;
 		}
@@ -98,9 +101,6 @@ export const gameService = {
 			},
 			orderBy: { createdAt: 'desc' },
 		});
-		if (!games || games.length === 0)
-			return []
 		return games;
-
 	},
 }

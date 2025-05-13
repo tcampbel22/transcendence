@@ -1,4 +1,5 @@
 import { gameService } from "../services/game.service.js"
+import logger from "@eleekku/logger"
 import { handleError } from "@app/errors";
 
 export const gameController = {
@@ -13,6 +14,7 @@ export const gameController = {
 				time: game.createdAt,
 			});
 		} catch (err) {
+			logger.error(`createGame: failed to create game`, err);
 			request.log.error(`createGame: failed to create game`, err);
 			return handleError(err, reply, `Failed to create the game`);
 		}
@@ -23,11 +25,13 @@ export const gameController = {
 			const { id } = request.params;
 			const { p1score, p2score, winnerId } = request.body;
 			const game = await gameService.finishGame(parseInt(id), parseInt(p1score), parseInt(p2score), parseInt(winnerId));
+			logger.info(`Game ${game.id} finished successfully`);
 			return reply.code(201).send({
 				message: `Game finished`,
 				id: game.id,
 		});
 		} catch (err) {
+			logger.error(`finishGame: failed to update finished game ${request.params.id}`, err);
 			request.log.error(`finishGame: failed to update finished game ${request.params.id}`);
 			return handleError(err, reply, `Failed to update the game`);
 		}
@@ -42,6 +46,7 @@ export const gameController = {
 			})
 			
 		} catch(err) {
+			logger.error(`getGame: failed to fetch game ${request.params.id}`, err);
 			request.log.error(`getGame: failed to fetch game ${request.params.id}`);
 			return handleError(err, reply, `Failed to fetch the game`);
 		}
@@ -57,8 +62,9 @@ export const gameController = {
 				userGames,
 			});
 		} catch (err) {
-			console.log(`getGame: failed to fetch user ${request.params.id}'s games`, err);
-			return handleError(err, reply, `Failed to fetch users game`);
+			logger.error(`getGame: failed to fetch user ${request.params.id}'s games`, err);
+			request.log.error(`getGame: failed to fetch user ${request.params.id}'s games`);
+			return reply.code(500).send({ message: `Failed to fetch user ${request.params.id}'s games`});
 		}
 	},
 }

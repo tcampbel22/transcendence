@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
+import axios from 'axios'; // Import axios for HTTP requests
 import GameCanvas  from "./GameCanvas"
 import GameControls from "./GameControls"
 import { useGameLoop } from '../../hooks/useGameLoop'
 import { usePaddles } from '../../hooks/usePaddles';
 import { useKeyPress } from '../../hooks/useKeyPress';
 import GameEnd from './GameEnd';
+import { useStartGame } from "../../hooks/useStartGame";
 
 type userObj = {
   userId: number;
@@ -47,6 +49,7 @@ const Pong: React.FC<PongProps> = ({
   const ballSpeedY = useRef<number>(0);
   const keysPressed = useKeyPress();
   const [isGameStarted, setIsGameStarted] = useState(false);
+  const [gameId, setGameId] = useState<number | null>(null);
 
   const updateLeftScore = (newScore: number) => {
     setLeftScore(newScore);
@@ -102,6 +105,13 @@ const Pong: React.FC<PongProps> = ({
       rightScore
     });
 
+  useStartGame({
+    isGameStarted,
+    userId: userInfo.userId,
+    opponentUserId,
+    setGameId
+  });
+
   return (
 	<div className="bg-black flex items-center justify-center p-4">
     <div className="relative">
@@ -121,6 +131,7 @@ const Pong: React.FC<PongProps> = ({
                                             winner={winner}
                                             p1score={leftScore}
                                             p2score={rightScore}
+                                            gameId={gameId}
                                   />
     };
 	  {/* {gameOver ? (
