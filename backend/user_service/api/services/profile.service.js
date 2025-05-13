@@ -28,6 +28,7 @@ export const profileService = {
                 username: true,
                 email: true,
                 picture: true,
+				isOnline: true
             },
         });
         if (!user) 
@@ -289,12 +290,12 @@ export const profileService = {
 			select: {
 				friends: {
 					select: {
-						isOnline: true,
 						friend: {
 							select: {
 								id: true,
 								username: true,
 								picture: true,
+								isOnline: true,
 							},
 						},
 					},
@@ -344,8 +345,8 @@ export const profileService = {
 		//Create friendship for friend
 		await prisma.friend.createMany({
 			data: [
-				{ userId: id, friendId: friend.id, isOnline: false },
-				{ userId: friend.id, friendId: id, isOnline: false },
+				{ userId: id, friendId: friend.id },
+				{ userId: friend.id, friendId: id },
 			],
 		});
 		return friend.id

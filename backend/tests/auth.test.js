@@ -10,8 +10,11 @@ import nock from "nock";
 import path from "path";
 import { fileURLToPath } from 'url';
 
+
 const isProduction = process.env.NODE_ENV === 'production'
 const SERVICE_URL = isProduction ? 'game_service' : 'localhost'
+
+
 
 describe("Backend User API Tests", () => {
 	let app;
@@ -51,6 +54,7 @@ describe("Backend User API Tests", () => {
 	afterEach(async () => {
 		await prisma.user.deleteMany();
 	});
+
 
 	it("should return 401 for invalid login", async () => {
 	const response = await supertest(app.server)

@@ -31,6 +31,7 @@ export const profileController = {
 				username: user.username,
 				email: user.email,
 				picture: user.picture,
+				isOnline: user.isOnline
 			})
 		} catch (err) {
 			request.log.error(err);

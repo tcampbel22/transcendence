@@ -45,7 +45,7 @@ Content-Type: application/json
 ### Add Friend Tests ###
 
 ### Test 23: Add Friend - Success
-POST http://localhost:3002/api/1032/friends
+POST http://localhost:3002/api/242/friends
 Content-Type: application/json
 
 {
