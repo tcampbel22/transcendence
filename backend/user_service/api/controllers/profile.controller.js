@@ -167,12 +167,7 @@ export const profileController = {
 		const { id } = request.params;
 		try {
 			const matchHistory = await profileService.getMatchHistory(parseInt(id));	
-			logger.info(`User ${id}'s match history fetched successfully`);
-			logger.info(matchHistory);	
-			return reply.code(200).send({
-				message: `User ${id}'s match history fetched successfully`,
-				matchHistory,
-			})
+			return reply.code(200).send(matchHistory)
 		} catch (err) {
 			logger.error(`Failed to fetch user ${id}'s match history: ${err.message}`);
 			request.log.error(err);

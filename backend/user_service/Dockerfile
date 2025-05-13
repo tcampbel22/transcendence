@@ -18,4 +18,4 @@ WORKDIR /app
 RUN chmod +x /app/database/db_entrypoint.sh
 ENTRYPOINT ["/bin/sh", "/app/database/db_entrypoint.sh"]
 
-CMD [ "node", "/app/index.js" ]
+CMD [ "node", "--use-system-ca", "/app/index.js" ]

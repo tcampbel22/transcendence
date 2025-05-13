@@ -104,8 +104,8 @@ export const gameService = {
 			},
 			orderBy: { createdAt: 'desc' },
 		});
-		if (!games || games.length === 0)
-			throw new Error(`getUserGames: user ${userId} does not have a game history`);
+	//	if (!games || games.length === 0)
+	//		throw new Error(`getUserGames: user ${userId} does not have a game history`);
 		return games;
 
 	},

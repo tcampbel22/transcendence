@@ -293,12 +293,7 @@ export const profileService = {
 
                 // Handle empty match history
             if (!games || !Array.isArray(games) || games.length === 0) {
-                logger.info(`getMatchHistory: No match history found for user ${id}`);
-                return {
-                    ...user,
-                    matchHistory: [],
-                    message: `No match history found for this user ${id}`,
-                };
+                return [];
             }
 
             // Process and format the match history
@@ -328,8 +323,8 @@ export const profileService = {
 
                     return {
                         id: id, 
-                        username: user.username, // Add username
-                        picture: user.picture, // Add user picture
+                        username: user.username,
+                        picture: user.picture,
                         gameId: game.id,
                         date: game.createdAt,
                         score: `${game.player1Score} - ${game.player2Score}`,
@@ -340,8 +335,7 @@ export const profileService = {
                     };
                 })
             );
-            const newMatchHistory = { ...user, matchHistory };
-            return newMatchHistory;
+            return matchHistory;
         } catch (err) {
             logger.error(`getMatchHistory: Failed to retrieve match history`);
             throw new ErrorCustom(err.message, err.statusCode);

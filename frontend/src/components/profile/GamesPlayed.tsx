@@ -6,11 +6,12 @@ type GameStatsInfo = {
 };
 
 type Game = {
-	matchId: number;
-  	opponent: string;
+	gameId: number;
+  	opponentName: string;
+  	score: string;
   	result: string;
-  	won: boolean;
   	played: string;
+	date: string;
 };
 
 const GamesPlayed = ({userId}: GameStatsInfo) => {
@@ -21,7 +22,6 @@ const GamesPlayed = ({userId}: GameStatsInfo) => {
 		const getMatchHistory = async () => {
 			try {
 				const history = await axios.get(`${API_URL}/${userId}/match-history`);
-				console.log(history);
 				setGames(history.data);
 			} catch (err) {
 				const error = err as AxiosError;
@@ -36,7 +36,7 @@ const GamesPlayed = ({userId}: GameStatsInfo) => {
         <div className="bg-beige col-span-2 rounded border border-white shadow-md">
             <h1 className="text-black font-bold text-xl">Match History</h1>
 			<div className="grid grid-cols-5 font-semibold border-b pb-2 mb-2 text-black m-4">
-				<p>Match</p>
+				<p>Match ID</p>
 				<p>Opponent</p>
 				<p>Result</p>
 				<p>Outcome</p>
@@ -48,13 +48,13 @@ const GamesPlayed = ({userId}: GameStatsInfo) => {
       key={index}
       className="grid grid-cols-5 border-b py-2 text-center text-black last:border-b-0"
     >
-      <p>#{index + 1}</p>
-      <p>{game.opponent}</p>
-      <p>{game.result}</p>
-      <p className={game.won ? 'text-green-600' : 'text-red-600'}>
-        {game.won ? 'Win' : 'Loss'}
-      </p>
-      <p>{new Date(game.played).toLocaleDateString()}</p>
+      <p>#{game.gameId}</p>
+      <p>{game.opponentName}</p>
+      <p>{game.score}</p>
+	    <p className={game.result.trim() === 'Winner' ? 'text-green-600' : 'text-red-600'}>
+      {game.result}
+	    </p>
+      <p>{new Date(game.date).toLocaleDateString()}</p>
     </div>
   ))
 ) : (
