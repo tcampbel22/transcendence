@@ -5,9 +5,10 @@ import { useState } from "react";
 
 type Id = {
     userId: number;
+	onSuccess: () => void;
 };
 
-const AddFriendButton = ({userId} : Id) => {
+const AddFriendButton = ({userId, onSuccess} : Id) => {
     const API_URL = import.meta.env.VITE_API_USER;
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
@@ -27,6 +28,7 @@ const AddFriendButton = ({userId} : Id) => {
             }
             const res = await axios.post(`${API_URL}/${userId}/friends`, payload, {withCredentials: true});
             setMessage("Friend added successfully!");
+			onSuccess();
             setIsError(false);
         } catch (err) {
             const error = err as AxiosError

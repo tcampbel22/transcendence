@@ -4,23 +4,32 @@ import { useState } from "react";
 import { AxiosError } from "axios";
 import FriendItem from "./FriendItem";
 
+type Friends = {
+    id: number,
+    username: string,
+    picture: string | null,
+    status: "online" | "offline"
+}
+
 type Id = {
     userId: number;
+	friendsList: Friends[] | null;
+	onSuccess: () => void;
 };
 
-const FriendsButton = ({userId} : Id) => {
-    const { friendsList, reFetch } = useFriendslist(userId);
+const FriendsButton = ({userId, friendsList, onSuccess} : Id) => {
+    // const { friendsList, reFetch } = useFriendslist(userId);
     const [open, setOpen] = useState(false);
     
 	const toggleOpen = () => {
 		setOpen(prev => !prev);
-
+		onSuccess();
 	}
 
 	const handleDelete = async (friendName: string) => {
 		try {
 			await deleteFriend(userId, friendName);
-			await reFetch();
+			onSuccess();
 		} catch (err) {
 			const error = err as AxiosError;
 		  	console.error('Failed to delete friend', error);

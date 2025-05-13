@@ -19,7 +19,7 @@ type GameControlProps = {
 const GameControls = ({userId, resetGame, setIsGameStarted, setOpponentUserId}: GameControlProps) => {
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState<Friends | null>(null);
-    const friendsList = useFriendslist(userId) || []; // Fetch the friends list using the custom hook
+    const {friendsList, reFetch}= useFriendslist(userId) || []; // Fetch the friends list using the custom hook
 
     const handleClick = () => {
 		setIsGameStarted(true);
@@ -36,7 +36,7 @@ const GameControls = ({userId, resetGame, setIsGameStarted, setOpponentUserId}: 
                     </button>
                     {open && (
                     <div className="absolute top-full left-0 w-full border-2 border-black rounded bg-white max-h-40 overflow-y-auto z-10">
-                        {friendsList && friendsList.map((friend, idx) => (
+                        {friendsList && friendsList?.map((friend, idx) => (
                         <div
                             key={idx}
                             onClick={() => {
