@@ -42,22 +42,16 @@ export const getUserProfileSchema = {
 export const getUserListSchema = {
 	response: {
 		200: {
-			type: 'object',
-			required: ['users'],
-			properties: {
-				users: {
-					type: 'array',
-					items: {
-						type: 'object',
-						required: ['id', 'username'],
-						properties: {
-							id: { type: 'integer' },
-							username: { type: 'string' }
-						},
-						additionalProperties: false,
-					}
-				}
-			},
+			type: 'array',
+			items: {
+				type: 'object',
+				required: ['id', 'username'],
+				properties: {
+					id: { type: 'integer' },
+					username: { type: 'string' }
+				},
+				additionalProperties: false,
+			}
 		},
 		400: errorResponseSchema,
 		401: errorResponseSchema,
@@ -101,16 +95,27 @@ export const updateUsernameSchema = {
 
 export const updatePictureSchema = {
 	params: idParamsSchema,
-	consumes: ['multipart/form-data'],
+	body: {
+		type: 'object',
+		required: ['picture'],
+		properties: {
+			picture: {
+				type: 'string',
+				minLength: 5,
+				maxLength: 100,
+				pattern: '\\.(jpg|jpeg|png)$'
+			}
+		},
+		additionalProperties: false
+	},
 	response: {
 		201: {
-		  type: 'object',
-		  required: ['message', 'id', 'newPicture'],
-		  properties: {
-			message: { type: 'string' },
-			id: { type: 'integer' },
-			newPicture: { type: 'string' }
-		  }
+			type: 'object',
+			required: ['id', 'newPicture'],
+			properties: {
+				id: { type: 'integer'},
+				picture: { type: 'string' },
+			}
 		},
 		400: errorResponseSchema,
 		401: errorResponseSchema,
@@ -207,41 +212,35 @@ export const getStatsSchema = {
 };
 
 export const matchHistorySchema = {
-  params: idParamsSchema,
-  response: {
+	params: idParamsSchema,
+	response: {
 		200: {
-			type: 'object',
-			required: ['id', 'username', 'picture', 'matchHistory'],
-			properties: {
-				id: { type: 'integer', minimum: 1 },
-				username: { type: 'string' },
-				picture: { type: 'string' },
-				matchHistory: {
-					type: 'array',
-					items: {
-						type: 'object',
-						required: ['gameId', 'date', 'score', 'result', 'opponentId', 'opponentName', 'opponentPicture'],
-						properties: {
-							gameId: { type: 'integer' },
-							date: { type: 'string', format: 'date-time' },
-							score: { type: 'string' },
-							result: { type: 'string' },
-							opponentId: { type: 'integer' },
-							opponentName: { type: 'string' },
-							opponentPicture: { type: 'string' },
-						},
-						additionalProperties: false
-					}
-				}
+			type: 'array',
+			items: {
+				type: 'object', 
+				required: ['id', 'username', 'picture', 'gameId', 'date', 'score', 'result', 'opponentId', 'opponentName', 'opponentPicture'],
+				properties: {
+					id: { type: 'integer'},
+					username: { type: 'string' },
+					picture: { type: 'string' },
+					gameId: { type: 'integer' },
+					date: { type: 'string', format: 'date-time' },
+					score: { type: 'string' },
+					result: {type: 'string'},
+					opponentId: { type: 'integer'},
+					opponentName: { type: 'string'},
+					opponentPicture: { type: 'string'},
+				},
+				additionalProperties: false,
 			}
 		},
-    400: errorResponseSchema,
-    401: errorResponseSchema,
-    403: errorResponseSchema,
-    404: errorResponseSchema,
-    500: errorResponseSchema,
-    502: errorResponseSchema,
-  }
+		400: errorResponseSchema,
+		401: errorResponseSchema,
+		403: errorResponseSchema,
+		404: errorResponseSchema,
+		500: errorResponseSchema,
+		502: errorResponseSchema,
+	}
 };
 
 export const deleteUserSchema = {
