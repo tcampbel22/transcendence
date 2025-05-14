@@ -5,7 +5,7 @@ type Friends = {
     id: number,
     username: string,
     picture: string | null,
-    status: "online" | "offline"
+    status: boolean
 }
 
 type GameControlProps = {
@@ -19,7 +19,7 @@ type GameControlProps = {
 const GameControls = ({userId, resetGame, setIsGameStarted, setOpponentUserId}: GameControlProps) => {
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState<Friends | null>(null);
-    const {friendsList, reFetch}= useFriendslist(userId) || []; // Fetch the friends list using the custom hook
+    const {friendsList, reFetch}= useFriendslist(userId) || [];
 
     const handleClick = () => {
 		setIsGameStarted(true);

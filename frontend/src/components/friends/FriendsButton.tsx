@@ -8,7 +8,7 @@ type Friends = {
     id: number,
     username: string,
     picture: string | null,
-    status: "online" | "offline"
+    status: boolean
 }
 
 type Id = {
@@ -18,7 +18,6 @@ type Id = {
 };
 
 const FriendsButton = ({userId, friendsList, onSuccess} : Id) => {
-    // const { friendsList, reFetch } = useFriendslist(userId);
     const [open, setOpen] = useState(false);
     
 	const toggleOpen = () => {
@@ -35,7 +34,7 @@ const FriendsButton = ({userId, friendsList, onSuccess} : Id) => {
 		  	console.error('Failed to delete friend', error);
 		}
 	  };
-
+	  console.log(friendsList);
     return (
         <div className="relative z-50 inline-block">
         <button title='Friends List' className={`transition-all duration-200 ease-in-out 

@@ -1,17 +1,21 @@
 type FriendItemProps = {
-	friend: { id: number; username: string; status: 'online' | 'offline' };
+	friend: { id: number; username: string; status: boolean };
 	onDelete: () => void;
   };
   
-  const FriendItem = ({ friend, onDelete }: FriendItemProps) => (
+  
+  const FriendItem = ({ friend, onDelete }: FriendItemProps) => {
+	
+
+	return (
 	<div className="flex items-center justify-between px-4 py-2 hover:bg-gray-200">
 	  <div className="flex items-center space-x-2">
 		<span>{friend.username}</span>
 		<span
 		  className={`w-2 h-2 rounded-full ${
-			friend.status === 'online' ? 'bg-green-500' : 'bg-red-400'
+			friend.status === true ? 'bg-green-500' : 'bg-red-400'
 		  }`}
-		  title={friend.status}
+		  title={friend.status === true ? "online" : "offline"}
 		/>
 	  </div>
 	  <button
@@ -22,6 +26,7 @@ type FriendItemProps = {
 		🗑️
 	  </button>
 	</div>
-  );
+	);
+  }
 
   export default FriendItem;
