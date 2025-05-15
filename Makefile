@@ -22,7 +22,7 @@ ssl_cert:
 		openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 			-keyout $$SSL_KEY \
 			-out $$SSL_CERT \
-			-subj "/C=FI/ST=Uusimaa/L=Helsinki/O=42/OU=Hive/CN=soyboys.42.fr" \
+			-subj "/C=FI/ST=Uusimaa/L=Helsinki/O=42/OU=Hive/CN=nginx" \
 			2>/dev/null; \
 		echo "$(GREEN)SSL certificate generated.$(RESET)"; \
 	else \
