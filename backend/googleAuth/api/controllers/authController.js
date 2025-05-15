@@ -18,11 +18,12 @@
             email: profile.emails[0].value,
             password: profile.id,
         };
-         const response = await axios.post(
+        /* const response = await axios.post(
              `https://nginx:4433/users/register`,
              payload,
              { httpsAgent }
-         ); 
+         ); */
+         const response = await axios.post("http://localhost:3002/api/register", payload);
          const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId }));
          reply.redirect(`/auth/google/callback.html?user=${userData}`);
      } 
@@ -33,11 +34,12 @@
                 username: profile.displayName,
                 password: profile.id,
             };
-            const response = await axios.post(
+            /*const response = await axios.post(
                 `https://nginx:4433/users/login`,
                 loginInput,
                 { httpsAgent }
-            );
+            );*/
+            const response = await axios.post("http://localhost:3002/api/login", loginInput);
             const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId }));
             reply.redirect(`/auth/google/callback.html?user=${userData}`);
          } else {

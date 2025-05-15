@@ -3,7 +3,7 @@ window.onload = function () {
     const userParam = params.get('user');
     if (userParam) {
       const userData = JSON.parse(decodeURIComponent(userParam));
-      window.opener.postMessage(userData, "https://localhost:4433");
+      window.opener.postMessage(userData, "http://localhost:5173/");
     } else {
       console.log("No URL.");
     }

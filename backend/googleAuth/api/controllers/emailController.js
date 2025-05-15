@@ -14,7 +14,7 @@ export const sendEmail = async (request, reply) => {
 
     const msg = {
         to,
-        from: "deivyla@hotmail.com", // SendGrid authorized sender
+        from: "transcendencetheboys@gmail.com",
         subject: "Your OTP Code",
         text: `Your OTP code is ${otp}. Use this code to login to your account. It expires in 5 minutes.`,
     };

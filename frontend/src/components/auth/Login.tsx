@@ -5,16 +5,17 @@ import { useNavigate } from 'react-router-dom';
 import React, { useEffect } from "react";
 
 const Login = () => {
-	//const API_URL = import.meta.env.VITE_API_USER;
+	const API_URL = import.meta.env.VITE_API_USER;
 	const [password, setPassword] = useState('')
 	const [username, setUsername] = useState('')
 	const [loginError, setLoginError] = useState('');
 	const navigate = useNavigate()
-	const API_URL = "https://localhost:4433/users";
-	const API_OTP = "https://localhost:4433/auth";
+	//const API_URL = "https://localhost:4433/users";
+	const API_OTP = import.meta.env.VITE_API_AUTH;
+	//const API_OTP = "https://localhost:4433/auth"; // Adjusted API URL
 
 	const handleGoogleLogin = async () => {
-		window.open("https://localhost:4433/auth/google", "GoogleLoginPopup", "width=500,height=600");
+		window.open("http://localhost:3003/google", "GoogleLoginPopup", "width=500,height=600");
 	};
 
 	useEffect(() => {

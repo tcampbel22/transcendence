@@ -6,7 +6,9 @@ const OTPInput: React.FC = () => {
   const [otp, setOtp] = useState<string>(""); 
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const API_OTP = "https://localhost:4433/auth";
+  //const API_OTP = "https://localhost:4433/auth"; // Adjusted API URL
+  //const API_OTP = "http://localhost:3003";
+   const API_OTP = import.meta.env.VITE_API_AUTH; // Adjusted API URL
   const [isResending, setIsResending] = useState<boolean>(false); // Track resend status
 
   const navigate = useNavigate();
