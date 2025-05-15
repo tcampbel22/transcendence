@@ -2,35 +2,3 @@
 @tailwind components;
 @tailwind utilities;
 
-
-.otp-container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-image: url("/public/images/epic_background.png");
-  background-size: cover;
-  background-position: center;
-}
-
-input {
-  padding: 10px;
-  font-size: 18px;
-  text-align: center;
-}
-
-.error {
-  color: red;
-}
-
-.success {
-  color: green;
-}
-
-button {
-  margin-top: 10px;
-  padding: 8px 16px;
-  font-size: 16px;
-}

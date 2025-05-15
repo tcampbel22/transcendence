@@ -4,7 +4,7 @@ import axios from 'axios'
 import { ContainerWithChildren } from 'postcss/lib/container';
 
 const Register = () => {
-	const API_URL = import.meta.env.VITE_API_USER;
+	//const API_URL = import.meta.env.VITE_API_USER;
 	const [username, setUsername] = useState('')
   	const [password, setPassword] = useState('')
 	const [email, setEmail] = useState('')
@@ -13,6 +13,8 @@ const Register = () => {
 	const [preview, setPreview] = useState<string | null>(null)
 	const [loginError, setError] = useState('')
 	const navigate = useNavigate();
+	//const API_URL = "http://localhost:3002/api"
+	const API_URL = "https://localhost:4433/users";
 
 	const registerUser = async () => {
 

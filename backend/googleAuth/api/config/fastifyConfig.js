@@ -17,16 +17,16 @@ import cors from "@fastify/cors";
 
 dotenv.config();
 
-
-const SSL_CERT_PATH = "./ssl/cert.pem";
-const SSL_KEY_PATH = "./ssl/key.pem";
+const isProduction = process.env.NODE_ENV === "production";
 
 const fastify = Fastify({
-	logger: true,
-	https: {
-		key: fs.readFileSync(SSL_KEY_PATH),
-		cert: fs.readFileSync(SSL_CERT_PATH),
-	},
+    logger: true,
+    ...(isProduction && {
+        https: {
+            key: fs.readFileSync("./ssl/key.pem"),
+            cert: fs.readFileSync("./ssl/cert.pem"),
+        },
+    }),
 });
 
 fastify.register(fastifySecureSession, {
@@ -34,7 +34,7 @@ fastify.register(fastifySecureSession, {
     cookie: {
         path: '/',
         httpOnly: true,
-        secure: false,
+        secure: isProduction, // Solo cookies seguras en producción
     },
 });
 
@@ -42,7 +42,7 @@ fastify.register(fastifySecureSession, {
 fastify.register(cors, {
     origin: "http://localhost:5173", // Allow only your frontend
     methods: ["GET", "POST"], // Allow these HTTP methods
-  });
+});
 
 fastify.register(emailRoutes);
 

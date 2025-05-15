@@ -5,11 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import React, { useEffect } from "react";
 
 const Login = () => {
-	const API_URL = import.meta.env.VITE_API_USER;
+	//const API_URL = import.meta.env.VITE_API_USER;
 	const [password, setPassword] = useState('')
 	const [username, setUsername] = useState('')
 	const [loginError, setLoginError] = useState('');
 	const navigate = useNavigate()
+	const API_URL = "https://localhost:4433/users";
+	const API_OTP = "https://localhost:4433/auth";
 
 	const handleGoogleLogin = async () => {
 		window.open("https://localhost:4433/auth/google", "GoogleLoginPopup", "width=500,height=600");
@@ -44,14 +46,13 @@ const Login = () => {
 			password,
 		}
 		try {
-			const response = await axios.post(`${API_URL}/login`, loginInput , { withCredentials: true });
-			//console.log("logged in succesfully", response.data);
+			const response = await axios.post(`${API_URL}/login`, loginInput);
+			//console.log("logged in succesfully", response.data)
 			const userEmail = response.data.email;
 
 			// Request OTP
-			const otpToken = await axios.post("https://localhost:3003/send-email", { to: userEmail });
+			const otpToken = await axios.post(`${API_OTP}/send-email`, { to: userEmail });
 			navigate('/2fa', { state: { userData: response.data, otpToken: otpToken.data.token } });
-; 
 		} catch (error: any) {
 			console.error("Error:", error.response?.data || error.message);
 			// navigate('/hub')

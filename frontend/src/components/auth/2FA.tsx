@@ -1,18 +1,17 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../../index.css";
 
 const OTPInput: React.FC = () => {
   const [otp, setOtp] = useState<string>(""); 
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const navigate = useNavigate();
-  
-  const location = useLocation();
-  const { userData, otpToken } = location.state || {}; // Ensure correct keys
+  const API_OTP = "https://localhost:4433/auth";
+  const [isResending, setIsResending] = useState<boolean>(false); // Track resend status
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { userData, otpToken } = location.state || {}; // Extract values safely
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -31,11 +30,12 @@ const OTPInput: React.FC = () => {
     }
 
     try {
-      const response = await axios.post("https://localhost:3003/verify-otp", { otp, otpToken });
-      console.log("Response from OTP verification:", response.data);
+      console.log("Sending OTP verification request:", { otp, otpToken });
+      const response = await axios.post(`${API_OTP}/verify-otp`, { otp, otpToken });
+
       if (response.data.success) {
         setSuccessMessage("OTP verified successfully!");
-        navigate("/hub", { state: userData }); // Redirect to the hub page        
+        navigate("/hub", { state: userData }); // Redirect after successful verification
       } else {
         setError("Invalid or expired OTP. Please try again.");
       }
@@ -44,22 +44,56 @@ const OTPInput: React.FC = () => {
     }
   };
 
+  const handleResendOTP = async () => {
+    setIsResending(true);
+    setOtp(""); 
+    setError(null); 
+    setSuccessMessage(null);
+
+    try {
+      console.log("Resending OTP to:", userData.email);
+
+      const response = await axios.post(`${API_OTP}/send-email`, { to: userData.email });
+
+      if (response.data.success) {
+        console.log("New OTP token:", response.data.token);
+        setSuccessMessage("A new authentication has been sent to your email.");
+        navigate("/2fa", { state: { userData, otpToken: response.data.token } });
+      } else {
+        setError("Failed to resend OTP. Please try again.");
+      }
+    } catch (error) {
+      setError("Error resending OTP. Check your connection.");
+    } finally {
+      setIsResending(false);
+    }
+  };
+
   return (
-    <div className="otp-container">
-      <h2>Two-Factor Authentication</h2>
-      <p>Enter the authentication code sent to <strong>{userData?.email}</strong>:</p>
+    <div className="otp-container min-h-screen flex flex-col justify-center items-center bg-cover bg-center bg-no-repeat text-white"
+         style={{ backgroundImage: "url('/images/background.jpg')" }}>
+      <p className="text-lg font-bold text-white-500">
+        Enter the authentication code sent to <strong>{userData?.email}</strong>:
+      </p>
       <input
         type="text"
         value={otp}
         onChange={handleChange}
         placeholder="123456"
         maxLength={6}
-        style={{ padding: "10px", fontSize: "16px", textAlign: "center" }}
+        className="w-40 text-center p-2 text-lg bg-gray-800 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
       />
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
-      <button onClick={handleSubmit} style={{ marginTop: "10px", padding: "8px", fontSize: "16px" }}>
+      {error && <p className="text-white-500 font-bold text-lg">{error}</p>}
+      {successMessage && <p className="text-white-500 font-bold text-lg">{successMessage}</p>}
+      <button onClick={handleSubmit} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
         Verify OTP
+      </button>
+      <button
+        onClick={handleResendOTP}
+        disabled={isResending}
+        className={`mt-2 px-4 py-2 rounded-md ${isResending ? "bg-gray-500 cursor-not-allowed" : "bg-yellow-500 hover:bg-yellow-600"} text-white`}
+      >
+        {isResending ? "Resending..." : "Resend Code"}
       </button>
     </div>
   );
