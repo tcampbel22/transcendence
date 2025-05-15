@@ -20,7 +20,7 @@ export const loginService = {
 		const token = jwt.sign(
 			{ id: user.id, username: user.username },
 			JWT_SECRET,
-			{ expiresIn: "1h"}
+			{ expiresIn: "7s"}
 		)
 		const { password: _, ...noPasswordUser} = user;
 		return { user: noPasswordUser, isMatch, token };

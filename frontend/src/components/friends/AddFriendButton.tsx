@@ -1,4 +1,5 @@
 import axios, { AxiosError } from "axios";
+import api from "../../lib/api";
 import { useState } from "react";
 
 
@@ -24,7 +25,7 @@ const AddFriendButton = ({userId} : Id) => {
             const payload = {
                 friendUsername: friendsName,
             }
-            const res = await axios.post(`${API_URL}/${userId}/friends`, payload, {withCredentials: true});
+            const res = await api.post(`${API_URL}/${userId}/friends`, payload, {withCredentials: true});
             setMessage("Friend added successfully!");
             setIsError(false);
         } catch (err) {

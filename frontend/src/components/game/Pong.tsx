@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react';
-import axios from 'axios'; // Import axios for HTTP requests
 import GameCanvas  from "./GameCanvas"
 import GameControls from "./GameControls"
 import { useGameLoop } from '../../hooks/useGameLoop'
