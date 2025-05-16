@@ -55,9 +55,22 @@ down:
 	@echo "$(GREEN)Docker containers stopped.$(RESET)"
 
 basic: ssl_cert build-frontend
-		@echo "$(YELLOW)Building docker images...$(RESET)"
+	@echo "$(YELLOW)Building docker images...$(RESET)"
 	@docker-compose -f $(DOCKER_COMPOSE_FILE) up -d nginx file_service user_service  game_service googlesignin
 	@echo "$(GREEN)Docker images built.$(RESET)"
+
+redo:
+	@echo "$(YELLOW)Stopping container...$(RESET)"
+	@if [ "$(filter-out $@,$(MAKECMDGOALS))" ]; then \
+		echo "$(YELLOW)Rebuilding specific service: $(filter-out $@,$(MAKECMDGOALS))...$(RESET)"; \
+		docker compose -f $(DOCKER_COMPOSE_FILE) down $(filter-out $@,$(MAKECMDGOALS)); \
+		docker compose -f $(DOCKER_COMPOSE_FILE) up --build -d $(filter-out $@,$(MAKECMDGOALS)); \
+	else \
+		echo "$(YELLOW)Rebuilding all services...$(RESET)"; \
+		docker compose down; \
+		docker compose up --build -d; \
+	fi
+	@echo "$(GREEN)Rebuild complete.$(RESET)"
 
 clean: down
 	@echo "$(YELLOW)Removing docker images...$(RESET)"
@@ -90,3 +103,6 @@ logs:
 re: clean all
 
 re_basic: clean basic
+
+%:
+	@:
