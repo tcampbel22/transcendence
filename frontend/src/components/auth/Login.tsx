@@ -6,21 +6,21 @@ import React, { useEffect } from "react";
 
 const Login = () => {
 	const API_URL = import.meta.env.VITE_API_USER;
+	const API_OTP = import.meta.env.VITE_API_AUTH;
+	const API_GOOGLE_URL = import.meta.env.VITE_API_GOOGLE;
 	const [password, setPassword] = useState('')
 	const [username, setUsername] = useState('')
 	const [loginError, setLoginError] = useState('');
 	const navigate = useNavigate()
-	//const API_URL = "https://localhost:4433/users";
-	const API_OTP = import.meta.env.VITE_API_AUTH;
-	//const API_OTP = "https://localhost:4433/auth"; // Adjusted API URL
+
 
 	const handleGoogleLogin = async () => {
-		window.open("http://localhost:3003/google", "GoogleLoginPopup", "width=500,height=600");
+		window.open(`${API_GOOGLE_URL}/google`, "GoogleLoginPopup", "width=500,height=600");
 	};
 
 	useEffect(() => {
 		const receiveMessage = (event:MessageEvent) => {
-			if (event.origin !== "https://localhost:4433") 
+			if (event.origin !== "https://localhost:4433" && event.origin !== "http://localhost:5173") 
 					return;
 			if (!event.data.statusCode) {	
 				//console.log("Received message from Google login:", event.data);
