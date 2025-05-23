@@ -1,2 +1,2 @@
-GAME_DATABASE_URL="file:../data/game.db"
+DATABASE_URL="file:../data/game.db"
 NODE_ENV="production"
