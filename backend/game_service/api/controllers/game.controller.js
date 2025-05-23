@@ -65,7 +65,7 @@ export const gameController = {
     try {
       const { id } = request.params;
       const userGames = await gameService.getUserGames(parseInt(id));
-      logger.info(`Information retrieved succesfully`);
+      logger.info(`Information retrieved successfully`);
       return reply.code(200).send({
         message: `User ${id}'s games fetched successfully`,
         id,
