@@ -5,6 +5,8 @@ const BOARD_HEIGHT = 500;
 const PADDLE_WIDTH = 10;
 const PADDLE_HEIGHT = 100;
 const BALL_SIZE = 10;
+const radius = 8;
+const PADDLE_OFFSET = 5;
 
 type GameCanvasProps = {
 	ballX: number;
@@ -26,7 +28,7 @@ const GameCanvas = ({ballX, ballY, leftPaddleY, rightPaddleY}: GameCanvasProps) 
 			return;
 
 		ctx.clearRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
-		ctx.fillStyle = 'black';
+		ctx.fillStyle = '#f5f5dc';
 		ctx.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
 		ctx.strokeStyle = '#39FF14';
 		ctx.lineWidth = 4;
@@ -37,19 +39,24 @@ const GameCanvas = ({ballX, ballY, leftPaddleY, rightPaddleY}: GameCanvasProps) 
 		ctx.lineTo(BOARD_WIDTH / 2, BOARD_HEIGHT);
 		ctx.stroke();
 		ctx.setLineDash([]);
-		ctx.fillStyle = '#39FF14';
+		ctx.fillStyle = 'black';
 		ctx.beginPath();
 		ctx.arc(ballX + BALL_SIZE/2, ballY + BALL_SIZE/2, BALL_SIZE/2, 0, Math.PI * 2);
 		ctx.fill();
 		ctx.fill();
-		ctx.fillStyle = '#FFFF00';
-		ctx.fillRect(0, leftPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
-		ctx.fillStyle = '#BC13FE';
-    	ctx.fillRect(BOARD_WIDTH - PADDLE_WIDTH, rightPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
+		ctx.beginPath();
+		ctx.fillStyle = 'blue';
+		(ctx as any).roundRect(5, leftPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT, radius);
+		ctx.fill();
+		const rightX = BOARD_WIDTH - PADDLE_WIDTH - PADDLE_OFFSET;
+		ctx.beginPath();
+		ctx.fillStyle = 'brown';
+    	(ctx as any).roundRect(rightX, rightPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT, radius);
+		ctx.fill();
 	}, [ballX, ballY, leftPaddleY, rightPaddleY]);
 
-	return ( 
-		<canvas ref={canvasRef} width={BOARD_WIDTH} height={BOARD_HEIGHT} />
+	return (
+			<canvas ref={canvasRef} width={BOARD_WIDTH} height={BOARD_HEIGHT} className="rounded shadow-lg border-2 border-black"/>
 	);
 }
 
