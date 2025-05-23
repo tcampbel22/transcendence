@@ -33,7 +33,6 @@
         } else {
          response = await axios.post("http://localhost:3002/api/register", payload);
         }
-        console.log("redirectURL ", redirectURL);
          const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId, redirectURL }));
          reply.redirect(`/auth/google/callback.html?user=${userData}`);
      } 
@@ -55,7 +54,6 @@
             else {
             response = await axios.post("http://localhost:3002/api/login", loginInput);
             }
-            console.log("redirectURL ", redirectURL);
             const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId, redirectURL }));
             reply.redirect(`/auth/google/callback.html?user=${userData}`);
          } else {
