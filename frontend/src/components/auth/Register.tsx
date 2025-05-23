@@ -6,6 +6,7 @@ import { ContainerWithChildren } from 'postcss/lib/container';
 
 const Register = () => {
 	const API_URL = import.meta.env.VITE_API_USER;
+	const BASE_URL = import.meta.env.VITE_BASE_USER_URL || '';
 	const [username, setUsername] = useState('')
   	const [password, setPassword] = useState('')
 	const [email, setEmail] = useState('')
@@ -31,11 +32,12 @@ const Register = () => {
 		};
 
 		const response = await axios.post(`${API_URL}/register`, payload, {withCredentials: true}) //product
-		return response.data
+		return response.data.id
 	}
 
 	const uploadProfileImage = async (userId: number) => {
 		// Don't proceed if no image selected
+		console.log(userId);
 		if (!image) return;
 		
 		// Create proper FormData
