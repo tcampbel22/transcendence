@@ -4,6 +4,9 @@ import { userIdFromState } from "../hooks/userIdFromState";
 import { userNameFromState } from "../hooks/useNameFromState";
 import FriendsButton from "../components/friends/FriendsButton";
 import AddFriendButton from "../components/friends/AddFriendButton"
+import { Header1 } from "../components/utils/Headers";
+import { Card } from "../components/utils/Card";
+import { TitleCard } from "../components/utils/TitleCard";
 
 
 const Hub = () => {
@@ -11,68 +14,19 @@ const Hub = () => {
   	const userInfo = location.state as { userId: number; username: string };
     const userId = userIdFromState() as number;
 	console.log("userid is:", userId);
-	const baseCardClass = "w-60 h-72 bg-cover bg-center rounded-lg shadow-lg p-1 transform hover:scale-110 transition-all duration-300 ease-in-out relative hover:shadow-xl hover:rotate-1";
-    
-	
-	
+
 	return (
-        <div 
-        >
-         <h1 className="items-center text-white text-4xl font-bold animate-fade-in">Welcome</h1>
+        <div className="flex flex-col items-center justify-start w-full min-h-screen pt-16 px-4 overflow-x-hidden">
+		<TitleCard image={"/images/welcome.webp"}/>
         <div className="absolute top-5 right-10">
                 <AddFriendButton userId={userInfo.userId}/>
                 <FriendsButton userId={userInfo.userId}/>
         </div>
-            <div className="flex  min-h-screen sm:flex-row items-center justify-center gap-6 animate-slide-in">
-
-                <div    className={baseCardClass} //1v1
-                        style={{
-                            backgroundImage: `url("/images/1v1_2.png")`,
-                        }}
-                    >
-                    <Link 
-                        to="/play/1v1"
-						state={userInfo} 
-                        className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">    
-                    </Link>
-                </div>
-
-                <div className={baseCardClass} //tournamenet
-                        style={{
-                            backgroundImage: `url("/images/tournament.png")`,
-                        }}
-                    >
-                    <Link 
-                        to="/play/tournament"
-						state={userId} 
-                        className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">
-                    </Link>
-                </div>
-
-                <div className={baseCardClass} //profile
-                        style={{
-                            backgroundImage: `url("/images/new_profile.png")`,
-                        }}
-                    >
-                    <Link 
-                        to="/profile"
-						state={userInfo.userId}
-                        className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">
-						   
-                    </Link>
-                </div>
-                
-                <div className={baseCardClass} //logout
-                        style={{
-                            backgroundImage: `url("/images/logout.png")`,
-                        }}
-                    >
-                    <Link 
-                        to="/logout" 
-						state={userId}
-                        className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">    
-                    </Link>
-                </div>
+            <div className="flex flex-col lg:flex-row items-center justify-center gap-6">
+			<Card image="/images/1v1_2.png" link={"/play/1v1"} data={userInfo}/>
+			<Card image="/images/tournament.png" link={"/play/tournament"} data={userId}/>
+			<Card image="/images/new_profile.png" link={"/profile"} data={userInfo.userId}/>
+			<Card image="/images/logout.png" link={"/logout"} data={userId}/>
             </div>
         </div>
     );

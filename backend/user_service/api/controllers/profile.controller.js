@@ -40,10 +40,7 @@ export const profileController = {
 	async getUserList(request, reply){
 		try {
 			const users = await profileService.getUserList();
-			return reply.code(200).send({
-				message: `User list fetched successfully`,
-				users: users
-			})
+			return reply.code(200).send(users)
 		} catch (err) {
 			request.log.error(err);
 			return handleError(err, reply, `Failed to fetch users`);

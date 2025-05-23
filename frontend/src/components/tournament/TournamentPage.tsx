@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Pong from '../game/Pong';
 import api from '../../lib/api';
-import TournamentSetup from './TournamentSetUp';
+import TournamentSetup from './TournamentType';
 
 // Define the types of tournaments
 type TournamentType = '4player' | '8player';
