@@ -57,7 +57,7 @@ const OTPInput: React.FC = () => {
 
       if (response.data.success) {
         console.log("New OTP token:", response.data.token);
-        setSuccessMessage("A new authentication has been sent to your email.");
+        setSuccessMessage("A new code has been sent to your email.");
         navigate("/2fa", { state: { userData, otpToken: response.data.token } });
       } else {
         setError("Failed to resend OTP. Please try again.");
