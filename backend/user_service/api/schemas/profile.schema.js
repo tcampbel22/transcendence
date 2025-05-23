@@ -30,6 +30,7 @@ export const getUserProfileSchema = {
 				username: { type: 'string' },
 				email: { type: 'string' },
 				picture: { type: 'string' },
+				isOnline: { type: 'boolean' }
 			}
 		},
 		400: errorResponseSchema,

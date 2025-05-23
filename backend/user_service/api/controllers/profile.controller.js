@@ -31,6 +31,7 @@ export const profileController = {
 				username: user.username,
 				email: user.email,
 				picture: user.picture,
+				isOnline: user.isOnline
 			})
 		} catch (err) {
 			request.log.error(err);
@@ -68,17 +69,19 @@ export const profileController = {
 	},
 	async updatePicture(request, reply) {
 		const { id } = request.params;
-		// const { newPicture } = request.body;
 		
 		try {
 			const data = await request.file();
 			if (!data)
 				throw new ErrorNotFound(`No file uploaded`);
 			const fileExtension = path.extname(data.filename).toLowerCase();
-			if (!['jpg', '.jpeg', '.png'].includes(fileExtension))
+			if (!['.jpg', '.jpeg', '.png'].includes(fileExtension))
 				throw new ErrorUnAuthorized(`File should be jpg, jpeg or png`);
-			const filename = `user_${id}_${Date.now()}${fileExtension}`;
-			const filepath = `./uploads/${filename}`;
+			
+			const filename = `user_${id}${fileExtension}`;
+
+			const uploadDir = process.env.NODE_ENV === 'production' ? '/app/uploads' : './uploads';
+			const filepath = `${uploadDir}/${filename}`;
 			const pictureUrl = `/uploads/${filename}`;
 			
 			const pump = util.promisify(pipeline);
@@ -93,7 +96,7 @@ export const profileController = {
 			});
 		} catch (err) {
 			request.log.error(err);
-			return handleError(err, reply, `Failed to update user${id}'s profile picture`);
+			return handleError(err, reply, `Failed to update user ${id}'s profile picture`);
 		}
 	},
 
@@ -166,11 +169,8 @@ export const profileController = {
 	async getMatchHistory(request, reply) {
 		const { id } = request.params;
 		try {
-			const matchHistory = await profileService.getMatchHistory(parseInt(id));
-			return reply.code(200).send({
-				message: `User ${id}'s match history fetched successfully`,
-				matchHistory,
-			})
+			const matchHistory = await profileService.getMatchHistory(parseInt(id));	
+			return reply.code(200).send(matchHistory)
 		} catch (err) {
 			logger.error(`Failed to fetch user ${id}'s match history: ${err.message}`);
 			request.log.error(err);

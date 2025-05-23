@@ -4,6 +4,9 @@ import axios from "axios";
 import logger from "@eleekku/logger";
 import { ErrorConflict, ErrorNotFound, ErrorCustom, ErrorUnAuthorized, ErrorBadRequest } from "@app/errors";
 
+const isProduction = process.env.NODE_ENV === 'production'
+const SERVICE_URL = isProduction ? 'game_service' : 'localhost' 
+
 export const profileService = {
 	// Check if user is in db
 	async validateUser(id) {
@@ -25,6 +28,7 @@ export const profileService = {
                 username: true,
                 email: true,
                 picture: true,
+				isOnline: true
             },
         });
         if (!user) 
@@ -89,9 +93,9 @@ export const profileService = {
         if (!user)
             throw new ErrorNotFound(`updatePicture: User ${id} cannot be found`);
 
-        // Check if the new picture is the same as the current one
-        if (user.picture === newPicture)
-            throw new ErrorConflict(`updatePicture: Picture already exists, please choose another`);
+        // // Check if the new picture is the same as the current one
+        // if (user.picture === newPicture)
+        //     throw new ErrorConflict(`updatePicture: Picture already exists, please choose another`);
 
         // Update the profile picture
         const newUser = await prisma.user.update({
@@ -194,78 +198,11 @@ export const profileService = {
 			throw (err);
 		}
     },
-
-    // async getMatchHistory(id) {
-    //     // Fetch the user's basic information
-    //     const user = await prisma.user.findUnique({
-    //         where: { id: id },
-    //         select: {
-    //             id: true,
-    //             username: true,
-    //             picture: true,
-    //         },
-    //     });
-    //     if (!user)
-    //         throw new ErrorNotFound(`getMatchHistory: User ${id} cannot be found`);
-    
-    //     try {
-    //         // Fetch match history from the game service
-    //         const response = await axios.get(`http://game_service:3001/api/user/${id}`);
-    
-    //         if (response.status !== 200)
-    //             throw new ErrorCustom(`Error retrieving match history ${response.statusText}`, response.status);
-    
-    //         // Validate match history response
-    //         if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
-    //             return {
-    //                 ...user,
-    //                 matchHistory: [],
-    //                 message: `No match history found for this user ${id}`,
-    //             };
-    //         }
-    
-    //         // Fetch all opponent information in one query
-    //         const opponentIds = [...new Set(response.data.flatMap(game => [game.player1Id, game.player2Id]))];
-    //         const opponents = await prisma.user.findMany({
-    //             where: { id: { in: opponentIds.map(id => parseInt(id)) } },
-    //             select: {
-    //                 id: true,
-    //                 username: true,
-    //                 picture: true,
-    //             },
-    //         });
-    
-    //         const opponentMap = Object.fromEntries(opponents.map(opp => [opp.id, opp]));
-    
-    //         // Process and format the match history
-    //         const matchHistory = response.data.map((game) => {
-    //             const isPlayer1 = game.player1Id === id;
-    //             const oppId = isPlayer1 ? game.player2Id : game.player1Id;
-    //             const opp = opponentMap[oppId];
-    
-    //             if (!opp) {
-    //                 throw new ErrorNotFound(`Opponent with ID ${oppId} cannot be found`);
-    //             }
-    
-    //             return {
-    //                 gameId: game.id,
-    //                 date: game.createdAt,
-    //                 score: `${game.player1Score} - ${game.player2Score}`,
-    //                 result: game.winnerId === id ? "Winner" : "Loser",
-    //                 opponentId: opp.id,
-    //                 opponentName: opp.username,
-    //                 opponentPicture: opp.picture,
-    //             };
-    //         });
-    
-    //         return { ...user, matchHistory };
-    //     } catch (err) {
-    //         logger.error(`getMatchHistory: Failed to retrieve match history for user ${id}. Error: ${err.message}`);
-    //         throw new ErrorCustom(err.message, err.response?.status || 500);
-    //     }
-    // },
     // Fetches a user's match history
     async getMatchHistory(id) {
+        const gameServiceBaseUrl = process.env.NODE_ENV === "production"
+        ? "https://game_service"
+        : "http://localhost";
         // Fetch the user's basic information
         const user = await prisma.user.findUnique({
             where: { id: id },
@@ -281,36 +218,35 @@ export const profileService = {
         try {
             // Fetch match history from the game service
             const response = await axios.get(
-                `http://localhost:3001/api/user/${id}`
+                `${gameServiceBaseUrl}:3001/api/user/${id}`
             );
             if (response.status !== 200)
                 throw new ErrorCustom(`Error retrieving match history ${response.statusText}`, response.status);
 
-            // Handle empty match history
-            if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
-                return {
-                    ...user,
-                    matchHistory: [],
-                    message: `No match history found for this user ${id}`,
-                };
+            const games = response.data.userGames;
+
+                // Handle empty match history
+            if (!games || !Array.isArray(games) || games.length === 0) {
+                return [];
             }
 
             // Process and format the match history
             const matchHistory = await Promise.all(
-                response.data.map(async (game) => {
+                games.map(async (game) => {
                     if (
-                        !game.id ||
-                        !game.createdAt ||
-                        !game.player1Score ||
-                        !game.player2Score
+                        game.id == null || // Check for null or undefined
+                        game.createdAt == null ||
+                        game.player1Score == null || // Allow 0 as a valid value
+                        game.player2Score == null
                     ) {
-                        throw new ErrorNotFound(`Invalid game data received from game service`);
+                        logger.error(`Invalid game data: ${JSON.stringify(game)}`);
+                        return null; // Skip invalid games
                     }
+
                     const isPlayer1 = game.player1Id === id;
-                    const oppId =
-                        game.player1Id !== id
-                            ? game.player1Id
-                            : game.player2Id;
+                    const oppId = isPlayer1 ? game.player2Id : game.player1Id;
+
+                    // Fetch opponent information
                     const oppName = await prisma.user.findUnique({
                         where: { id: parseInt(oppId) },
                         select: {
@@ -318,27 +254,28 @@ export const profileService = {
                             picture: true,
                         },
                     });
+
                     return {
+                        id: id, 
+                        username: user.username,
+                        picture: user.picture,
                         gameId: game.id,
                         date: game.createdAt,
                         score: `${game.player1Score} - ${game.player2Score}`,
-                        result:
-                            game.winnerId === id ? "Winner" : "Loser",
-                        opponentId: isPlayer1
-                            ? game.player2Id
-                            : game.player1Id,
-                        opponentName: oppName.username,
-                        opponentPicture: oppName.picture,
+                        result: game.winnerId === id ? "Winner" : "Loser",
+                        opponentId: oppId,
+                        opponentName: oppName?.username || "Unknown",
+                        opponentPicture: oppName?.picture || null,
                     };
                 })
             );
-            const newMatchHistory = { ...user, matchHistory };
-            return newMatchHistory;
+            return matchHistory;
         } catch (err) {
             logger.error(`getMatchHistory: Failed to retrieve match history`);
             throw new ErrorCustom(err.message, err.statusCode);
         }
     },
+
     // Deletes a user
     async deleteUser(id) {
         const user = await prisma.user.findUnique({
@@ -358,12 +295,12 @@ export const profileService = {
 			select: {
 				friends: {
 					select: {
-                        isOnline: true,
 						friend: {
 							select: {
 								id: true,
 								username: true,
 								picture: true,
+								isOnline: true,
 							},
 						},
 					},
@@ -413,8 +350,8 @@ export const profileService = {
 		//Create friendship for friend
 		await prisma.friend.createMany({
 			data: [
-				{ userId: id, friendId: friend.id, isOnline: false },
-				{ userId: friend.id, friendId: id, isOnline: false },
+				{ userId: id, friendId: friend.id },
+				{ userId: friend.id, friendId: id },
 			],
 		});
 		return friend.id
