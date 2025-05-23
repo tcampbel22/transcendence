@@ -32,7 +32,7 @@ export async function add_user(username) {
 		const user = await tx.user.create({
 			data: {
 				username: username, 
-				email: `${username}fake@gmail.com`,
+				email: `${username}@gmail.com`,
 				password: "kissa"
 		}});
 		await tx.userStats.create({

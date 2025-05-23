@@ -25,7 +25,7 @@ export const profileService = {
       throw new ErrorNotFound(`validateUser: User ${id} cannot be found`);
     return user;
   },
-
+  
   // Fetches a user's profile
   async getUser(id) {
     const user = await prisma.user.findUnique({

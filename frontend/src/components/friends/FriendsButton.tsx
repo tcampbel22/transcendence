@@ -1,34 +1,53 @@
 import { useFriendslist } from "../../hooks/useFriendsList";
+import { deleteFriend } from "../../hooks/deleteFriend"
 import { useState } from "react";
+import { AxiosError } from "axios";
+import FriendItem from "./FriendItem";
+
+type Friends = {
+    id: number,
+    username: string,
+    picture: string | null,
+    status: boolean
+}
 
 type Id = {
     userId: number;
+	friendsList: Friends[] | null;
+	onSuccess: () => void;
 };
 
-const FriendsButton = ({userId} : Id) => {
-    const friendsList = useFriendslist(userId);
+const FriendsButton = ({userId, friendsList, onSuccess} : Id) => {
     const [open, setOpen] = useState(false);
     
+	const toggleOpen = () => {
+		setOpen(prev => !prev);
+		onSuccess();
+	}
+
+	const handleDelete = async (friendName: string) => {
+		try {
+			await deleteFriend(userId, friendName);
+			onSuccess();
+		} catch (err) {
+			const error = err as AxiosError;
+		  	console.error('Failed to delete friend', error);
+		}
+	  };
+	  console.log(friendsList);
     return (
         <div className="relative z-50 inline-block">
         <button title='Friends List' className={`transition-all duration-200 ease-in-out 
           ${open ? 'w-64 rounded-t bg-beige' : 'w-12 rounded bg-beige'}
-          bg-beige text-white py-2 shadow text-2xl flex items-center justify-center`} onClick={() => setOpen(!open)}>
+          bg-beige text-white py-2 shadow text-2xl flex items-center justify-center`} onClick={toggleOpen}>
                 🫂
         </button>
-        {open && ( 
-            <div className="absolute top-full left-0 w-64 bg-beige border-t-0 border rounded-b shadow max-h-60 overflow-y-auto">
-                {friendsList && friendsList.map((friend, idx) => (
-                    <div key={idx} className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-gray-200">
-                        <span>{friend.username}</span>
-                        <span className={`w-2 h-2 rounded-full ${
-                            friend.status === 'online' ? 'bg-green-500' : 'bg-red-400'}`}
-                        title={friend.status}
-                        />
-                    </div>
-                ))}
-            </div>
-            )}
+		{open && (
+        	<div className="absolute top-full left-0 w-64 bg-beige rounded-b shadow max-h-60 overflow-y-auto">
+				{friendsList?.map(f => (
+				<FriendItem key={f.id} friend={f} onDelete={() => handleDelete(f.username)} />))}
+        	</div>
+     	 )}
     </div>
     );
 };
