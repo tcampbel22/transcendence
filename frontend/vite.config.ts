@@ -5,5 +5,10 @@ export default defineConfig({
   plugins: [react()],
   define: {
     'import.meta.env': JSON.stringify(process.env) // Ensures env variables are available
+  },
+  server: {
+    proxy: {
+      '/auth/google': 'http://localhost:3003'
+    }
   }
 });

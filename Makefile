@@ -1,6 +1,6 @@
 DOCKER_COMPOSE_FILE = docker-compose.yml
 ENV_FILE = .env
-DIR_NAMES = game_service user_service file_service googleAuth nginx
+DIR_NAMES = game_service user_service file_service auth_service nginx
 
 # Colors for better output
 GREEN = $$(printf '\033[0;32m')
@@ -82,7 +82,7 @@ clean: down
 	@rm -rf ./backend/game_service/ssl
 	@rm -rf ./backend/user_service/ssl
 	@rm -rf ./backend/file_service/ssl
-	@rm -rf ./backend/googleAuth/ssl
+	@rm -rf ./backend/auth_service/ssl
 
 #WARNING!! THIS WILL PERMANTLY REMOVE THE DB, ONLY USE IN TESTING ENV
 db_clean: clean

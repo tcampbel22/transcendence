@@ -6,34 +6,37 @@ import React, { useEffect } from "react";
 
 const Login = () => {
   const API_URL = import.meta.env.VITE_API_USER;
+	const API_OTP = import.meta.env.VITE_API_AUTH;
+	const API_GOOGLE_URL = import.meta.env.VITE_API_GOOGLE;
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
 
-  const handleGoogleLogin = async () => {
-    window.open(
-      "https://localhost:4433/auth/google",
-      "GoogleLoginPopup",
-      "width=500,height=600",
-    );
-  };
 
-  useEffect(() => {
-    const receiveMessage = (event: MessageEvent) => {
-      if (event.origin !== "https://localhost:4433") return;
-      if (!event.data.statusCode) {
-        //console.log("Received message from Google login:", event.data);
-        navigate("/hub", { state: event.data.userId });
-      } else {
-        setLoginError("Unable to connect with Google Sign-In");
-      }
-    };
-    window.addEventListener("message", receiveMessage);
-    return () => {
-      window.removeEventListener("message", receiveMessage);
-    };
-  }, []);
+	const handleGoogleLogin = async () => {
+		window.open(`${API_GOOGLE_URL}/google`, "GoogleLoginPopup", "width=500,height=600");
+	};
+
+	useEffect(() => {
+		const receiveMessage = (event:MessageEvent) => {
+			/*if (event.origin !== "https://localhost:4433" && event.origin !== "http://localhost:5173") 
+					return;*/
+			console.log("Received message from Google login:", event.data);
+			if (!event.data.statusCode) {	
+				//console.log("Received message from Google login:", event.data);
+				console.log("(login)User ID:", event.data.userId);
+				navigate('/hub', { state: event.data.userId });
+				}						 
+			else {
+				setLoginError("Unable to connect with Google Sign-In");
+			}
+		};	  
+		window.addEventListener("message", receiveMessage);	  
+		return () => {
+		  window.removeEventListener("message", receiveMessage);
+		};
+	  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,25 +44,27 @@ const Login = () => {
     console.log("uname:", username); //testing purposes
     console.log("pword:", password);
 
-    const loginInput = {
-      username,
-      password,
-    };
-    try {
-      const response = await axios.post(`${API_URL}/login`, loginInput, {
-        withCredentials: true,
-      });
-      console.log("logged in succesfully", response.data);
-      navigate("/hub", { state: response.data });
-    } catch (error: any) {
-      console.error("Error:", error.response?.data || error.message);
-      // navigate('/hub')
-      setLoginError("invalid username or password");
-      return;
-    }
-    setPassword("");
-    setUsername("");
-  };
+		const loginInput = {
+			username,
+			password,
+		}
+		try {
+			const response = await axios.post(`${API_URL}/login`, loginInput);
+			//console.log("logged in succesfully", response.data)
+			const userEmail = response.data.email;
+
+			// Request OTP
+			const otpToken = await axios.post(`${API_OTP}/send-email`, { to: userEmail });
+			navigate('/2fa', { state: { userData: response.data, otpToken: otpToken.data.token } });
+		} catch (error: any) {
+			console.error("Error:", error.response?.data || error.message);
+			// navigate('/hub')
+			setLoginError("invalid username or password")
+			return;
+		}
+		setPassword('')
+		setUsername('')
+	}
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen gap-4 animate-fade-in">
