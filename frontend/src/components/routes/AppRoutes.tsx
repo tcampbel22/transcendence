@@ -6,8 +6,6 @@ import TournamentPage from "../../pages/TournamentPage"
 import Login from "../auth/Login"
 import Hub from "../../pages/HubPage"
 import Profile from "../../pages/Profile"
-import OTPInput from "../auth/2FA"
-import "../../index.css" // Import CSS file for styles
 import Logout from "../auth/Logout"
 
 const AppRoutes = () => (
@@ -18,7 +16,6 @@ const AppRoutes = () => (
 		<Route path="/play/Tournament" element={<TournamentPage />} />
 		<Route path='/hub' element={<Hub />}/>
 		<Route path='/profile' element={<Profile />} />
-		<Route path='/2fa' element={<OTPInput />} />
 		<Route path="/logout" element={<Logout />} />
 	</Routes>
 )

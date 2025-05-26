@@ -5,11 +5,6 @@
 
  import axios from 'axios';
  import https from 'https';
-
- const redirectURL =
- process.env.NODE_ENV === "production"
-     ? "https://localhost:4433"
-     : "http://localhost:5173";
  
  export const googleCallback = async (req, reply) => {
      const profile = req.user;
@@ -23,17 +18,12 @@
             email: profile.emails[0].value,
             password: profile.id,
         };
-        let response;
-        if (process.env.NODE_ENV === "production") {
-        response = await axios.post(
+         const response = await axios.post(
              `https://nginx:4433/users/register`,
              payload,
              { httpsAgent }
-         );
-        } else {
-         response = await axios.post("http://localhost:3002/api/register", payload);
-        }
-         const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId, redirectURL }));
+         ); 
+         const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId }));
          reply.redirect(`/auth/google/callback.html?user=${userData}`);
      } 
      catch (error) { 
@@ -43,18 +33,12 @@
                 username: profile.displayName,
                 password: profile.id,
             };
-            let response;
-            if (process.env.NODE_ENV === "production") {
-                response = await axios.post(
+            const response = await axios.post(
                 `https://nginx:4433/users/login`,
                 loginInput,
                 { httpsAgent }
             );
-            }
-            else {
-            response = await axios.post("http://localhost:3002/api/login", loginInput);
-            }
-            const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId, redirectURL }));
+            const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId }));
             reply.redirect(`/auth/google/callback.html?user=${userData}`);
          } else {
              const statusCode = error.response ? error.response.status : 500;

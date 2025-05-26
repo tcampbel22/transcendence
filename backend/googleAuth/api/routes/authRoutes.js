@@ -12,7 +12,7 @@ import fastifyPassport from '@fastify/passport';
 
 export const authRoutes = (fastify) => {
     fastify.get(
-        '/google',
+        '/auth/google',
         { preValidation: fastifyPassport.authenticate('google', { scope: ['profile', 'email'], prompt: 'select_account' }) },
         async (req, reply) => {}
     );
@@ -22,6 +22,4 @@ export const authRoutes = (fastify) => {
         { preValidation: fastifyPassport.authenticate('google', { failureRedirect: '/' }) },
         googleCallback
     );
-
-    
 };

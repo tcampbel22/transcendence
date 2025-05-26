@@ -186,7 +186,7 @@ services:
 
   googlesignin:
     build:
-      context: backend/auth_service
+      context: backend/googleAuth
       dockerfile: Dockerfile
     depends_on:
       - game_service

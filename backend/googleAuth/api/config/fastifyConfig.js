@@ -12,21 +12,19 @@ import Fastify from 'fastify';
 import fastifySecureSession from '@fastify/secure-session';
 import dotenv from 'dotenv';
 import fs from "fs";
-import emailRoutes from "../routes/emailRoutes.js";
-import cors from "@fastify/cors";
 
 dotenv.config();
 
-const isProduction = process.env.NODE_ENV === "production";
+
+const SSL_CERT_PATH = "./ssl/cert.pem";
+const SSL_KEY_PATH = "./ssl/key.pem";
 
 const fastify = Fastify({
-    logger: true,
-    ...(isProduction && {
-        https: {
-            key: fs.readFileSync("./ssl/key.pem"),
-            cert: fs.readFileSync("./ssl/cert.pem"),
-        },
-    }),
+	logger: true,
+	https: {
+		key: fs.readFileSync(SSL_KEY_PATH),
+		cert: fs.readFileSync(SSL_CERT_PATH),
+	},
 });
 
 fastify.register(fastifySecureSession, {
@@ -34,16 +32,8 @@ fastify.register(fastifySecureSession, {
     cookie: {
         path: '/',
         httpOnly: true,
-        secure: isProduction, // Solo cookies seguras en producción
+        secure: false,
     },
 });
-
-// Enable CORS for all origins or specify your frontend URL
-fastify.register(cors, {
-    origin: "http://localhost:5173", // Allow only your frontend
-    methods: ["GET", "POST"], // Allow these HTTP methods
-});
-
-fastify.register(emailRoutes);
 
 export default fastify;
