@@ -38,14 +38,14 @@ const AddFriendButton = ({userId} : Id) => {
     return (
         <div className="relative z-50 inline-block px-3">
             <button title="Add Friend" className={`transition-all duration-200 ease-in-out 
-          ${'w-12 rounded bg-beige'} 
-             bg-beige text-white py-2 shadow text-2xl flex items-center justify-center`} 
+          ${'w-12 rounded bg-beige-300'} 
+             bg-beige-300 text-white py-2 shadow text-2xl flex items-center justify-center`} 
             onClick={handleClick}
             >
                 🗣️
             </button>
                 {open && (
-                    <div className="absolute top-full mt-2 right-0 w-64 bg-beige border border-black rounded shadow p-2">
+                    <div className="absolute top-full mt-2 right-0 w-64 bg-beige-300 border border-black rounded shadow p-2">
                         <p>Add Friend</p>
                         <input  className="border-black border rounded px-2"
                                 type="text" 

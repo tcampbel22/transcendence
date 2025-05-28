@@ -85,7 +85,7 @@ const Register = () => {
 
 	return (
 	<div className="flex flex-col justify-center items-center gap-4 min-h-screen">
-		<div className='bg-beige p-10 rounded border-2 border-black'>
+		<div className='bg-beige-300 p-10 rounded border-2 border-black'>
 		<h1 className="text-3xl m-5 items-center opacity-0 animate-fade-in delay-700 font-semibold">Register</h1>
 		<div className='animate-slide-in'>
 			<form className="flex flex-col items-center gap-4" onSubmit={handleSubmit}>

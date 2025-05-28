@@ -34,7 +34,7 @@ export const profileService = {
 			throw new ErrorNotFound(`getUser: User ${id} cannot be found`);
         return user;
     },
-	async getUserList(limit = 20, sortField = 'username') {
+	async getUserList(limit = 25, sortField = 'username') {
         const users = await prisma.user.findMany({
             select: {
                 id: true,

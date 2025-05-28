@@ -59,7 +59,7 @@ const Login = () => {
 
   	return (
 	<div className="flex flex-col justify-center items-center min-h-screen gap-4 animate-fade-in">
-		<div className="bg-beige p-10 rounded border-2 border-black flex flex-col items-center">
+		<div className="bg-beige-300 p-10 rounded border-2 border-black flex flex-col items-center">
 			<h1 className="font-bold text-5xl text-black mb-6">Welcome to Pong</h1>
 			<h2 className="font-bold text-3xl mb-5 text-black">Login</h2>
 			<form className="flex flex-col items-center gap-4 mb-6" onSubmit={handleSubmit}>
