@@ -65,12 +65,11 @@ const StartTournament = ({ startTournament }: { startTournament: boolean }) => {
 					// state={data}
 					className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg"
 					>
+				<button className="bg-amber-600 shadow-lg rounded-lg p-10 px-10 transform hover:scale-110">
+					Start Tournament
+				</button>
 				</Link>
 			
-			{/* <button 
-				className="bg-amber-600 shadow-lg rounded-lg p-10 px-10 transform hover:scale-110">
-				Start Tournament
-			</button> */}
 		</div>
 	);
 }
