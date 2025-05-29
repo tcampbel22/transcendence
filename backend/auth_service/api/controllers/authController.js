@@ -17,7 +17,8 @@
         rejectUnauthorized: false,
     });
 
-     try {
+     try 
+     {
         const payload = {
             username: profile.displayName,
             email: profile.emails[0].value,
@@ -30,7 +31,8 @@
              payload,
              { httpsAgent }
          );
-        } else {
+        } 
+        else {
          response = await axios.post("http://localhost:3002/api/register", payload);
         }
          const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId, redirectURL }));
