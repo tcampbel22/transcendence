@@ -15,6 +15,8 @@ const Register = () => {
 	const [preview, setPreview] = useState<string | null>(null)
 	const [loginError, setError] = useState('')
 	const navigate = useNavigate();
+	//const API_URL = "http://localhost:3002/api"
+	//const API_URL = "https://localhost:4433/users";
 
 	const registerUser = async () => {
 

@@ -24,6 +24,7 @@ export const loginController = {
 			reply.status(200).send({
 				userId: login.user.id,
 				username: login.user.username,
+				email: login.user.email,
 				isOnline: login.user.isOnline
 			});  
 		} catch (err) {
