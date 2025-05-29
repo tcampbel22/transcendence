@@ -20,12 +20,9 @@ const Login = () => {
 
 	useEffect(() => {
 		const receiveMessage = (event:MessageEvent) => {
-			/*if (event.origin !== "https://localhost:4433" && event.origin !== "http://localhost:5173") 
-					return;*/
-			console.log("Received message from Google login:", event.data);
-			if (!event.data.statusCode) {	
-				//console.log("Received message from Google login:", event.data);
-				console.log("(login)User ID:", event.data.userId);
+			if (event.origin !== "https://localhost:4433" && event.origin !== "http://localhost:5173") 
+					return;
+			if (!event.data.statusCode) {
 				navigate('/hub', { state: event.data.userId });
 				}						 
 			else {
