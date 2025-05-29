@@ -4,7 +4,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 import logger from "@eleekku/logger";
-import fastifyHelmet from "@fastify/helmet";
 
 const SSL_CERT_PATH = "./ssl/cert.pem";
 const SSL_KEY_PATH = "./ssl/key.pem";
@@ -22,14 +21,6 @@ const __dirname = path.dirname(__filename);
 fastify.register(fastifyStatic, {
 	root: path.join(__dirname, "dist"),
 	prefix: "/",
-});
-fastify.register(fastifyHelmet, {
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      imgSrc: ["'self'", 'data:', 'blob:', "https://localhost:4433"],
-    }
-  }
 });
 
 // Start the server

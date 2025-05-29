@@ -12,18 +12,24 @@
         rejectUnauthorized: false,
     });
 
-     try {
+     try 
+     {
         const payload = {
             username: profile.displayName,
             email: profile.emails[0].value,
             password: profile.id,
         };
+		if (process.env.NODE_ENV === "production") {
          const response = await axios.post(
              `https://nginx:4433/users/register`,
              payload,
              { httpsAgent }
-         ); 
-         const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId }));
+         );
+        } 
+        else {
+         response = await axios.post("http://localhost:3002/api/register", payload);
+        }
+         const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId, redirectURL }));
          reply.redirect(`/auth/google/callback.html?user=${userData}`);
      } 
      catch (error) { 
