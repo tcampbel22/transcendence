@@ -54,8 +54,9 @@ const Login = () => {
 			const userEmail = response.data.email;
 
 			// Request OTP
-			const otpToken = await axios.post(`${API_OTP}/send-email`, { to: userEmail });
-			navigate('/2fa', { state: { userData: response.data, otpToken: otpToken.data.token } });
+		//	const otpToken = await axios.post(`${API_OTP}/send-email`, { to: userEmail });
+		//	navigate('/2fa', { state: { userData: response.data, otpToken: otpToken.data.token } });
+    navigate('/hub', { state: response.data.userId });
 		} catch (error: any) {
 			console.error("Error:", error.response?.data || error.message);
 			// navigate('/hub')

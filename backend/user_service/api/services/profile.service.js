@@ -233,6 +233,9 @@ export const profileService = {
       //if (process.env.NODE_ENV === "production") {
       const response = await axios.get(`${gameServiceBaseUrl}/user/${id}`, {
         httpsAgent: agent,
+        headers: {
+          'x-internal-api-key': process.env.INTERNAL_KEY
+        },
       });
       //} else {
       //  const response = await axios.get(`${gameServiceBaseUrl}/user/${id}`);

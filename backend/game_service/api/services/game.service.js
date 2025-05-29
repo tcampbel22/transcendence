@@ -96,6 +96,9 @@ export const gameService = {
             isWinner: game.player2Id === winnerId,
             gameId: id,
             httpsAgent: agent,
+            hearders: {
+              'x-internal-api-key': process.env.INTERNAL_KEY,
+            },
           });
         } catch (err) {
           console.log(`Failed to update player 2's stats`);
