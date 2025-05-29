@@ -57,8 +57,8 @@ const Login = () => {
 			setLoginError("invalid username or password")
 			return;
 		}
-		setPassword('')
-		setUsername('')
+		setPassword('');
+		setUsername('');
 	}
 
   	return (
