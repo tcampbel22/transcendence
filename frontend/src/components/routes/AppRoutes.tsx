@@ -2,7 +2,7 @@
 import { Routes, Route } from "react-router-dom"
 import Register from "../auth/Register"
 import OneVsOnePage from "../../pages/OneVsOnePage"
-import TournamentPage from "../../pages/TournamentPage"
+import TournamentPage from "../tournament/TournamentPage"
 import Login from "../auth/Login"
 import Hub from "../../pages/HubPage"
 import Profile from "../../pages/Profile"
