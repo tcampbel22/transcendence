@@ -18,7 +18,7 @@ export const loginController = {
 				httpOnly: true,
 				secure: process.env.NODE_ENV === "production",
 				sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax",
-				maxAge: 3600,
+				maxAge: 3600 * 1000,
 			});
 			logger.info(`User logged in: ${login.user.username}, ID: ${login.user.id}`);
 			reply.status(200).send({

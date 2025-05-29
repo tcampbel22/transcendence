@@ -26,7 +26,7 @@ const Avatar = ({userId}: AvatarInfo) => {
 		const fetchUserInfo = async () => {
 			try {
 				console.log(`Base url: ${BASE_URL}`)
-				const response = await api.get(`${API_URL}/${userId}`);
+				const response = await api.get(`${API_URL}/${userId}`, { withCredentials: true });
 				console.log("user status:" ,response.data)
 				setUsername(response.data.username);
 				setEmail(response.data.email);
