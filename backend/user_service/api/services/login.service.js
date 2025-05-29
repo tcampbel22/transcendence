@@ -28,7 +28,7 @@ export const loginService = {
 		const token = jwt.sign(
 			{ id: userCheck.id, username: userCheck.username },
 			JWT_SECRET,
-			{ expiresIn: "7s"}
+			{ expiresIn: "1h"}
 		)
 		const user = await prisma.user.update({ 
 			where: { id: userCheck.id }, 
