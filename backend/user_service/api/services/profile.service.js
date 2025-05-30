@@ -38,7 +38,7 @@ export const profileService = {
         const users = await prisma.user.findMany({
             select: {
                 id: true,
-                username: true,
+                username: true
             },
 			orderBy: {
 				[sortField]: 'asc',
@@ -91,11 +91,6 @@ export const profileService = {
         });
         if (!user)
             throw new ErrorNotFound(`updatePicture: User ${id} cannot be found`);
-
-        // // Check if the new picture is the same as the current one
-        // if (user.picture === newPicture)
-        //     throw new ErrorConflict(`updatePicture: Picture already exists, please choose another`);
-
         // Update the profile picture
         const newUser = await prisma.user.update({
             where: { id: id },

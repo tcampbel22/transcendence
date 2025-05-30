@@ -95,19 +95,11 @@ export const updateUsernameSchema = {
 
 export const updatePictureSchema = {
 	params: idParamsSchema,
-	body: {
-		type: 'object',
-		required: ['picture'],
-		properties: {
-			picture: {
-				type: 'string',
-				minLength: 5,
-				maxLength: 100,
-				pattern: '\\.(jpg|jpeg|png)$'
-			}
-		},
-		additionalProperties: false
-	},
+  	consumes: ['multipart/form-data'],
+  	body: {
+    	type: ['object', 'null'],
+    	additionalProperties: true  // Allow the file properties to come through
+  },
 	response: {
 		201: {
 			type: 'object',

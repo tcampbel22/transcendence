@@ -24,7 +24,7 @@ const Hub = () => {
         </div>
             <div className="flex flex-col lg:flex-row items-center justify-center gap-6">
 			<Card image="/images/1v1_2.png" link={"/play/1v1"} data={userInfo}/>
-			<Card image="/images/tournament.png" link={"/play/tournament"} data={userId}/>
+			<Card image="/images/tournament.png" link={"/play/tournament"} data={userInfo}/>
 			<Card image="/images/new_profile.png" link={"/profile"} data={userInfo.userId}/>
 			<Card image="/images/logout.png" link={"/logout"} data={userId}/>
             </div>
