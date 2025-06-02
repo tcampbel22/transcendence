@@ -1,6 +1,6 @@
 type CardProps = {
 	image?: string,
-	link: string,
+	link?: string,
 	data?: any
 }
 
