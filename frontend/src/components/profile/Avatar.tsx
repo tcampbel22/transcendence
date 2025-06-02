@@ -6,9 +6,10 @@ import DeleteProfile from "./DeleteUser";
 
 type AvatarInfo = {
 	userId: number;
+	is2faEnabled: boolean;
 };
 
-const Avatar = ({userId}: AvatarInfo) => {
+const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 	const API_URL = import.meta.env.VITE_API_USER;
 	const BASE_URL = import.meta.env.VITE_BASE_USER_URL || '';
 	const [editIsOpen, setEditOpen] = useState(false);
@@ -19,7 +20,12 @@ const Avatar = ({userId}: AvatarInfo) => {
 	const [refreshUser, setRefreshUser] = useState(false);
 	const [imageUrl, setImageUrl] = useState<string>(`${BASE_URL}/uploads/default.png`);
 	const [imageFile, setImageFile] = useState<File | null>(null);
+	const [enabled, setEnabled] = useState(is2faEnabled);
 	//need to add actual values to the userId.
+
+	useEffect(() => {
+    setEnabled(is2faEnabled);
+	}, [is2faEnabled]);
 
 	useEffect(() => {
 		const fetchUserInfo = async () => {
@@ -52,6 +58,26 @@ const Avatar = ({userId}: AvatarInfo) => {
 			setImageUrl(URL.createObjectURL(file)); // Instant preview
 		}
 	};
+
+	const set2FA = async () => {
+		if (!userId) {
+			userId = 4;
+		}
+		console.log("2FA status:", enabled);
+		console.log("userId:", userId);
+		if (enabled)
+		{	
+			const response = await axios.put(`${API_URL}/${userId}/2fa`, { is2faEnabled: false });
+			console.log("2FA disabled:", response.data);
+			setEnabled(false);
+		}
+		else
+		{
+			const response = await axios.put(`${API_URL}/${userId}/2fa`, { is2faEnabled: true });
+			console.log("2FA enabled:", response.data);
+			setEnabled(true);
+		}
+	}
 
 	const uploadProfileImage = async () => {
 		if (!imageFile) return;
@@ -116,6 +142,7 @@ const Avatar = ({userId}: AvatarInfo) => {
 			<button onClick={() => setPasswordOpen(true)} className="border border-black rounded p-1 hover:bg-black hover:text-white mt-3 shadow-md">
 				change password
 			</button>
+			<button onClick={() => set2FA()} className="border border-black rounded p-1 hover:bg-black hover:text-white mt-auto shadow-md">  {enabled ? 'Disable 2FA' : 'Enable 2FA'} </button>
 			<button onClick={() => setDeleteOpen(true)} className="shadow-md bg-beige border border-black text-black rounded p-1 hover:bg-red-500 hover:text-beige mt-auto">
 				commit seppuku
 			</button>

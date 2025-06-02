@@ -35,6 +35,8 @@ export const profileService = {
         username: true,
         email: true,
         picture: true,
+        isOnline: true,
+        is2faEnabled: true,
       },
     });
     if (!user) throw new ErrorNotFound(`getUser: User ${id} cannot be found`);
@@ -82,6 +84,26 @@ export const profileService = {
       select: {
         id: true,
         username: true,
+      },
+    });
+    return newUser;
+  },
+
+  async update2faStatus(id, isEnabled) {
+
+    const user = await prisma.user.findUnique({
+      where: { id: id },
+      select: { id: true },
+    });
+    if (!user)
+      throw new ErrorNotFound(`updateUsername: User ${id} cannot be found`);
+    // Update the 2FA status
+    const newUser = await prisma.user.update({
+      where: { id: id },
+      data: { is2faEnabled: isEnabled },
+      select: {
+        id: true,
+        is2faEnabled: true,
       },
     });
     return newUser;

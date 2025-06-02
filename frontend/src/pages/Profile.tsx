@@ -5,10 +5,12 @@ import axios from "axios";
 import Avatar from "../components/profile/Avatar";
 import GamesPlayed from "../components/profile/GamesPlayed";
 import {userIdFromState} from "../hooks/userIdFromState"
+import { status2FAFromState } from "../hooks/status2FAFromState";
 
 
 const Profile = () => {
 	const userId = userIdFromState() as number;
+	const [is2faEnabled, setIs2faEnabled] = useState (status2FAFromState() as boolean);
 	const API_URL = import.meta.env.VITE_API_USER;
 	const [victories, setVictories] = useState(0)
 	const [losses, setLoses] = useState(0)
@@ -18,9 +20,14 @@ const Profile = () => {
 	useEffect (() => {
 		const getUserData = async () => {
 			try {
+				const userData = await axios.get(`${API_URL}/${userId}`);
+				console.log("user data in profile:", userData.data);
+				setIs2faEnabled(userData.data.is2faEnabled);
 				const gameData = await axios.get(`${API_URL}/${userId}/stats`);
+				console.log("game data:", gameData.data)
 				setVictories(gameData.data.wins) //these are the actual ones for the game testing purposes commented out
 				setLoses(gameData.data.losses)
+				//setIs2faEnabled(gameData.data.is2faEnabled);
 			} catch (error) {
 				console.error('error getting data:', error)
 			}
@@ -32,7 +39,7 @@ const Profile = () => {
 	//avatar component for the profile picture, not sure if this is the place to extract user info and send it to the component or just user id there
 	return (
 		<div className="grid grid-cols-3 gap-4 p-6">
-			<Avatar userId={userId}/>
+			<Avatar userId={userId} is2faEnabled={is2faEnabled} />
 			<GamesPlayed userId={userId}/>
 			<Wins victories={victories} />
 			<Losses losses={losses} />

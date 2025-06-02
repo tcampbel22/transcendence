@@ -23,7 +23,7 @@ const Login = () => {
 			if (event.origin !== "https://localhost:4433" && event.origin !== "http://localhost:5173") 
 					return;
 			if (!event.data.statusCode) {
-				navigate('/hub', { state: event.data.userId });
+          navigate('/hub', { state: { userId: parseInt(event.data.userId, 10), username: event.data.username } });
 				}						 
 			else {
 				setLoginError("Unable to connect with Google Sign-In");
@@ -51,6 +51,12 @@ const Login = () => {
 			const userEmail = response.data.email;
 
 			// Request OTP
+      console.log("2fa status:", response.data.is2faEnabled);
+      console.log("userId:", response.data);
+      if (!response.data.is2faEnabled) {
+        navigate('/hub', { state: { userId: response.data.userId, username: response.data.username, is2faEnabled: response.data.is2faEnabled } });
+        return;
+      }
 			const otpToken = await axios.post(`${API_OTP}/send-email`, { to: userEmail });
 			navigate('/2fa', { state: { userData: response.data, otpToken: otpToken.data.token } });
 		} catch (error: any) {

@@ -7,7 +7,7 @@ import AddFriendButton from "../components/friends/AddFriendButton";
 
 const Hub = () => {
   const location = useLocation();
-  const userInfo = location.state as { userId: number; username: string };
+  const userInfo = location.state as { userId: number; username: string; is2faEnabled: boolean };
   const userId = userIdFromState() as number;
   console.log("userid is:", userId);
   const baseCardClass =
@@ -57,7 +57,7 @@ const Hub = () => {
         >
           <Link
             to="/profile"
-            state={userInfo.userId}
+            state={userInfo}
             className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg"
           ></Link>
         </div>
