@@ -73,7 +73,7 @@ const OTPInput: React.FC = () => {
     <div className="otp-container min-h-screen flex flex-col justify-center items-center bg-cover bg-center bg-no-repeat text-white"
          style={{ backgroundImage: "url('/images/background.jpg')" }}>
       <p className="text-lg font-bold text-white-500">
-        Enter the authentication code sent to <strong>{userData?.email}</strong>
+        Enter the authentication code sent to <strong>{userData?.email}</strong>:
       </p>
       <input
         type="text"

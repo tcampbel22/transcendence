@@ -11,18 +11,24 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [googleClicked, setGoogleClicked] = useState(false);
   const navigate = useNavigate();
 
 
 	const handleGoogleLogin = async () => {
+		setGoogleClicked(true);
 		window.open(`${API_GOOGLE_URL}/google`, "GoogleLoginPopup", "width=500,height=600");
 	};
 
 	useEffect(() => {
+		if (!googleClicked) return;
 		const receiveMessage = (event:MessageEvent) => {
-			if (event.origin !== "https://localhost:4433" && event.origin !== "http://localhost:5173") 
-					return;
-			if (!event.data.statusCode) {
+			/*if (event.origin !== "https://localhost:4433" && event.origin !== "http://localhost:5173") 
+					return;*/
+			console.log("Received message from Google login:", event.data);
+			if (!event.data.statusCode) {	
+				//console.log("Received message from Google login:", event.data);
+				console.log("(login)User ID:", event.data.userId);
 				navigate('/hub', { state: event.data.userId });
 				}						 
 			else {
@@ -33,7 +39,7 @@ const Login = () => {
 		return () => {
 		  window.removeEventListener("message", receiveMessage);
 		};
-	  }, []);
+	  }, [googleClicked]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
