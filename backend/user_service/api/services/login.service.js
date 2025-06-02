@@ -4,7 +4,7 @@ import { prisma } from "../../database/db.js";
 import { HttpStatusCode } from "axios";
 import { ErrorNotFound, ErrorUnAuthorized, handleError } from "@app/errors"
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = "daniel1";
 
 export const loginService = {
 

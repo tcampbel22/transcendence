@@ -43,6 +43,7 @@ const Pong: React.FC<PongProps> = ({
   const [ballY, setBallY] = useState(BOARD_HEIGHT / 2);
   const [gameOver, setGameOver] = useState(false);
   const [winner, setWinner] = useState<'left' | 'right' | null>(null);
+  const [loser, setLoser] = useState<'left' | 'right' | null>(null);
   const [leftScore, setLeftScore] = useState(0);
   const [rightScore, setRightScore] = useState(0);
   const ballSpeedX = useRef<number>(BALL_SPEED);
@@ -57,6 +58,7 @@ const Pong: React.FC<PongProps> = ({
     if (newScore >= (winningScore || WINNING_SCORE)) {
       setGameOver(true);
       setWinner('left');
+	  setLoser('right');
       onGameEnd?.(player1); // Notify tournament system who won
     }
   };
@@ -67,6 +69,7 @@ const Pong: React.FC<PongProps> = ({
     if (newScore >= (winningScore || WINNING_SCORE)) {
       setGameOver(true);
       setWinner('right');
+	  setLoser('left');
       onGameEnd?.(player2); // Notify tournament system who won
     }
   };
@@ -130,6 +133,7 @@ const Pong: React.FC<PongProps> = ({
     {gameOver && isGameStarted && <GameEnd  user={userInfo}
                                             opponentUserId={opponentUserId}
                                             winner={winner}
+											loser={loser}
                                             p1score={leftScore}
                                             p2score={rightScore}
                                             gameId={gameId}

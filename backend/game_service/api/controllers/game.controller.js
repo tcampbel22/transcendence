@@ -1,4 +1,5 @@
 import { gameService } from "../services/game.service.js";
+import { profileController } from "../../../user_service/api/controllers/profile.controller.js";
 import logger from "@eleekku/logger";
 import { handleError } from "@app/errors";
 
@@ -24,13 +25,20 @@ export const gameController = {
   async finishGame(request, reply) {
     try {
       const { id } = request.params;
-      const { p1score, p2score, winnerId } = request.body;
+      const { p1score, p2score, winnerId, loserId } = request.body;
       const game = await gameService.finishGame(
         parseInt(id),
         parseInt(p1score),
         parseInt(p2score),
         parseInt(winnerId),
+		parseInt(loserId),
       );
+
+	  //update stats here:
+	  await profileController.updateStats(winnerId, true);
+	  await profileController.updateStats(loserId, false);
+
+
       logger.info(`Game ${game.id} finished successfully`);
       return reply.code(201).send({
         message: `Game finished`,

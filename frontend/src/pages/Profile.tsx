@@ -10,15 +10,16 @@ import {userIdFromState} from "../hooks/userIdFromState"
 const Profile = () => {
 	const userId = userIdFromState() as number;
 	const API_URL = import.meta.env.VITE_API_USER;
-	const [victories, setVictories] = useState(0)
-	const [losses, setLoses] = useState(0)
+	const [victories, setVictories] = useState(0);
+	const [losses, setLoses] = useState(0);
 
-
-	console.log("in profile: ", userId)
 	useEffect (() => {
 		const getUserData = async () => {
 			try {
 				const gameData = await axios.get(`${API_URL}/${userId}/stats`);
+				console.log(gameData.data);
+				console.log("wins: ", gameData.data.wins);
+				console.log("lolses: ", gameData.data.losses);
 				setVictories(gameData.data.wins) //these are the actual ones for the game testing purposes commented out
 				setLoses(gameData.data.losses)
 			} catch (error) {
