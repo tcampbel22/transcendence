@@ -16,6 +16,7 @@ const Login = () => {
 
 
 	const handleGoogleLogin = async () => {
+		setGoogleClicked(true);
 		window.open(`${API_GOOGLE_URL}/google`, "GoogleLoginPopup", "width=500,height=600");
 	};
 
