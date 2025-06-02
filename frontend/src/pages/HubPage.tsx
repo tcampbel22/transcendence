@@ -11,7 +11,7 @@ const Hub = () => {
   const userInfo = location.state as { userId: number; username: string };
   const userId = userIdFromState() as number;
   console.log("userid is:", userId);
-  const {friendsList, reFetch} = useFriendslist(userInfo.userId);
+  const { friendsList, reFetch } = useFriendslist(userInfo.userId);
   const baseCardClass =
     "w-60 h-72 bg-cover bg-center rounded-lg shadow-lg p-1 transform hover:scale-110 transition-all duration-300 ease-in-out relative hover:shadow-xl hover:rotate-1";
 
@@ -21,8 +21,12 @@ const Hub = () => {
         Welcome
       </h1>
       <div className="absolute top-5 right-10">
-        <AddFriendButton userId={userInfo.userId} onSuccess={reFetch}/>
-        <FriendsButton userId={userInfo.userId} friendsList={friendsList} onSuccess={reFetch}/>
+        <AddFriendButton userId={userInfo.userId} onSuccess={reFetch} />
+        <FriendsButton
+          userId={userInfo.userId}
+          friendsList={friendsList}
+          onSuccess={reFetch}
+        />
       </div>
       <div className="flex  min-h-screen sm:flex-row items-center justify-center gap-6 animate-slide-in">
         <div
