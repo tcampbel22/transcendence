@@ -5,6 +5,11 @@
 
  import axios from 'axios';
  import https from 'https';
+
+ const redirectURL =
+ process.env.NODE_ENV === "production"
+     ? "https://localhost:4433"
+     : "http://localhost:5173";
  
  export const googleCallback = async (req, reply) => {
      const profile = req.user;
@@ -12,18 +17,24 @@
         rejectUnauthorized: false,
     });
 
-     try {
+     try 
+     {
         const payload = {
             username: profile.displayName,
             email: profile.emails[0].value,
             password: profile.id,
         };
-         const response = await axios.post(
+        let response;
+        if (process.env.NODE_ENV === "production") {
+        response = await axios.post(
              `https://nginx:4433/users/register`,
              payload,
              { httpsAgent }
-         ); 
-         const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId }));
+         );
+        } else {
+         response = await axios.post("http://localhost:3002/api/register", payload);
+        }
+         const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId, redirectURL }));
          reply.redirect(`/auth/google/callback.html?user=${userData}`);
      } 
      catch (error) { 
@@ -33,12 +44,18 @@
                 username: profile.displayName,
                 password: profile.id,
             };
-            const response = await axios.post(
+            let response;
+            if (process.env.NODE_ENV === "production") {
+                response = await axios.post(
                 `https://nginx:4433/users/login`,
                 loginInput,
                 { httpsAgent }
             );
-            const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId }));
+            }
+            else {
+            response = await axios.post("http://localhost:3002/api/login", loginInput);
+            }
+            const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId, redirectURL }));
             reply.redirect(`/auth/google/callback.html?user=${userData}`);
          } else {
              const statusCode = error.response ? error.response.status : 500;

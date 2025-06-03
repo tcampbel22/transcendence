@@ -5,18 +5,16 @@ import useAxiosInterceptor from "./hooks/useAxiosInterceptor";
 import './index.css'
 
 const App: React.FC = () => {
-    useAxiosInterceptor(); 
-  
-    return (
-      <div 
-        className="min-h-screen text-center"
-        style={{
-          backgroundImage: 'url("/images/epic_background.png")',
-        }}
-      >
-        <AppRoutes />
-      </div>
-    );
-  };
-  
-  export default App;
+  return (
+    <div
+      className="min-h-screen text-center"
+      style={{
+        backgroundImage: 'url("/images/epic_background.webp")',
+      }}
+    >
+      <AppRoutes />
+    </div>
+  );
+};
+
+export default App;

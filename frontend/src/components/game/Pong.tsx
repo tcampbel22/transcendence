@@ -112,13 +112,14 @@ const Pong: React.FC<PongProps> = ({
   });
 
   return (
-	<div className="bg-black flex items-center justify-center p-4">
+	<div className="bg-blacks flex items-center justify-center p-4 rounded">
     <div className="relative">
-	  <GameCanvas 	ballX={ballX}
+	{isGameStarted && <GameCanvas 	ballX={ballX}
 	   				ballY={ballY} 
 					leftPaddleY={leftPaddleY} 
 					rightPaddleY={rightPaddleY}
 		/>
+	}
     {!isGameStarted && <GameControls  userId={userInfo.userId} 
                                       resetGame={resetGame} 
                                       setIsGameStarted={setIsGameStarted}

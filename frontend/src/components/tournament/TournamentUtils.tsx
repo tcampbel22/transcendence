@@ -43,7 +43,7 @@ export const StartTournament = ({ startTournament }: { startTournament: boolean 
 
 export const PlayersCard = ({players}: {players: PlayerProps[]}) => {
 	return (
-		<div className="w-full max-w-md bg-beige-500 rounded-lg shadow-lg p-1 text-2xl pt-4 pb-4">
+		<div className="w-full max-w-md bg-beige rounded-lg shadow-lg p-1 text-2xl pt-4 pb-4">
 			<div className="mb-6 text-3xl">
 				<Header1 text="Selected Players"/>
 			</div>
@@ -59,9 +59,9 @@ export const PlayersCard = ({players}: {players: PlayerProps[]}) => {
 
 export const FilterCard: React.FC<TournamentCardProps> = ({ data, players, togglePlayers, c_id }) => {
 	if (data.length === 0)
-		return <p className="w-full max-w-md bg-beige-500 rounded-lg shadow-lg p-1 text-2xl pt-4 pb-4">No players found</p>
+		return <p className="w-full max-w-md bg-beige rounded-lg shadow-lg p-1 text-2xl pt-4 pb-4">No players found</p>
 	return (
-		<div className="w-full max-w-md bg-beige-500 rounded-lg shadow-lg p-1 text-2xl pt-4 pb-4">
+		<div className="w-full max-w-md bg-beige rounded-lg shadow-lg p-1 text-2xl pt-4 pb-4">
 			<div className="mb-6 text-3xl">
 				<Header1 text="Choose Players"/>
 			</div>

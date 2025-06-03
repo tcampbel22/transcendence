@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest NODE_ENV=test",
-    "dev": "npx prisma db push --schema=./database/prisma/schema.prisma && npx prisma generate --schema=./database/prisma/schema.prisma && nodemon"
+    "test": "jest",
+  "dev": "npx prisma db push --schema=./database/prisma/schema.prisma && npx prisma generate --schema=./database/prisma/schema.prisma && nodemon"
   },
   "keywords": [],
   "author": "",

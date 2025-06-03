@@ -34,7 +34,7 @@ const GamesPlayed = ({userId}: GameStatsInfo) => {
 
 
     return (
-        <div className="bg-beige-400 col-span-2 rounded border border-white shadow-md">
+        <div className="bg-beige col-span-2 rounded border border-white shadow-md">
             <h1 className="text-black font-bold text-xl">Match History</h1>
 			<div className="grid grid-cols-5 font-semibold border-b pb-2 mb-2 text-black m-4">
 				<p>Match ID</p>

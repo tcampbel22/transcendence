@@ -73,7 +73,7 @@ const Avatar = ({userId}: AvatarInfo) => {
 
 	//image change logic, change password logic and account deletion needs to be added.
 	return (
-        <div className="bg-beige-400 border border-white col-span-1 row-span-2 items-center flex flex-col h-screen py-8 shadow-md text-black rounded">
+        <div className="bg-beige border border-white col-span-1 row-span-2 items-center flex flex-col h-screen py-8 shadow-md text-black rounded">
 			<h1 className="font-bold text-2xl m-4 ">{username}</h1>
 			<div className="relative w-80 h-80">
 				<div className="bg-white w-80 h-80 rounded-full border-4 border-black flex shadow-md flex-col items-center justify-center bg-cover bg-center">

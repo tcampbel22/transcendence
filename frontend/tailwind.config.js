@@ -7,19 +7,7 @@ module.exports = {
 	theme: {
 	  extend: {
 		colors: {
-		  beige: {
-          50: '#fefdf9',
-          100: '#f9f5eb',
-          200: '#f5f0dc', // Classic beige
-          300: '#efe5c9',
-          400: '#e8d8b0',
-          500: '#d9c896',
-          600: '#c2ae7c',
-          700: '#a89267',
-          800: '#8c7954',
-          900: '#736247',
-          950: '#453a2b',
-        },
+		  beige: '#f9f9dc',
 		  amber: {
 			50: '#fffbeb',
 			100: '#fef3c7',

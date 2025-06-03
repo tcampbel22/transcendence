@@ -43,7 +43,7 @@ const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
 	}
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-		<div className="bg-beige-600 p-6 rounded shadow-lg w-96">
+		<div className="bg-beige p-6 rounded shadow-lg w-96">
 		  <h2 className="text-xl font-bold mb-4">Edit Username</h2>
   
 		  <input
@@ -68,7 +68,7 @@ const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
 			</button>
 			<button
 			  onClick={handleSave}
-			  className="shadow-md bg-beige-600 text-black border border-black px-2 py-1 rounded hover:bg-black hover:text-beige"
+			  className="shadow-md bg-beige text-black border border-black px-2 py-1 rounded hover:bg-black hover:text-beige"
 			  disabled={loading || !newUsername}
 			>
 			  {loading ? 'Saving...' : 'Save'}

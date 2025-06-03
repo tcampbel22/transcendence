@@ -6,6 +6,7 @@ import { ContainerWithChildren } from 'postcss/lib/container';
 
 const Register = () => {
 	const API_URL = import.meta.env.VITE_API_USER;
+	const BASE_URL = import.meta.env.VITE_BASE_USER_URL || '';
 	const [username, setUsername] = useState('')
   	const [password, setPassword] = useState('')
 	const [email, setEmail] = useState('')
@@ -14,6 +15,8 @@ const Register = () => {
 	const [preview, setPreview] = useState<string | null>(null)
 	const [loginError, setError] = useState('')
 	const navigate = useNavigate();
+	//const API_URL = "http://localhost:3002/api"
+	//const API_URL = "https://localhost:4433/users";
 
 	const registerUser = async () => {
 
@@ -29,11 +32,12 @@ const Register = () => {
 		};
 
 		const response = await api.post(`${API_URL}/register`, payload, {withCredentials: true}) //product
-		return response.data
+		return response.data.id
 	}
 
 	const uploadProfileImage = async (userId: number) => {
 		// Don't proceed if no image selected
+		console.log(userId);
 		if (!image) return;
 		
 		// Create proper FormData
@@ -85,7 +89,7 @@ const Register = () => {
 
 	return (
 	<div className="flex flex-col justify-center items-center gap-4 min-h-screen">
-		<div className='bg-beige-300 p-10 rounded border-2 border-black'>
+		<div className='bg-beige p-10 rounded border-2 border-black'>
 		<h1 className="text-3xl m-5 items-center opacity-0 animate-fade-in delay-700 font-semibold">Register</h1>
 		<div className='animate-slide-in'>
 			<form className="flex flex-col items-center gap-4" onSubmit={handleSubmit}>

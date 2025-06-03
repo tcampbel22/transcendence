@@ -1,6 +1,7 @@
 import { loginService } from "../services/login.service.js";
 import jsonwebtoken from "jsonwebtoken";
 import logger from "@eleekku/logger"
+import { ErrorNotFound, ErrorUnAuthorized, handleError } from "@app/errors"
 
 export const loginController = {
 
@@ -22,11 +23,12 @@ export const loginController = {
 			logger.info(`User logged in: ${login.user.username}, ID: ${login.user.id}`);
 			reply.status(200).send({
 				userId: login.user.id,
-				username: login.user.username
+				username: login.user.username,
+				email: login.user.email,
+				isOnline: login.user.isOnline
 			});  
 		} catch (err) {
 			logger.error(`Error logging in user: ${err.message}`);
-			request.log.error(err);
 			reply.status(500).send({ message: "loginUser: Internal server error!" });
 		}
 	},
@@ -37,12 +39,16 @@ export const loginController = {
 			// Decode the token to get user information
 			const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
 			logger.info(`User logged out: ${decoded.username}, ID: ${decoded.id}`);
+			const user = await loginService.logoutUser(parseInt(decoded.id));
 			reply.clearCookie("token");
-			reply.status(200).send({ message: "Logged out successfully" });
+			reply.status(200).send({ 
+				message: "Logged out successfully",
+				id: user.id,
+				isOnline: user.isOnline
+			});
 		} catch (err) {
 			logger.error(`Error logging out user: ${err.message}`);
-			request.log.error(err);
-			reply.status(500).send({ message: "logoutUser: Internal server error!" });
+			return handleError(err, reply, `Failed to logout user`);
 		}
 	}
 };
