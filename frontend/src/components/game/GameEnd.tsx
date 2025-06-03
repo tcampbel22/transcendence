@@ -17,7 +17,7 @@ type EndGameProps = {
     p2score: number
 };
 
-const GameEnd = ({user, opponentUserId, winner, loser, p1score, p2score, gameId} : EndGameProps) => {
+const GameEnd = ({user, opponentUserId, winner, p1score, p2score, gameId} : EndGameProps) => {
     const navigate = useNavigate();
     const {userId, username } = user;
     const API_URL = import.meta.env.VITE_API_GAME;
@@ -40,7 +40,6 @@ const GameEnd = ({user, opponentUserId, winner, loser, p1score, p2score, gameId}
             p1score: p1score,
             p2score: p2score,
             winnerId: winner === 'left' ? userId : opponentUserId,
-			loserId: loser === 'left' ? userId : opponentUserId
         }
 		console.log("payload inside postwinner:", payload)
         try {
