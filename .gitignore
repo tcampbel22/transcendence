@@ -6,3 +6,5 @@ ssl/
 *.db-journal
 .env
 *.log
+.env.test
+package-lock.json

@@ -40,7 +40,7 @@ export const profileService = {
     if (!user) throw new ErrorNotFound(`getUser: User ${id} cannot be found`);
     return user;
   },
-  async getUserList(limit = 20, sortField = "username") {
+  async getUserList(limit = 50, sortField = "username") {
     const users = await prisma.user.findMany({
       select: {
         id: true,
@@ -222,19 +222,19 @@ export const profileService = {
 
     try {
       // Load Nginx certificate
-	 let agent; 
-	  try {
-        agent = new https.Agent({
-          ca: fs.readFileSync("ssl/nginx.cert.pem"), // Path to the Nginx certificate
-      });
-	  } catch (err) {
-		throw ErrorCustom("Failed to find SSL certificates", 502);
-	  }
-	
-	// Fetch match history from the game service
-		const response = await axios.get(`${gameServiceBaseUrl}/user/${id}`, {
-			httpsAgent: agent,
+	  let agent; 
+	  if (isProduction) { 
+		try {
+			agent = new https.Agent({
+			ca: fs.readFileSync("ssl/nginx.cert.pem"), // Path to the Nginx certificate
 		});
+		} catch (err) {
+			throw ErrorCustom("Failed to find SSL certificates", 502);
+		};
+	  }
+	  const axiosConfig = isProduction ? { httpsAgent: agent } : {}; // Needed to add so ssl is bypassed in testing
+	// Fetch match history from the game service
+		const response = await axios.get(`${gameServiceBaseUrl}/user/${id}`, axiosConfig);
       if (response.status !== 200)
         throw new ErrorCustom(
           `Error retrieving match history ${response.statusText}`,
