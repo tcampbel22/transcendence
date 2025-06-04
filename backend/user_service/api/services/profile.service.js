@@ -280,7 +280,7 @@ export const profileService = {
             gameId: game.id,
             date: game.createdAt,
             score: `${game.player1Score} - ${game.player2Score}`,
-            result: game.winnerId === id ? "Winner" : "Loser",
+            result: game.winnerId === id ? "Winner" : game.winnerId === null ? 'No Result' : "Loser",
             opponentId: oppId,
             opponentName: oppName?.username || "Unknown",
             opponentPicture: oppName?.picture || null,
