@@ -31,7 +31,7 @@ jobs:
       - run: |
           cp backend/user_service/.env.test backend/user_service/.env
           cp backend/game_service/.env.test backend/game_service/.env
-      
+
       - name: Push Prisma Schemas
         run: |
           cd backend/user_service
