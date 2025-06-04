@@ -24,8 +24,8 @@ jobs:
 
       - name: Create test .env files
         run: |
-          echo 'DATABASE_URL="file:./dev-user-test.db?mode=memory&cache=shared"' > backend/user_service/.env.test
-          echo 'DATABASE_URL="file:./dev-game-test.db?mode=memory&cache=shared"' > backend/game_service/.env.test
+          echo 'USER_DATABASE_URL="file:./dev-user-test.db?mode=memory&cache=shared"' > backend/user_service/.env.test
+          echo 'GAME_DATABASE_URL="file:./dev-game-test.db?mode=memory&cache=shared"' > backend/game_service/.env.test
 
       - name: Push Prisma Schemas
         run: |
