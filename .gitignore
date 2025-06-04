@@ -7,4 +7,4 @@ ssl/
 .env
 *.log
 .env.test
-package-lock.json
+
