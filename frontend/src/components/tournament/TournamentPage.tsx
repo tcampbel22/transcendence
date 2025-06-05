@@ -1,146 +1,19 @@
-// // src/pages/TournamentPage.tsx
-// import React, { useState } from 'react';
-// import { Link } from 'react-router-dom';
-// import Pong from '../components/Pong';
-
-// type TournamentType = '4player' | '8player';
-
-// interface Match {
-//   id: string;
-//   player1: string;
-//   player2: string;
-//   winner?: string;
-//   status: 'pending' | 'in-progress' | 'completed';
-//   nextMatchId?: string;
-// }
-
-// interface TournamentState {
-//   currentRound: number;
-//   rounds: Match[][];
-//   currentMatchIndex: number;
-// }
-
-// const TournamentPage: React.FC = () => {
-//   const [stage, setStage] = useState<'setup' | 'playing' | 'results'>('setup');
-//   const [tournamentType, setTournamentType] = useState<TournamentType>('4player');
-//   const [players, setPlayers] = useState<string[]>([]);
-//   const [tournamentState, setTournamentState] = useState<TournamentState | null>(null);
-//   const [currentMatch, setCurrentMatch] = useState<Match | null>(null);
-
-//   // Use your existing functions but adapt them to the page format
-//   const addPlayer = (playerName: string) => {
-//     // Your existing logic
-//   };
-
-//   const createTournament = () => {
-//     // Create tournament brackets
-//     // This will replace your createRandomMatches function with the enhanced
-//     // version that supports proper tournament progression
-    
-//     setStage('playing');
-//   };
-
-//   const handleMatchComplete = (winner: string) => {
-//     // Update tournament state with match result
-//     // Move to next match or round
-//   };
-
-//   return (
-//     <div className="container mx-auto p-4">
-//       <h1 className="text-3xl font-bold text-center mb-6">Tournament Mode</h1>
-      
-//       {/* Back button */}
-//       <Link to="/" className="absolute top-4 left-4">
-//         <button className="bg-gray-500 text-white py-1 px-3 rounded">
-//           ← Back to Menu
-//         </button>
-//       </Link>
-
-//       {stage === 'setup' && (
-//         <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
-//           {/* Your existing tournament setup UI, but without modal wrapper */}
-//           <div className="mb-4">
-//             <label className="text-lg">Choose Tournament Type:</label>
-//             <select
-//               className="bg-white p-2 rounded border w-full mt-2"
-//               value={tournamentType}
-//               onChange={(e) => {
-//                 setTournamentType(e.target.value as TournamentType);
-//                 setPlayers([]);
-//               }}
-//             >
-//               <option value="2player">2 Player</option>
-//               <option value="4player">4 Player</option>
-//               <option value="8player">8 Player</option>
-//             </select>
-//           </div>
-          
-//           {/* Player management UI */}
-//           {/* Start tournament button */}
-//           <button
-//             className="w-full bg-blue-500 text-white p-2 rounded font-bold"
-//             onClick={createTournament}
-//           >
-//             Start Tournament
-//           </button>
-//         </div>
-//       )}
-
-//       {stage === 'playing' && (
-//         <div>
-//           {currentMatch ? (
-//             <Pong 
-//               player1={currentMatch.player1}
-//               player2={currentMatch.player2}
-//               onGameEnd={handleMatchComplete}
-//             />
-//           ) : (
-//             <div className="text-center">
-//               <h2 className="text-xl">Tournament Brackets</h2>
-//               {/* Display tournament brackets */}
-//               <button 
-//                 className="bg-blue-500 text-white p-2 rounded mt-4"
-//                 onClick={() => {/* Start next match */}}
-//               >
-//                 Start Next Match
-//               </button>
-//             </div>
-//           )}
-//         </div>
-//       )}
-      
-//       {stage === 'results' && (
-//         <div className="text-center">
-//           <h2 className="text-2xl font-bold mb-4">Tournament Complete!</h2>
-//           <p className="text-xl mb-6">Winner: {/* Show winner */}</p>
-//           <button
-//             className="bg-green-500 text-white p-2 rounded"
-//             onClick={() => setStage('setup')}
-//           >
-//             New Tournament
-//           </button>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default TournamentPage;
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Pong from '../components/game/Pong';
+import Pong from '../game/Pong';
+import api from '../../lib/api';
+import TournamentSetup from './TournamentType';
 
 // Define the types of tournaments
 type TournamentType = '4player' | '8player';
 
 interface Match {
-  id: string;
+  id: number;
   player1: string;
   player2: string;
   winner?: string;
   status: 'pending' | 'in-progress' | 'completed';
-  nextMatchId?: string;
+  nextMatchId?: number;
 }
 
 interface TournamentState {
@@ -157,7 +30,7 @@ const TournamentPage: React.FC = () => {
   const [currentMatch, setCurrentMatch] = useState<Match | null>(null);
   const [tournamentWinner, setTournamentWinner] = useState<string | null>(null);
 
-  // Function to handle player addition - reused from your modal
+  // Needs to check if the players exist, p1 is automatically added
   const addPlayer = (playerName: string) => {
     if (!parsePlayerName(playerName))
       return;
@@ -391,36 +264,44 @@ const TournamentPage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold text-center mb-6">Tournament Mode</h1>
+    <div>
+	  {stage === 'setup' && (
+		<TournamentSetup/>
+	  )}</div>
+	)};
       
       {/* Back button */}
-      <Link to="/" className="absolute top-4 left-4">
+      {/* <Link to="/" className="absolute top-4 left-4">
         <button className="bg-gray-500 text-white py-1 px-3 rounded">
           ← Back to Menu
         </button>
-      </Link>
+      </Link> */}
+	  
 
       {/* Setup stage */}
-      {stage === 'setup' && (
-        <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
-          <div className="mb-4">
-            <label className="text-lg">Choose Tournament Type:</label>
-            <select
+        {/* <div>
+        <div className="flex flex-col items-center justify-center w-full mb-8" >
+
+		 <div className={"title-card-class"} */}
+	 		{/* style={{ backgroundImage: `url("/images/tournament-welcome.webp")` }}>
+			</div> */}
+		 {/* </div> */}
+          {/* <div> */}
+            {/* <select
               className="bg-white p-2 rounded border w-full mt-2"
               value={tournamentType}
               onChange={(e) => {
                 setTournamentType(e.target.value as TournamentType);
                 setPlayers([]);
               }}
-            >
-              <option value="4player">4 Player</option>
+            > */}
+              {/* <option value="4player">4 Player</option>
               <option value="8player">8 Player</option>
-            </select>
-          </div>
+            </select> */}
+          {/* </div> */}
           
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold">Players ({players.length}/{tournamentType[0]})</h2>
+          {/* <div className="mb-4">
+            <h2 className="tournament-h2">Players ({players.length}/{tournamentType[0]})</h2>
             <ul className="mb-2">
               {players.map((player, index) => (
                 <li key={index} className="flex justify-between items-center my-1 py-1 border-b">
@@ -457,20 +338,40 @@ const TournamentPage: React.FC = () => {
               >
                 Add
               </button>
-            </div>
-          </div>
+            </div> */}
+			
+          {/* </div> */}
           
-          <button
+          {/* <button
             className="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded font-bold"
             onClick={createTournament}
             disabled={players.length !== parseInt(tournamentType[0])}
           >
             Start Tournament
-          </button>
-        </div>
-      )}
+          </button> */}
+		// <div className="flex  min-h-screen sm:flex-row items-center justify-center gap-6">
+        //  <div className={"base-card-class"}
+		// 	style={{ backgroundImage: `url("/images/4_players.webp")` }}>
+		// 	<Link 
+		// 		to="/play/tournament"
+		// 		// state={userInfo} 
+		// 		className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">    
+		// 	</Link>
+		// </div>
+		// <div className={"base-card-class"}
+		// 	style={{ backgroundImage: `url("/images/8_players.webp")` }}>
+		// 	<Link 
+		// 		to="/play/tournament"
+		// 		// state={userInfo} 
+		// 		className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg">    
+		// 	</Link>
+		// </div>
+		// </div>
+		// </div>
+		
+    //   )}
 
-      {/* Bracket view stage */}
+      {/* Bracket view stage
       {stage === 'bracket' && tournamentState && (
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold mb-4">Tournament Bracket</h2>
@@ -493,7 +394,7 @@ const TournamentPage: React.FC = () => {
       )}
       
       {/* Playing stage */}
-      {stage === 'playing' && currentMatch && (
+      {/* {stage === 'playing' && currentMatch && (
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold mb-4 text-center">
             {currentMatch.player1} vs {currentMatch.player2}
@@ -510,7 +411,7 @@ const TournamentPage: React.FC = () => {
       )}
       
       {/* Results stage */}
-      {stage === 'results' && (
+      {/* {stage === 'results' && (
         <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md text-center">
           <h2 className="text-3xl font-bold mb-6">Tournament Complete!</h2>
           <div className="py-6">
@@ -529,11 +430,11 @@ const TournamentPage: React.FC = () => {
             }}
           >
             New Tournament
-          </button>
-        </div>
-      )}
-    </div>
-  );
-};
+          </button> */}
+        {/* </div> */}
+      {/* )} */}
+    {/* </div> */}
+  {/* );
+}; */}
 
 export default TournamentPage;

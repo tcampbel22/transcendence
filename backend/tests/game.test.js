@@ -5,8 +5,7 @@ import { prisma, testConnection } from "../game_service/database/db.js";
 // import { populate_games } from "./populate_db.js";
 import nock from "nock"
 
-const isProduction = process.env.NODE_ENV === 'production'
-const SERVICE_URL = isProduction ? 'user_service' : 'localhost' 
+const SERVICE_URL = 'localhost' 
 
 describe("Backend Game API Tests", () => {
 	let app;

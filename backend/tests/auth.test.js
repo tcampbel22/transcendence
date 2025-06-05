@@ -7,14 +7,9 @@ import supertest from "supertest";
 import { prisma, testConnection } from "../user_service/database/db.js";
 import { populate_users, add_user } from "./populate_db.js";
 import nock from "nock";
-import path from "path";
-import { fileURLToPath } from 'url';
 
 
-const isProduction = process.env.NODE_ENV === 'production'
-const SERVICE_URL = isProduction ? 'game_service' : 'localhost'
-
-
+const SERVICE_URL = 'localhost';
 
 describe("Backend User API Tests", () => {
 	let app;
@@ -219,8 +214,6 @@ describe("Backend User API Tests", () => {
 	// Get match history
 	it("Returns a users match history", async () => {
 		const mockUserGamesResponse = {
-			message: `User ${userId}'s games fetched successfully`,
-			id: userId,
 			userGames: [
 			  {
 				id: 103,
@@ -249,26 +242,21 @@ describe("Backend User API Tests", () => {
 				player2Score: 4,
 				createdAt: "2025-05-03T08:12:37Z"
 			  } 
-			]
-		  };
+			]};
 		nock(`http://${SERVICE_URL}:3001`)
 			.get(`/api/user/${userId}`)
-			.reply(200, mockUserGamesResponse.userGames)
+			.reply(200, mockUserGamesResponse)
 		const response = await supertest(app.server)
 		  .get(`/api/${userId}/match-history`)
 		expect(response.status).toBe(200);
 	});
 
 	// Get empty match history
-	it("Returns a users match history", async () => {
-		const mockUserGamesResponse = {
-			message: `User ${userId}'s games fetched successfully`,
-			id: userId,
-			userGames: []
-		};
+	it("Returns a users empty match history", async () => {
+		const mockUserGamesResponse = [];
 		nock(`http://${SERVICE_URL}:3001`)
 			.get(`/api/user/${userId}`)
-			.reply(200, mockUserGamesResponse.userGames)
+			.reply(200, mockUserGamesResponse)
 		const response = await supertest(app.server)
 		.get(`/api/${userId}/match-history`)
 		expect(response.status).toBe(200);

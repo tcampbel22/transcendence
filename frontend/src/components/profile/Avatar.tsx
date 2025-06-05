@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
+import api from "../../lib/api";
+import { AxiosError } from "axios";
 import EditProfile from "./EditProfile";
 import ChangePassword from "./ChangePassword";
 import DeleteProfile from "./DeleteUser";
@@ -31,7 +32,7 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 		const fetchUserInfo = async () => {
 			try {
 				console.log(`Base url: ${BASE_URL}`)
-				const response = await axios.get(`${API_URL}/${userId}`);
+				const response = await api.get(`${API_URL}/${userId}`);
 				console.log("user status:" ,response.data)
 				setUsername(response.data.username);
 				setEmail(response.data.email);
@@ -81,7 +82,8 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 		formData.append("file", imageFile);
 		
 		try {
-			const response = await axios.put(`${API_URL}/${userId}/picture`, formData);
+			const headers = { "Content-Type": "multipart/form-data" };
+			const response = await api.put(`${API_URL}/${userId}/picture`, formData, { headers });
 			setImageUrl(`${BASE_URL}${response.data.newPicture}?${Date.now()}`);
 			setImageFile(null);
 			setRefreshUser(prev => !prev); // Trigger refresh to get latest data
