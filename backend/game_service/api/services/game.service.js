@@ -16,30 +16,30 @@ const SERVICE_URL = isProduction
   ? "https://nginx:4433/users"
   : "http://localhost:3002/api";
 
+let agent;
+if (isProduction) {
+  try {
+  	agent = new https.Agent({
+  	ca: fs.readFileSync("ssl/nginx.cert.pem"), // Path to the Nginx certificate
+  });
+  } catch (err) {
+  	logger.error("Failed to find SSL certificates", 502);
+  };
+}
+const axiosConfig = isProduction ? { httpsAgent: agent } : {};
+
 export const gameService = {
-  async startGame(player1Id, player2Id) 
+  async startGame(player1Id, player2Id)
   {
     try {
-      // Load Nginx certificate
-		  let agent; 
-		  if (isProduction) { 
-			try {
-				agent = new https.Agent({
-				ca: fs.readFileSync("ssl/nginx.cert.pem"), // Path to the Nginx certificate
-			});
-			} catch (err) {
-				throw ErrorCustom("Failed to find SSL certificates", 502);
-			};
-		  }
-		  const axiosConfig = isProduction ? { httpsAgent: agent } : {};
       const p1Response = await axios.get( `${SERVICE_URL}/validate/${player1Id}`, axiosConfig );
       if (p1Response.status !== 200)
         throw new ErrorCustom(`Error retrieving player`, p1Response.status);
-      
+
 	  const p2Response = await axios.get(`${SERVICE_URL}/validate/${player2Id}`, axiosConfig );
       if (p2Response.status !== 200)
         throw new ErrorCustom(`Error retrieving player`, p2Response.status);
-      
+
 	  //Create default game row
       logger.info(`Creating game for players ${player1Id} and ${player2Id}`);
       const newGame = await prisma.game.create({
@@ -79,20 +79,6 @@ export const gameService = {
           winnerId: winnerId,
         },
       });
-
-      // Load Nginx certificate
-		let agent; 
-		if (isProduction) { 
-			try {
-				agent = new https.Agent({
-				ca: fs.readFileSync("ssl/nginx.cert.pem"), // Path to the Nginx certificate
-			});
-			} catch (err) {
-				logger.error(err.message);
-				throw ErrorCustom("Failed to find SSL certificates", 502);
-			};
-		}
-		const axiosConfig = isProduction ? { httpsAgent: agent } : {};
 
       //Update P1 userstats
       try {
@@ -140,7 +126,7 @@ export const gameService = {
       throw new ErrorNotFound(`getGameById: gameId ${gameId} does not exist`);
     return game;
   },
-  
+
   // Fetches all games a user has played in
   async getUserGames(userId) {
     const games = await prisma.game.findMany({
