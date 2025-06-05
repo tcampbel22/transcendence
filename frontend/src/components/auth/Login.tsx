@@ -55,7 +55,7 @@ const Login = () => {
 
 			// Request OTP
       console.log("2fa status:", response.data.is2faEnabled);
-      console.log("login userId:", response.data);
+      console.log("login userId deivy:", response.data);
       if (!response.data.is2faEnabled) {
         navigate('/hub', { state: { userId: response.data.userId, username: response.data.username, is2faEnabled: response.data.is2faEnabled } });
         return;

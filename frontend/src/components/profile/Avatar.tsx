@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../lib/api";
 import { AxiosError } from "axios";
+import  axios  from	"axios"
 import EditProfile from "./EditProfile";
 import ChangePassword from "./ChangePassword";
 import DeleteProfile from "./DeleteUser";
