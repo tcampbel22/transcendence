@@ -5,12 +5,11 @@ import axios from "axios";
 import Avatar from "../components/profile/Avatar";
 import GamesPlayed from "../components/profile/GamesPlayed";
 import {userIdFromState} from "../hooks/userIdFromState"
-import { status2FAFromState } from "../hooks/status2FAFromState";
 
 
 const Profile = () => {
 	const userId = userIdFromState() as number;
-	const [is2faEnabled, setIs2faEnabled] = useState (status2FAFromState() as boolean);
+	const [is2faEnabled, setIs2faEnabled] = useState (false);
 	const API_URL = import.meta.env.VITE_API_USER;
 	const [victories, setVictories] = useState(0)
 	const [losses, setLoses] = useState(0)
@@ -20,6 +19,7 @@ const Profile = () => {
 	useEffect (() => {
 		const getUserData = async () => {
 			try {
+				console.log("getting user data for profile : ", API_URL)
 				const userData = await axios.get(`${API_URL}/${userId}`);
 				console.log("user data in profile:", userData.data);
 				setIs2faEnabled(userData.data.is2faEnabled);

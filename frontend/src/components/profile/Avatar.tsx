@@ -60,11 +60,6 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 	};
 
 	const set2FA = async () => {
-		if (!userId) {
-			userId = 4;
-		}
-		console.log("2FA status:", enabled);
-		console.log("userId:", userId);
 		if (enabled)
 		{	
 			const response = await axios.put(`${API_URL}/${userId}/2fa`, { is2faEnabled: false });
