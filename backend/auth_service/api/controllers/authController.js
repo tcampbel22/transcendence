@@ -53,7 +53,7 @@
             );
             }
             else {
-            response = await axios.post("http://localhost:3002/api/login", loginInput);
+            response = await axios.post("http://localhost:3002/api/login", loginInput, {withCredentials: true});
             }
             console.log("authController.js: Google callback login response:", response.data);
             const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId, username: response.data.username, is2faEnabled: response.data.is2faEnabled, redirectURL }));

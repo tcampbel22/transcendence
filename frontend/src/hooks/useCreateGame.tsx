@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios"
+import api from "../lib/api";
 import { useEffect, useState } from "react";
 
 type id = {
@@ -23,7 +23,7 @@ export const useCreateGame = ({p1Id, p2Id} : id) => {
     useEffect (() => {
         const createGame = async () => {
             try {
-                const res = await axios.post(`${API_URL}/create-game`, payload);
+                const res = await api.post(`${API_URL}/create-game`, payload, {withCredentials: true});
                 if (res.status == 201)
                     setGameId(res.data); 
             } catch (err) {
