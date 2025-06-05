@@ -29,10 +29,10 @@ fastify.register(cors, {
 });
 
 try {
-  fastify.register(gameRoutes);
   fastify.register(fastifyCookie, {
-    secret: process.env.JWT_SECRET, // for cookies signature
+  secret: process.env.JWT_SECRET, // for cookies signature
   });
+  fastify.register(gameRoutes);
 } catch (err) {
   fastify.log.error(err);
 }
