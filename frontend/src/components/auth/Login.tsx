@@ -26,7 +26,8 @@ const Login = () => {
 			if (event.origin !== "https://localhost:4433" && event.origin !== "http://localhost:5173") 
 					return;
 			if (!event.data.statusCode) {
-          navigate('/hub', { state: { userId: parseInt(event.data.userId, 10), username: event.data.username } });
+          console.log("response", event.data);
+          navigate('/hub', { state: { userId: event.data.userId, username: event.data.username } });
 				}						 
 			else {
 				setLoginError("Unable to connect with Google Sign-In");
