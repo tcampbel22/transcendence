@@ -388,7 +388,7 @@ export const profileService = {
       },
     });
     if (duplicate)
-      throw new ErrorUnAuthorized(
+      throw new ErrorConflict(
         `User ${id} is already friends with friend ${friend.id}`,
       );
     //Create friendship for friend
