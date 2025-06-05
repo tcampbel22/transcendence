@@ -35,7 +35,7 @@ const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
 			setLoading(true);
 		} catch (err) {
 			const error = err as AxiosError
-			setMessage(error.message || "Something wen't wrong");
+			setMessage(error.message || "Something went wrong");
 			setMessageType('error')
 		} finally {
 			setLoading(false);

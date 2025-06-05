@@ -25,7 +25,7 @@ export const profileService = {
       throw new ErrorNotFound(`validateUser: User ${id} cannot be found`);
     return user;
   },
-  
+
   // Fetches a user's profile
   async getUser(id) {
     const user = await prisma.user.findUnique({
@@ -35,12 +35,14 @@ export const profileService = {
         username: true,
         email: true,
         picture: true,
+        isOnline: true,
+        is2faEnabled: true,
       },
     });
     if (!user) throw new ErrorNotFound(`getUser: User ${id} cannot be found`);
     return user;
   },
-  async getUserList(limit = 20, sortField = "username") {
+  async getUserList(limit = 50, sortField = "username") {
     const users = await prisma.user.findMany({
       select: {
         id: true,
@@ -87,6 +89,26 @@ export const profileService = {
     return newUser;
   },
 
+  async update2faStatus(id, isEnabled) {
+
+    const user = await prisma.user.findUnique({
+      where: { id: id },
+      select: { id: true },
+    });
+    if (!user)
+      throw new ErrorNotFound(`updateUsername: User ${id} cannot be found`);
+    // Update the 2FA status
+    const newUser = await prisma.user.update({
+      where: { id: id },
+      data: { is2faEnabled: isEnabled },
+      select: {
+        id: true,
+        is2faEnabled: true,
+      },
+    });
+    return newUser;
+  },
+
   // Updates a user's profile picture
   async updatePicture(id, newPicture) {
     // Check if the user exists
@@ -99,10 +121,6 @@ export const profileService = {
     });
     if (!user)
       throw new ErrorNotFound(`updatePicture: User ${id} cannot be found`);
-
-    // // Check if the new picture is the same as the current one
-    // if (user.picture === newPicture)
-    //     throw new ErrorConflict(`updatePicture: Picture already exists, please choose another`);
 
     // Update the profile picture
     const newUser = await prisma.user.update({
@@ -226,20 +244,24 @@ export const profileService = {
 
     try {
       // Load Nginx certificate
-      const agent = new https.Agent({
-        ca: fs.readFileSync("ssl/nginx.cert.pem"), // Path to the Nginx certificate
-      });
-      // Fetch match history from the game service
-      //if (process.env.NODE_ENV === "production") {
-      const response = await axios.get(`${gameServiceBaseUrl}/user/${id}`, {
-        httpsAgent: agent,
-        headers: {
-          'x-internal-api-key': process.env.INTERNAL_KEY
-        },
-      });
-      //} else {
-      //  const response = await axios.get(`${gameServiceBaseUrl}/user/${id}`);
-      //}
+	  let agent; 
+	  if (isProduction) { 
+		try {
+			agent = new https.Agent({
+			ca: fs.readFileSync("ssl/nginx.cert.pem"), // Path to the Nginx certificate
+		});
+		} catch (err) {
+			throw ErrorCustom("Failed to find SSL certificates", 502);
+		};
+	  }
+	  const axiosConfig = isProduction ? { httpsAgent: agent } : {}; // Needed to add so ssl is bypassed in testing
+	// Fetch match history from the game service
+    const response = await axios.get(`${gameServiceBaseUrl}/user/${id}`, {
+      headers: {
+        "x-internal-api-key": process.env.INTERNAL_KEY,
+      },
+      ...axiosConfig
+    });
       if (response.status !== 200)
         throw new ErrorCustom(
           `Error retrieving match history ${response.statusText}`,
@@ -285,7 +307,7 @@ export const profileService = {
             gameId: game.id,
             date: game.createdAt,
             score: `${game.player1Score} - ${game.player2Score}`,
-            result: game.winnerId === id ? "Winner" : "Loser",
+            result: game.winnerId === id ? "Winner" : game.winnerId === null ? 'No Result' : "Loser",
             opponentId: oppId,
             opponentName: oppName?.username || "Unknown",
             opponentPicture: oppName?.picture || null,
@@ -316,9 +338,9 @@ export const profileService = {
     const rawFriendsData = await prisma.user.findUnique({
       where: { id: id },
       select: {
+        isOnline: true,
         friends: {
           select: {
-            isOnline: true,
             friend: {
               select: {
                 id: true,
@@ -372,8 +394,8 @@ export const profileService = {
     //Create friendship for friend
     await prisma.friend.createMany({
       data: [
-        { userId: id, friendId: friend.id, isOnline: false },
-        { userId: friend.id, friendId: id, isOnline: false },
+        { userId: id, friendId: friend.id },
+        { userId: friend.id, friendId: id },
       ],
     });
     return friend.id;

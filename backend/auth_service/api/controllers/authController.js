@@ -31,11 +31,10 @@
              payload,
              { httpsAgent }
          );
-        } 
-        else {
+        } else {
          response = await axios.post("http://localhost:3002/api/register", payload);
         }
-         const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId, redirectURL }));
+         const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId, username: response.data.username, redirectURL }));
          reply.redirect(`/auth/google/callback.html?user=${userData}`);
      } 
      catch (error) { 
@@ -56,7 +55,8 @@
             else {
             response = await axios.post("http://localhost:3002/api/login", loginInput);
             }
-            const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId, redirectURL }));
+            console.log("authController.js: Google callback login response:", response.data);
+            const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId, username: response.data.username, is2faEnabled: response.data.is2faEnabled, redirectURL }));
             reply.redirect(`/auth/google/callback.html?user=${userData}`);
          } else {
              const statusCode = error.response ? error.response.status : 500;

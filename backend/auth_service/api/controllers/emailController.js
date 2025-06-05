@@ -22,7 +22,7 @@ export const sendEmail = async (request, reply) => {
         reply.send({ success: true, message: "Email sent successfully!", token: otpToken });
     } catch (error) {
         console.error("Error sending email:", error);
-        reply.send({ success: false, error });
+        reply.send({ success: false, message: "Failed to send email. Please try again later." });
     }
 };
 

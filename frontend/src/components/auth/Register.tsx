@@ -31,9 +31,8 @@ const Register = () => {
 			password,
 		};
 
-
 		const response = await api.post(`${API_URL}/register`, payload, {withCredentials: true}) //product
-		return response.data
+		return response.data.id
 	}
 
 	const uploadProfileImage = async (userId: number) => {

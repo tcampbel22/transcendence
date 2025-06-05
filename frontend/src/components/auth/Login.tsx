@@ -1,29 +1,33 @@
-import { Link } from 'react-router-dom';
-import api from '../../lib/api';
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import axios from "axios";
+import api from "../../lib/api";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import React, { useEffect } from "react";
 
 const Login = () => {
   const API_URL = import.meta.env.VITE_API_USER;
-	const API_OTP = import.meta.env.VITE_API_AUTH;
-	const API_GOOGLE_URL = import.meta.env.VITE_API_GOOGLE;
+	const API_AUTH = import.meta.env.VITE_API_AUTH;
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [googleClicked, setGoogleClicked] = useState(false);
   const navigate = useNavigate();
 
 
 	const handleGoogleLogin = async () => {
-		window.open(`${API_GOOGLE_URL}/google`, "GoogleLoginPopup", "width=500,height=600");
+		setGoogleClicked(true);
+		window.open(`${API_AUTH}/google`, "GoogleLoginPopup", "width=500,height=600");
 	};
 
 	useEffect(() => {
+		if (!googleClicked) return;
 		const receiveMessage = (event:MessageEvent) => {
 			if (event.origin !== "https://localhost:4433" && event.origin !== "http://localhost:5173") 
 					return;
 			if (!event.data.statusCode) {
-				navigate('/hub', { state: event.data.userId });
+          console.log("response", event.data);
+          navigate('/hub', { state: { userId: event.data.userId, username: event.data.username } });
 				}						 
 			else {
 				setLoginError("Unable to connect with Google Sign-In");
@@ -33,7 +37,7 @@ const Login = () => {
 		return () => {
 		  window.removeEventListener("message", receiveMessage);
 		};
-	  }, []);
+	  }, [googleClicked]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,9 +55,14 @@ const Login = () => {
 			const userEmail = response.data.email;
 
 			// Request OTP
-		//	const otpToken = await axios.post(`${API_OTP}/send-email`, { to: userEmail });
-		//	navigate('/2fa', { state: { userData: response.data, otpToken: otpToken.data.token } });
-			navigate('/hub', {state: response.data}); 
+      console.log("2fa status:", response.data.is2faEnabled);
+      console.log("login userId deivy:", response.data);
+      if (!response.data.is2faEnabled) {
+        navigate('/hub', { state: { userId: response.data.userId, username: response.data.username, is2faEnabled: response.data.is2faEnabled } });
+        return;
+      }
+			const otpToken = await axios.post(`${API_AUTH}/send-email`, { to: userEmail });
+			navigate('/2fa', { state: { userData: response.data, otpToken: otpToken.data.token } });
 		} catch (error: any) {
 			console.error("Error:", error.response?.data || error.message);
 			// navigate('/hub')

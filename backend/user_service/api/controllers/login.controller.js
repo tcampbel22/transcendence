@@ -25,7 +25,8 @@ export const loginController = {
 				userId: login.user.id,
 				username: login.user.username,
 				email: login.user.email,
-				isOnline: login.user.isOnline
+				isOnline: login.user.isOnline,
+				is2faEnabled: login.user.is2faEnabled
 			});  
 		} catch (err) {
 			logger.error(`Error logging in user: ${err.message}`);

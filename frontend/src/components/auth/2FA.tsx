@@ -6,7 +6,7 @@ const OTPInput: React.FC = () => {
   const [otp, setOtp] = useState<string>(""); 
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const API_OTP = import.meta.env.VITE_API_AUTH; // Adjusted API URL
+  const API_AUTH = import.meta.env.VITE_API_AUTH; // Adjusted API URL
   const [isResending, setIsResending] = useState<boolean>(false); // Track resend status
 
   const navigate = useNavigate();
@@ -26,12 +26,13 @@ const OTPInput: React.FC = () => {
   const handleSubmit = async () => {
     if (otp.length !== 6) { 
       setError("The code must be exactly 6 digits.");
+	  navigate("/hub", { state: userData }); 
       return;
     }
 
     try {
       console.log("Sending OTP verification request:", { otp, otpToken });
-      const response = await axios.post(`${API_OTP}/verify-otp`, { otp, otpToken });
+      const response = await axios.post(`${API_AUTH}/verify-otp`, { otp, otpToken });
 
       if (response.data.success) {
         setSuccessMessage("OTP verified successfully!");
@@ -53,7 +54,7 @@ const OTPInput: React.FC = () => {
     try {
       console.log("Resending OTP to:", userData.email);
 
-      const response = await axios.post(`${API_OTP}/send-email`, { to: userData.email });
+      const response = await axios.post(`${API_AUTH}/send-email`, { to: userData.email });
 
       if (response.data.success) {
         console.log("New OTP token:", response.data.token);
@@ -73,7 +74,7 @@ const OTPInput: React.FC = () => {
     <div className="otp-container min-h-screen flex flex-col justify-center items-center bg-cover bg-center bg-no-repeat text-white"
          style={{ backgroundImage: "url('/images/background.jpg')" }}>
       <p className="text-lg font-bold text-white-500">
-        Enter the authentication code sent to <strong>{userData?.email}</strong>
+        Enter the authentication code sent to <strong>{userData?.email}</strong>:
       </p>
       <input
         type="text"
