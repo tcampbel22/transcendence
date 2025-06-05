@@ -20,7 +20,7 @@ model User {
   username String   @unique
   email    String
   password String
-  picture  String   @default("uploads/default.png") // Enforce PNG/JPG in validation
+  picture  String   @default("uploads/default.png")
   isOnline Boolean  @default(false)
 
   // Relations

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import api from "../../lib/api";
 
 type GameStatsInfo = {
 	userId: number;
@@ -21,7 +22,7 @@ const GamesPlayed = ({userId}: GameStatsInfo) => {
 	useEffect (() => {
 		const getMatchHistory = async () => {
 			try {
-				const history = await axios.get(`${API_URL}/${userId}/match-history`);
+				const history = await api.get(`${API_URL}/${userId}/match-history`);
 				setGames(history.data);
 			} catch (err) {
 				const error = err as AxiosError;

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import api from "../../lib/api";
 
 type EditProfileProps = {
 	onClose: () => void;
@@ -23,7 +24,7 @@ const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
 
 			console.log(payload);
 			//need to check with Tim that this is the correct place where to change the username
-			const res = await axios.put(`${API_URL}/${userId}`, {newUsername: newUsername}, {withCredentials: true}); //product version
+			const res = await api.put(`${API_URL}/${userId}`, {newUsername: newUsername}, {withCredentials: true}); //product version
 			console.log(res);
 			setMessage("Username changed succesfully");
 			setMessageType('success')
@@ -34,7 +35,7 @@ const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
 			setLoading(true);
 		} catch (err) {
 			const error = err as AxiosError
-			setMessage(error.message || "Something wen't wrong");
+			setMessage(error.message || "Something went wrong");
 			setMessageType('error')
 		} finally {
 			setLoading(false);
