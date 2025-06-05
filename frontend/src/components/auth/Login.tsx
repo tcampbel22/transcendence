@@ -6,8 +6,7 @@ import React, { useEffect } from "react";
 
 const Login = () => {
   const API_URL = import.meta.env.VITE_API_USER;
-	const API_OTP = import.meta.env.VITE_API_AUTH;
-	const API_GOOGLE_URL = import.meta.env.VITE_API_GOOGLE;
+	const API_AUTH = import.meta.env.VITE_API_AUTH;
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [loginError, setLoginError] = useState("");
@@ -17,7 +16,7 @@ const Login = () => {
 
 	const handleGoogleLogin = async () => {
 		setGoogleClicked(true);
-		window.open(`${API_GOOGLE_URL}/google`, "GoogleLoginPopup", "width=500,height=600");
+		window.open(`${API_AUTH}/google`, "GoogleLoginPopup", "width=500,height=600");
 	};
 
 	useEffect(() => {
@@ -61,7 +60,7 @@ const Login = () => {
         navigate('/hub', { state: { userId: response.data.userId, username: response.data.username, is2faEnabled: response.data.is2faEnabled } });
         return;
       }
-			const otpToken = await axios.post(`${API_OTP}/send-email`, { to: userEmail });
+			const otpToken = await axios.post(`${API_AUTH}/send-email`, { to: userEmail });
 			navigate('/2fa', { state: { userData: response.data, otpToken: otpToken.data.token } });
 		} catch (error: any) {
 			console.error("Error:", error.response?.data || error.message);
