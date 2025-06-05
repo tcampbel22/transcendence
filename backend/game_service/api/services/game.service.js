@@ -31,6 +31,7 @@ const axiosConfig = isProduction ? { httpsAgent: agent } : {};
 export const gameService = {
   async startGame(player1Id, player2Id)
   {
+    logger.info(`Starting game for players ${player1Id} and ${player2Id}`);
     try {
       const p1Response = await axios.get(
       `${SERVICE_URL}/validate/${player1Id}`,
@@ -98,12 +99,18 @@ export const gameService = {
 
       //Update P1 userstats
       try {
-        await axios.patch(`${SERVICE_URL}/${game.player1Id}/update-stats`,
+        await axios.patch(
+          `${SERVICE_URL}/${game.player1Id}/update-stats`,
           {
-            isWinner: game.player1Id === winnerId,
-            gameId: id,
+        isWinner: game.player1Id === winnerId,
+        gameId: id,
           },
-		  axiosConfig
+          {
+        headers: {
+          "x-internal-key": process.env.INTERNAL_KEY,
+        },
+        ...axiosConfig,
+          }
         );
       } catch (err) {
         console.log(`Failed to update player 1's stats`);
@@ -114,17 +121,17 @@ export const gameService = {
       if (game.player2Id) {
         try {
           await axios.patch(
-            `${SERVICE_URL}/${game.player2Id}/update-stats`,
-            {
-              isWinner: game.player2Id === winnerId,
-              gameId: id,
-            },
-            {
-              headers: {
-                "x-internal-key": process.env.INTERNAL_KEY,
-              },
-              ...axiosConfig
-            }
+        `${SERVICE_URL}/${game.player2Id}/update-stats`,
+        {
+          isWinner: game.player2Id === winnerId,
+          gameId: id,
+        },
+        {
+          headers: {
+            "x-internal-key": process.env.INTERNAL_KEY,
+          },
+          ...axiosConfig,
+        }
           );
         } catch (err) {
           console.log(`Failed to update player 2's stats`);
