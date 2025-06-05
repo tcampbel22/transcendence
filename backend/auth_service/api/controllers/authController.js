@@ -31,8 +31,7 @@
              payload,
              { httpsAgent }
          );
-        } 
-        else {
+        } else {
          response = await axios.post("http://localhost:3002/api/register", payload);
         }
          const userData = encodeURIComponent(JSON.stringify({ userId: response.data.userId, username: response.data.username, redirectURL }));

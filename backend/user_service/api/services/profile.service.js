@@ -25,7 +25,7 @@ export const profileService = {
       throw new ErrorNotFound(`validateUser: User ${id} cannot be found`);
     return user;
   },
-  
+
   // Fetches a user's profile
   async getUser(id) {
     const user = await prisma.user.findUnique({
@@ -335,9 +335,9 @@ export const profileService = {
     const rawFriendsData = await prisma.user.findUnique({
       where: { id: id },
       select: {
+        isOnline: true,
         friends: {
           select: {
-            isOnline: true,
             friend: {
               select: {
                 id: true,
@@ -391,8 +391,8 @@ export const profileService = {
     //Create friendship for friend
     await prisma.friend.createMany({
       data: [
-        { userId: id, friendId: friend.id, isOnline: false },
-        { userId: friend.id, friendId: id, isOnline: false },
+        { userId: id, friendId: friend.id },
+        { userId: friend.id, friendId: id },
       ],
     });
     return friend.id;

@@ -78,25 +78,41 @@ export const gameService = {
         },
       });
 
+      // Create https agent once for both player updates
+      const agent = new https.Agent({
+        ca: fs.readFileSync("ssl/nginx.cert.pem"), // Path to the Nginx certificate
+      });
+
       //Update P1 userstats
       try {
-        await axios.patch(`${SERVICE_URL}/${game.player1Id}/update-stats`, {
-          isWinner: game.player1Id === winnerId,
-          gameId: id,
-          httpsAgent: agent,
-        });
+        await axios.patch(
+          `${SERVICE_URL}/${game.player1Id}/update-stats`,
+          {
+            isWinner: game.player1Id === winnerId,
+            gameId: id,
+          },
+          {
+            httpsAgent: agent,
+          }
+        );
       } catch (err) {
         console.log(`Failed to update player 1's stats`);
+        console.error(err);
       }
 
       //Update P2 userstats, if it exists
       if (game.player2Id) {
         try {
-          await axios.patch(`${SERVICE_URL}/${game.player2Id}/update-stats`, {
-            isWinner: game.player2Id === winnerId,
-            gameId: id,
-            httpsAgent: agent,
-          });
+          await axios.patch(
+            `${SERVICE_URL}/${game.player2Id}/update-stats`,
+            {
+              isWinner: game.player2Id === winnerId,
+              gameId: id,
+            },
+            {
+              httpsAgent: agent,
+            }
+          );
         } catch (err) {
           console.log(`Failed to update player 2's stats`);
         }
