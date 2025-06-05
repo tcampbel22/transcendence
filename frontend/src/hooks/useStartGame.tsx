@@ -19,7 +19,9 @@ export const useStartGame = ({ isGameStarted, userId, opponentUserId, setGameId 
             player1Id: userId,
             player2Id: opponentUserId,
           }, {
-            withCredentials: true,
+            headers: {
+            "x-internal-key": "dj"
+            }
           });
           console.log("Game started successfully:", response.data);
           setGameId(response.data.gameId); 

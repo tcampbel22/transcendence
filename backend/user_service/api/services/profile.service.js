@@ -258,7 +258,7 @@ export const profileService = {
 	// Fetch match history from the game service
     const response = await axios.get(`${gameServiceBaseUrl}/user/${id}`, {
       headers: {
-        "x-internal-api-key": process.env.INTERNAL_KEY,
+        "x-internal-key": process.env.INTERNAL_KEY,
       },
       ...axiosConfig
     });
