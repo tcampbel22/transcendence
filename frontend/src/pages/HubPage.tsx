@@ -11,7 +11,7 @@ import useAllUsers from "../hooks/useAllUsers";
 
 const Hub = () => {
   const location = useLocation();
-  const userInfo = location.state as { userId: number; username: string };
+  const userInfo = location.state as { userId: number; username: string; is2faEnabled: boolean };
   const userId = userIdFromState() as number;
   const tournamentToggle = useAllUsers().length < 4;
 

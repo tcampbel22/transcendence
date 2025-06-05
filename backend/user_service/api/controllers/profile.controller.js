@@ -31,7 +31,8 @@ export const profileController = {
 				username: user.username,
 				email: user.email,
 				picture: user.picture,
-				isOnline: user.isOnline
+				isOnline: user.isOnline,
+				is2faEnabled: user.is2faEnabled,
 			})
 		} catch (err) {
 			request.log.error(err);
@@ -113,6 +114,30 @@ export const profileController = {
 			return handleError(err, reply, `Failed to update user ${id}'s password`);
 		}
 	},
+
+	async update2faStatus(request, reply) {
+		const { id } = request.params;
+		const { is2faEnabled } = request.body;
+		if (typeof is2faEnabled !== 'boolean') {
+			return reply.code(400).send({ message: 'is2faEnabled must be a boolean' });
+		}
+		try {
+			const user = await profileService.update2faStatus(parseInt(id), is2faEnabled);
+			logger.info(`User ${id}'s 2FA status updated to ${user.is2faEnabled}`);
+			return reply.code(201).send({
+				message: `User ${id}'s 2FA status updated successfully`,
+				id: user.id,
+				is2faEnabled: user.is2faEnabled,
+			});
+		}
+		catch (err) {
+			logger.error(`Failed to update user ${id}'s 2FA status: ${err.message}`);
+			request.log.error(err);
+			return handleError(err, reply, `Failed to update user ${id}'s 2FA status`);
+		}
+	},
+
+
 	async validatePassword(request, reply) {
 		const { id, password } = request.body
 		try {

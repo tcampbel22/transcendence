@@ -22,6 +22,9 @@ export default async function profileRoutes(fastify, options) {
     
     // Update profile pic
     fastify.put("/api/:id/picture", { schema: schemas.updatePictureSchema }, profileController.updatePicture);
+
+    // update 2fa status
+    fastify.put("/api/:id/2fa", { schema: schemas.update2faSchema }, profileController.update2faStatus);
     
     // Update password
     fastify.put("/api/:id/reset-password", { schema: schemas.updatePasswordSchema }, profileController.updatePassword);
