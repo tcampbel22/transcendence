@@ -13,7 +13,7 @@ const Hub = () => {
 	const location = useLocation();
   	const userInfo = location.state as { userId: number; username: string };
     const userId = userIdFromState() as number;
-	const tournamentToggle = useAllUsers().length < 3;
+	const tournamentToggle = useAllUsers().length > 3;
 
 	const { friendsList, reFetch } = useFriendslist(userInfo.userId);
 
