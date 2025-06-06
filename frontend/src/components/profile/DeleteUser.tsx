@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import api from "../../lib/api";
 import { useNavigate } from "react-router-dom";
 
 type DeleteProfileProps = {
@@ -17,7 +18,7 @@ const DeleteProfile = ({userId, onClose}: DeleteProfileProps) => {
 	const handleDelete = async () => {
 		setLoading(true); 
 		try {
-			await axios.delete(`${API_URL}/${userId}/delete-user`, {withCredentials: true});
+			await api.delete(`${API_URL}/${userId}/delete-user`, {withCredentials: true});
             setMessageType('success');
             setMessage("gg my guy");
 			setTimeout(() => {

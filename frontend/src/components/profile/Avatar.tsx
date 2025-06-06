@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
+import api from "../../lib/api";
+import { AxiosError } from "axios";
+import  axios  from	"axios"
 import EditProfile from "./EditProfile";
 import ChangePassword from "./ChangePassword";
 import DeleteProfile from "./DeleteUser";
 
 type AvatarInfo = {
 	userId: number;
+	is2faEnabled: boolean;
 };
 
-const Avatar = ({userId}: AvatarInfo) => {
+const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 	const API_URL = import.meta.env.VITE_API_USER;
 	const BASE_URL = import.meta.env.VITE_BASE_USER_URL || '';
 	const [editIsOpen, setEditOpen] = useState(false);
@@ -19,13 +22,18 @@ const Avatar = ({userId}: AvatarInfo) => {
 	const [refreshUser, setRefreshUser] = useState(false);
 	const [imageUrl, setImageUrl] = useState<string>(`${BASE_URL}/uploads/default.png`);
 	const [imageFile, setImageFile] = useState<File | null>(null);
+	const [enabled, setEnabled] = useState(is2faEnabled);
 	//need to add actual values to the userId.
+
+	useEffect(() => {
+    setEnabled(is2faEnabled);
+	}, [is2faEnabled]);
 
 	useEffect(() => {
 		const fetchUserInfo = async () => {
 			try {
 				console.log(`Base url: ${BASE_URL}`)
-				const response = await axios.get(`${API_URL}/${userId}`);
+				const response = await api.get(`${API_URL}/${userId}`);
 				console.log("user status:" ,response.data)
 				setUsername(response.data.username);
 				setEmail(response.data.email);
@@ -53,6 +61,21 @@ const Avatar = ({userId}: AvatarInfo) => {
 		}
 	};
 
+	const set2FA = async () => {
+		if (enabled)
+		{	
+			const response = await axios.put(`${API_URL}/${userId}/2fa`, { is2faEnabled: false });
+			console.log("2FA disabled:", response.data);
+			setEnabled(false);
+		}
+		else
+		{
+			const response = await axios.put(`${API_URL}/${userId}/2fa`, { is2faEnabled: true });
+			console.log("2FA enabled:", response.data);
+			setEnabled(true);
+		}
+	}
+
 	const uploadProfileImage = async () => {
 		if (!imageFile) return;
 		
@@ -60,7 +83,8 @@ const Avatar = ({userId}: AvatarInfo) => {
 		formData.append("file", imageFile);
 		
 		try {
-			const response = await axios.put(`${API_URL}/${userId}/picture`, formData);
+			const headers = { "Content-Type": "multipart/form-data" };
+			const response = await api.put(`${API_URL}/${userId}/picture`, formData, { headers });
 			setImageUrl(`${BASE_URL}${response.data.newPicture}?${Date.now()}`);
 			setImageFile(null);
 			setRefreshUser(prev => !prev); // Trigger refresh to get latest data
@@ -116,6 +140,7 @@ const Avatar = ({userId}: AvatarInfo) => {
 			<button onClick={() => setPasswordOpen(true)} className="border border-black rounded p-1 hover:bg-black hover:text-white mt-3 shadow-md">
 				change password
 			</button>
+			<button onClick={() => set2FA()} className="border border-black rounded p-1 hover:bg-black hover:text-white mt-auto shadow-md">  {enabled ? 'Disable 2FA' : 'Enable 2FA'} </button>
 			<button onClick={() => setDeleteOpen(true)} className="shadow-md bg-beige border border-black text-black rounded p-1 hover:bg-red-500 hover:text-beige mt-auto">
 				commit seppuku
 			</button>

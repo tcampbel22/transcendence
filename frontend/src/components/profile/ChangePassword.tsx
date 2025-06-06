@@ -1,5 +1,6 @@
-import axios, { AxiosError } from "axios";
 import { useState } from "react";
+import api from "../../lib/api";
+import { AxiosError } from "axios";
 
 type EditPasswordProps = {
 	onClose: () => void;
@@ -22,7 +23,7 @@ const ChangePassword = ({onClose, userId, onSave}: EditPasswordProps) => {
                 newPassword: newPassword,
             };
 
-            const res = await axios.put(`${API_URL}/${userId}/reset-password`, payload);
+            const res = await api.put(`${API_URL}/${userId}/reset-password`, payload);
             console.log(res);
             setMessage('Password changed succesfully!');
             setMessageType('success')

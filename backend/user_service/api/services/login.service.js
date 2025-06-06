@@ -38,7 +38,8 @@ export const loginService = {
 				username: true,
 				email: true,
 				picture: true,
-				isOnline: true
+				isOnline: true,
+				is2faEnabled: true
 			}
 		})
 		return { user, isMatch, token };
