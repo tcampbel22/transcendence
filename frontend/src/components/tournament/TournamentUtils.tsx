@@ -24,11 +24,12 @@ export const PlayerList: React.FC<ListProps> = ({ name, togglePlayers, buttonTex
 export const StartTournament = ({ startTournament }: { startTournament: boolean }) => {
 	if (!startTournament)
 		return ;
+
 	return (
 		<div className="text-6xl px-9 p-10">
 			<Link
 					to="/play/tournament-bracket"
-					// state={data}
+					// state={{players}}
 					className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg"
 					>
 				<button className="bg-amber-100 shadow-lg rounded-lg p-10 px-10 transform hover:scale-110">
@@ -39,6 +40,7 @@ export const StartTournament = ({ startTournament }: { startTournament: boolean 
 		</div>
 	);
 }
+
 
 
 export const PlayersCard = ({players}: {players: PlayerProps[]}) => {
