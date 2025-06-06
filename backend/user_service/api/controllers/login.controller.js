@@ -15,6 +15,7 @@ export const loginController = {
 				return reply.status(401).send({ message: "invalid username or password" });
 
 			reply.setCookie("token", login.token, {
+				path: "/",
 				httpOnly: true,
 				secure: process.env.NODE_ENV === "production",
 				sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax",

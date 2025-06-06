@@ -15,14 +15,16 @@ export const useStartGame = ({ isGameStarted, userId, opponentUserId, setGameId 
       const startGame = async () => {
         try {
           const API_URL = import.meta.env.VITE_API_GAME;
-          const response = await api.post(`${API_URL}/create-game`, {
-            player1Id: userId,
-            player2Id: opponentUserId,
-          }, {
-            headers: {
-            "x-internal-key": "dj"
+          const response = await api.post(
+            `${API_URL}/create-game`,
+            {
+              player1Id: userId,
+              player2Id: opponentUserId,
+            },
+            {
+              withCredentials: true,
             }
-          });
+          );
           console.log("Game started successfully:", response.data);
           setGameId(response.data.gameId); 
         } catch (error) {

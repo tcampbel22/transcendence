@@ -17,6 +17,7 @@ const authenticate = async (request, reply) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     request.user = decoded;
   } catch (err) {
+    logger.error("JWT verification failed:", err);
     console.error("Authentication failed:", err.message);
     return reply.status(401).send({ message: "Unauthorized: Invalid or expired token" });
   }
