@@ -1,4 +1,4 @@
 DATABASE_URL="file:../data/user.db"
 JWT_SECRET="daniel1"
 NODE_ENV="production"
-INTERNAL_KEY"dj";
+INTERNAL_KEY="dj"
