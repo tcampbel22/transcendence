@@ -26,7 +26,6 @@ const OTPInput: React.FC = () => {
   const handleSubmit = async () => {
     if (otp.length !== 6) { 
       setError("The code must be exactly 6 digits.");
-	  navigate("/hub", { state: userData }); 
       return;
     }
 
