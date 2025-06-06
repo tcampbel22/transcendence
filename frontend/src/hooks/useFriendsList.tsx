@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
+import api from "../lib/api";
+import { AxiosError } from "axios";
 
 type Friends = {
     id: number,
@@ -16,7 +17,7 @@ export const useFriendslist = (userId : number) => {
     useEffect (() => {
             const getFriendsList = async () => {
                 try {
-                    const res = await axios.get(`${API_URL}/${userId}/friends`, {withCredentials: true}); //get friends list
+                    const res = await api.get(`${API_URL}/${userId}/friends`, {withCredentials: true}); //get friends list
                     setFriendsList(res.data.friendList || []); //set it for usage in the dropdown list
                 } catch (err) {
                     const error = err as AxiosError;

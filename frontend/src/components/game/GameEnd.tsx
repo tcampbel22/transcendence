@@ -45,7 +45,7 @@ const GameEnd = ({user, opponentUserId, winner, p1score, p2score, gameId} : EndG
         }
 
         try {
-            const res = await api.patch(`${API_URL}/${gameId}/finish-game`, payload);
+            const res = await api.patch(`${API_URL}/${gameId}/finish-game`, payload, { withCredentials: true });
             console.log("match finished", res.data);
             navigate('/hub', {state:user});
         } catch (err) {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Wins from "../components/profile/Wins";
 import Losses from "../components/profile/Losses";
-import axios from "axios";
+import api from "../lib/api";
 import Avatar from "../components/profile/Avatar";
 import GamesPlayed from "../components/profile/GamesPlayed";
 import {userIdFromState} from "../hooks/userIdFromState"
@@ -20,10 +20,10 @@ const Profile = () => {
 		const getUserData = async () => {
 			try {
 				console.log("getting user data for profile : ", API_URL)
-				const userData = await axios.get(`${API_URL}/${userId}`);
+				const userData = await api.get(`${API_URL}/${userId}`, { withCredentials: true });
 				console.log("user data in profile:", userData.data);
 				setIs2faEnabled(userData.data.is2faEnabled);
-				const gameData = await axios.get(`${API_URL}/${userId}/stats`);
+				const gameData = await api.get(`${API_URL}/${userId}/stats`, { withCredentials: true });
 				console.log("game data:", gameData.data)
 				setVictories(gameData.data.wins) //these are the actual ones for the game testing purposes commented out
 				setLoses(gameData.data.losses)

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import axios from "axios";
+import api from "../../lib/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect } from "react";
@@ -49,7 +50,7 @@ const Login = () => {
 			password,
 		}
 		try {
-			const response = await axios.post(`${API_URL}/login`, loginInput);
+			const response = await api.post(`${API_URL}/login`, loginInput, { withCredentials: true });
 			//console.log("logged in succesfully", response.data)
 			const userEmail = response.data.email;
 

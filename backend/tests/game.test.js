@@ -61,6 +61,7 @@ describe("Backend Game API Tests", () => {
 	it("should return 201 when creating a game", async () => {
 	const response = await supertest(app.server)
 		.post("/api/create-game")
+		.set("x-internal-key", "dj")
 		.send({ player1Id: 1, player2Id: 2 });
 	expect(response.status).toBe(201);
 	});
@@ -68,12 +69,14 @@ describe("Backend Game API Tests", () => {
 	it("should return 200 when fetching game details", async () => {
 	const response = await supertest(app.server)
 		.get(`/api/${gameId}`)
+		.set("x-internal-key", "dj");
 	expect(response.status).toBe(200);
 	});
 	
 	it("should return 201 when finishing a game", async () => {
 	const response = await supertest(app.server)
 		.patch(`/api/${gameId}/finish-game`)
+		.set("x-internal-key", "dj")
 		.send({ p1score: 5, p2score: 1, winnerId: 1 });
 	expect(response.status).toBe(201);
 	});
@@ -91,7 +94,8 @@ describe("Backend Game API Tests", () => {
 		})
 		await new Promise(resolve => setTimeout(resolve, 100));
 		const response = await supertest(app.server)
-			.get(`/api/user/1`);
+			.get(`/api/user/1`)
+			.set("x-internal-key", "dj");
 		expect(response.status).toBe(200)
 		 // Check response structure
 		expect(response.body).toHaveProperty('userGames');

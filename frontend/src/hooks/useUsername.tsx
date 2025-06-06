@@ -1,3 +1,4 @@
+import api from "../lib/api";
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 
@@ -17,7 +18,7 @@ export const useUsername = (UserId : userIdProp) => {
     useEffect (() => {
         const getName = async () => {
             try {
-                const res = await axios.get(`${API_URL}/${UserId}`);
+                const res = await api.get(`${API_URL}/${UserId}`);
                 setProfile(res.data);
             } catch (err) {
                 const error = err as AxiosError;

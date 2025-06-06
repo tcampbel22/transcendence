@@ -4,6 +4,7 @@ import gameRoutes from "./api/routes/game.routes.js";
 import logger from "@eleekku/logger";
 import fs from "fs";
 import cors from "@fastify/cors";
+import fastifyCookie from "@fastify/cookie";
 
 const SSL_CERT_PATH = "ssl/cert.pem";
 const SSL_KEY_PATH = "ssl/key.pem";
@@ -23,11 +24,14 @@ const fastify = Fastify({
 fastify.register(cors, {
   origin: ["http://localhost:5173"], // 👈 Vite's default dev server port
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization", "x-internal-key"],
   credentials: true,
 });
 
 try {
+  fastify.register(fastifyCookie, {
+  secret: process.env.JWT_SECRET, // for cookies signature
+  });
   fastify.register(gameRoutes);
 } catch (err) {
   fastify.log.error(err);

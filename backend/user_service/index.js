@@ -30,6 +30,10 @@ fastify.register(cors, {
   origin: ["http://localhost:5173"],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   credentials: true,
+  allowedHeaders: [
+    "x-internal-key",
+    "content-type",
+  ],
 });
 
 fastify.register(multipart, {
