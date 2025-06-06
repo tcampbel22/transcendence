@@ -12,13 +12,16 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: npm
           cache-dependency-path: backend/tests/package-lock.json
 
       - name: Install Dependencies
         run: |
-          cd backend/user_service && npm ci
+          cd backend/libs/jwt_authenticator && npm ci
+          cd ../logger && npm ci
+          cd ../error_lib && npm ci
+          cd ../../user_service && npm ci
           cd ../game_service && npm ci
           cd ../tests && npm ci
 
@@ -93,7 +96,7 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: npm
           cache-dependency-path: e2e/package.json
 
