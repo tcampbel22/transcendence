@@ -74,7 +74,7 @@ describe("Backend User API Tests", () => {
 	it("should return 204 and delete the user", async () => {
 		const response = await supertest(app.server)
 			.delete(`/api/${userId}/delete-user`)
-			.set("x-internal-key", process.env.INTERNAL_KEY);
+			.set("x-internal-key", "dj");
 		expect(response.status).toBe(204);
 	});
 
