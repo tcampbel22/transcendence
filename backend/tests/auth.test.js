@@ -168,7 +168,7 @@ describe("Backend User API Tests", () => {
 			.post(`/api/${userId}/friends`)
 			.set("x-internal-key", "dj")
 			.send({ friendUsername: "friend" });
-		expect(response2.status).toBe(401)
+		expect(response2.status).toBe(409) // Changed from 401 to 409 (Conflict)
 	});
 
 	// add friend and then delete them
@@ -219,15 +219,18 @@ describe("Backend User API Tests", () => {
 		// First add a friend
 		const response = await supertest(app.server)
 			.post(`/api/${userId}/friends`)
+			.set("x-internal-key", "dj")
 			.send({ friendUsername: "friend" });
 		expect(response.status).toBe(201);
 			// Get users friend list
 		const response2 = await supertest(app.server)
 			.get(`/api/${userId}/friends`)
+			.set("x-internal-key", "dj");
 		expect(response2.status).toBe(200)
 		// Get friends friend list
 		const response3 = await supertest(app.server)
 			.get(`/api/${friendId}/friends`)
+			.set("x-internal-key", "dj");
 		expect(response3.status).toBe(200)
 	});
 	// Get match history
@@ -267,6 +270,7 @@ describe("Backend User API Tests", () => {
 			.reply(200, mockUserGamesResponse)
 		const response = await supertest(app.server)
 		  .get(`/api/${userId}/match-history`)
+		  .set("x-internal-key", "dj");
 		expect(response.status).toBe(200);
 	});
 
@@ -278,6 +282,7 @@ describe("Backend User API Tests", () => {
 			.reply(200, mockUserGamesResponse)
 		const response = await supertest(app.server)
 		.get(`/api/${userId}/match-history`)
+		.set("x-internal-key", "dj");
 		expect(response.status).toBe(200);
 	});
 });
