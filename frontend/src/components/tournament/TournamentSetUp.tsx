@@ -33,7 +33,7 @@ const Button: React.FC<ButtonProps> = ({ colour, text, togglePlayers } ) => {
 const StartTournament = ({ startTournament }: { startTournament: boolean }) => {
 	if (!startTournament)
 		return ;
-	const players = ["kissa", "juuso", "kilpi", "koira"];
+	const players = [1, 2, 3, 4];
 	return (
 		<div className="text-6xl px-9 p-10">
 			<Link

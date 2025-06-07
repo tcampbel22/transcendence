@@ -12,6 +12,7 @@ import Logout from "../auth/Logout"
 import TournamentType from "../tournament/TournamentType"
 import TournamentSetUp from "../tournament/TournamentSetUp"
 import TournamentBracket from "../tournament/TournamentBracket"
+import TournamentPongWrapper from "../tournament/TournamentWrapper"
 
 const AppRoutes = () => (
 	<Routes>
@@ -21,6 +22,7 @@ const AppRoutes = () => (
 		<Route path="/play/tournament" element={<TournamentType />} />
 		<Route path="/play/tournament-setup" element={<TournamentSetUp />} />
 		<Route path="/play/tournament-bracket" element={<TournamentBracket />} />
+		<Route path="/play/1v1/tournament" element={<TournamentPongWrapper />} />
 		<Route path='/hub' element={<Hub />}/>
 		<Route path='/profile' element={<Profile />} />
 		<Route path='/2fa' element={<OTPInput />} />

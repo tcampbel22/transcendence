@@ -7,7 +7,7 @@ import { AxiosError } from 'axios';
 
 type userObj = {
     userId: number;
-    username: string;
+    username: { username: string | undefined };
 };
 
 type EndGameProps = {
@@ -67,7 +67,7 @@ const GameEnd = ({user, opponentUserId, winner, p1score, p2score, gameId} : EndG
                     <p className=   {`font-semibold text-lg ${winner === 'left' ? 'text-green-500' : 'text-red-600'}`}>
                                     {winner === 'left' ? 'Winner' : 'Loser'}
                     </p>
-                    <p className="text-sm text-gray-600 font-bold">{username}</p>
+                    <p className="text-sm text-gray-600 font-bold">{useUsername(userId).username}</p>
                 </div>
 
                 {/* Score */}

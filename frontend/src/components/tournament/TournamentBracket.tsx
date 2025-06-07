@@ -1,13 +1,16 @@
-import React from "react";
+import React, {useState} from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import MatchBox from "./MatchBox";
+import TournamentPong from "./TournamentPong";
+import TournamentPongWrapper from "./TournamentWrapper";
 
 const TournamentBracket: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [scores, setScores] = useState({ left: 0, right: 0 });
 
   // 1) Grab the `players` array from location.state
-  const routerState = (location.state as { players: string[] }) || null;
+  const routerState = (location.state as { players: number[] }) || null;
   const players = routerState?.players ?? [];
   if (players.length === 0) {
     return (
@@ -34,32 +37,33 @@ const TournamentBracket: React.FC = () => {
   }
 
   // 3) Semifinal pairings for 4 players (seeded 0 vs 3, 1 vs 2):
-  const sfPairs: [string, string][] = [
+  const sfPairs: [number, number][] = [
     [players[0], players[3]],
     [players[1], players[2]],
   ];
 
   // 4) Final placeholder
-  const finalPair: [string, string] = ["TBD", "TBD"];
+  const finalPair: [number | "TBD", number | "TBD"] = ["TBD", "TBD"];
 
   return (
     <div className="p-6">
       <h1 className="text-4xl font-bold text-center mb-10 bg-beige border-2 border-black rounded">
         Tournament Bracket
       </h1>
-
-      {/** 
-        We want exactly 4 rows of 6 rem each (h-96 = 24 rem total, so each "1fr" = 6 rem). 
-        And two columns (SF | Final). 
-      **/}
       <div className="grid grid-cols-2 grid-rows-4 h-96 gap-x-10">
         {/* ───── Semifinal #1 at column 1, row 1 ───── */}
         <div className="col-start-1 row-start-1 flex justify-center">
           <MatchBox
             playerA={sfPairs[0][0]}
             playerB={sfPairs[0][1]}
+			
             onClick={() => {
-              /* e.g. navigate to Pong for sfPairs[0][0] vs sfPairs[0][1] */
+              navigate("/play/1v1/tournament", {
+				state: {
+					p1UserId: sfPairs[0][0],
+					p2UserId: sfPairs[0][1],
+			},
+			});
             }}
           />
         </div>
@@ -69,7 +73,12 @@ const TournamentBracket: React.FC = () => {
           <MatchBox
             playerA={sfPairs[1][0]}
             playerB={sfPairs[1][1]}
-            onClick={() => {
+            onClick={() => {navigate("/play/1v1/tournament", {
+				state: {
+					p1UserId: sfPairs[0][0],
+					p2UserId: sfPairs[0][1],
+			},
+			});
               /* e.g. navigate to Pong for sfPairs[1][0] vs sfPairs[1][1] */
             }}
           />
@@ -80,7 +89,12 @@ const TournamentBracket: React.FC = () => {
           <MatchBox
             playerA={finalPair[0]}
             playerB={finalPair[1]}
-            onClick={() => {
+            onClick={() => {navigate("/play/1v1/tournament", {
+				state: {
+					p1UserId: sfPairs[0][0],
+					p2UserId: sfPairs[0][1],
+			},
+			});
               /* e.g. navigate to Pong for finalPair[0] vs finalPair[1] */
             }}
           />
