@@ -33,7 +33,8 @@ const Button: React.FC<ButtonProps> = ({ colour, text, togglePlayers } ) => {
 const StartTournament = ({ startTournament }: { startTournament: boolean }) => {
 	if (!startTournament)
 		return ;
-	const players = [1, 2, 3, 4];
+	const players = [1, 2, 3, 4, 5, 6, 7, 8];
+	localStorage.removeItem("tournament_bracket");
 	return (
 		<div className="text-6xl px-9 p-10">
 			<Link

@@ -1,23 +1,26 @@
-import { useEffect } from "react";
-import { userNameFromState } from "../../hooks/useNameFromState";
 import { useUsername } from "../../hooks/useUsername";
-
 
 interface MatchBoxProps {
   playerA: number | string;
   playerB: number | string;
+  winner: number | string;
+  hasPlayed: boolean;
   onClick?: () => void;
 }
 
-const MatchBox: React.FC<MatchBoxProps> = ({ playerA, playerB, onClick }) => {
-  const player1Name = typeof playerA === "number" ? useUsername(playerA).username : "TBD";
-  const player2Name = typeof playerB === "number" ? useUsername(playerB).username : "TBD";
+const MatchBox: React.FC<MatchBoxProps> = ({ playerA, playerB, winner, hasPlayed, onClick }) => {
+  const playerAId = typeof playerA === "number" ? playerA : null;
+  const playerBId = typeof playerB === "number" ? playerB : null;
 
-  const isTBD = player1Name === "TBD" || player2Name === "TBD";
+  const playerAUsername = playerAId !== null ? useUsername(playerAId).username : "TBD";
+  const playerBUsername = playerBId !== null ? useUsername(playerBId).username : "TBD";
+
+  const isTBD = playerA === "TBD" || playerB === "TBD";
+  const canClick = onClick && !isTBD && !hasPlayed;
 
   return (
     <div
-      onClick={!isTBD && onClick ? onClick : undefined}
+      onClick={canClick ? onClick : undefined}
       className={`
         border-2 
         border-black
@@ -28,15 +31,17 @@ const MatchBox: React.FC<MatchBoxProps> = ({ playerA, playerB, onClick }) => {
         text-center 
         rounded 
         shadow 
-        ${!isTBD && onClick ? "hover:shadow-lg cursor-pointer" : "opacity-60"} 
+        ${canClick ? "hover:shadow-lg cursor-pointer" : "opacity-60"} 
         transition
       `}
     >
-      <div className="font-medium">{player1Name}</div>
+      <div className="font-medium">{playerAUsername}</div>
       <div className="text-gray-500 text-sm">vs</div>
-      <div className="font-medium">{player2Name}</div>
+      <div className="font-medium">{playerBUsername}</div>
     </div>
   );
 };
 
 export default MatchBox;
+
+

@@ -1,13 +1,11 @@
 import { useState } from "react";
 
 type TournamentControlProps = {
-	p1UserId: number;
-	p2UserId: number;
 	resetGame: () => void;
 	setIsGameStarted: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const TournamentControls = ({p1UserId, p2UserId, resetGame, setIsGameStarted}: TournamentControlProps) => {
+const TournamentControls = ({resetGame, setIsGameStarted}: TournamentControlProps) => {
 
 	const handleClick = () => {
 		setIsGameStarted(true);
@@ -16,7 +14,7 @@ const TournamentControls = ({p1UserId, p2UserId, resetGame, setIsGameStarted}: T
 
 	return (
 		<div className="mb-4">
-			<button onClick={handleClick} className="px-4 py-2 bg-beige text-white rounded">
+			<button onClick={handleClick} className="bg-beige shadow-lg rounded-lg p-10 px-10 transform hover:scale-110">
 				Start Game
 			</button>
 		</div>
