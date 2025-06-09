@@ -6,11 +6,11 @@ import { ListProps, TournamentCardProps, PlayerProps, FilterProps } from "../../
 
 
 export const PlayerList: React.FC<ListProps> = ({ name, togglePlayers, buttonText }) => {
-	const colour = buttonText === 'Add' ? 'amber-600' : 'red-500' 
-	return ( 
+	const colour = buttonText === 'Add' ? 'amber-600' : 'red-500'
+	return (
 	<li className="flex justify-between items-center px-7">
-		<span>{name}</span> 
-		<button 
+		<span>{name}</span>
+		<button
 			onClick={() => togglePlayers && togglePlayers()}
 			className={`bg-${colour} shadow-lg rounded-lg p-1 pl-3 pr-3 transform hover:scale-110`}>
 			{buttonText}
@@ -21,24 +21,24 @@ export const PlayerList: React.FC<ListProps> = ({ name, togglePlayers, buttonTex
 
 // Need to fix this, it needs to link to the tournament bracket page which will generate the bracket based on the players array
 //  passed though as a state.
-export const StartTournament = ({ startTournament }: { startTournament: boolean }) => {
-	if (!startTournament)
-		return ;
-	return (
-		<div className="text-6xl px-9 p-10">
-			<Link
-					to="/play/tournament-bracket"
-					// state={data}
-					className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg"
-					>
-				<button className="bg-amber-100 shadow-lg rounded-lg p-10 px-10 transform hover:scale-110">
-					Start Tournament
-				</button>
-				</Link>
-			
-		</div>
-	);
-}
+// export const StartTournament = ({ startTournament }: { startTournament: boolean }) => {
+// 	if (!startTournament)
+// 		return ;
+// 	return (
+// 		<div className="text-6xl px-9 p-10">
+// 			<Link
+// 					to="/play/tournament-bracket"
+// 					// state={data}
+// 					className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg"
+// 					>
+// 				<button className="bg-amber-100 shadow-lg rounded-lg p-10 px-10 transform hover:scale-110">
+// 					Start Tournament
+// 				</button>
+// 				</Link>
+
+// 		</div>
+// 	);
+// }
 
 
 export const PlayersCard = ({players}: {players: PlayerProps[]}) => {
@@ -75,9 +75,9 @@ export const FilterCard: React.FC<TournamentCardProps> = ({ data, players, toggl
 						if (togglePlayers)
 							togglePlayers(u.id);
 					}
-					return <PlayerList 
-						key={u.id} 
-						name={u.username} 
+					return <PlayerList
+						key={u.id}
+						name={u.username}
 						togglePlayers={handleUserClick}
 						buttonText={buttonText}
 						username={players[0].username}
