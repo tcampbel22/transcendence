@@ -33,7 +33,7 @@ type ListProps = {
 	name: string,
 	togglePlayers?: () => void,
 	buttonText: string,
-	username: string
+	// username?: string
 }
 
 type PlayerProps = {

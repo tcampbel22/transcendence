@@ -90,7 +90,7 @@ const FilterCard: React.FC<TournamentCardProps> = ({ data, players, togglePlayer
 						name={u.username} 
 						togglePlayers={handleUserClick}
 						buttonText={buttonText}
-						username={players[0].username}
+						// username={players[0].username}
 					/>
 				})}
 			</ul>

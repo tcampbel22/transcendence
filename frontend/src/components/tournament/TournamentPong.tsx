@@ -7,6 +7,7 @@ import { useStartGame } from "../../hooks/useStartGame";
 import { useUsername } from "../../hooks/useUsername";
 import GameCanvas from "../game/GameCanvas";
 import GameEnd from "../game/GameEnd";
+import TournamentControls from "./TournamentControls";
 
 
 const PADDLE_HEIGHT = 100;
@@ -52,7 +53,7 @@ const TournamentPong: React.FC<TournamentProps> = ({onScoreChange, onGameEnd, p1
 		  onGameEnd?.(player1); // Notify tournament system who won
 		}
 	  };
-	
+
 	  const updateRightScore = (newScore: number) => {
 		setRightScore(newScore);
 		onScoreChange?.(leftScore, newScore);
@@ -108,16 +109,24 @@ const TournamentPong: React.FC<TournamentProps> = ({onScoreChange, onGameEnd, p1
 	return (
 		<div className="bg-blacks flex items-center justify-center p-4 rounded">
 			<div className="relative">
-			<GameCanvas ballX={ballX}
+			{isGameStarted && <GameCanvas ballX={ballX}
 	   					ballY={ballY} 
 						leftPaddleY={leftPaddleY} 
 						rightPaddleY={rightPaddleY}/>
-			{gameOver && <GameEnd  			user={user}
-                                            opponentUserId={opponentUserId}
-                                            winner={winner}
-                                            p1score={leftScore}
-                                            p2score={rightScore}
-                                            gameId={gameId}
+			}
+			{!isGameStarted && <TournamentControls
+				p1UserId={p1UserId}
+				p2UserId={p2UserId}
+				resetGame={resetGame}
+				setIsGameStarted={setIsGameStarted}
+			/>
+			}
+			{gameOver && isGameStarted && <GameEnd  user={user}
+													opponentUserId={opponentUserId}
+													winner={winner}
+													p1score={leftScore}
+													p2score={rightScore}
+													gameId={gameId}
                                   />
     };
 			</div>
