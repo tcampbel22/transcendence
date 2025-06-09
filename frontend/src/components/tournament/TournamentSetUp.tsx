@@ -7,13 +7,13 @@ import { Link } from "react-router-dom";
 import { Header1 } from "../utils/Headers";
 import { ListProps, ButtonProps, TournamentCardProps, PlayerProps, FilterProps } from "../../types/types";
 
-function shuffleArray<T>(array: T[]): T[] {
+function shuffleArray(array: PlayerProps[]): number[] {
   const arr = [...array];
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-  return arr;
+  return arr.map(player => player.id);
 }
 
 const List: React.FC<ListProps> = ({ name, togglePlayers, buttonText }) => {
@@ -41,13 +41,13 @@ const StartTournament = ({ startTournament, players }: { startTournament: boolea
 	if (!startTournament)
 	  return ;
 
-	const shuffledPlayers = shuffleArray(players);
-	console.log("Shuffled players:", shuffledPlayers);
+	const shuffledPlayerIds = shuffleArray(players);
+	console.log("Shuffled player IDs:", shuffledPlayerIds);
 	return (
 		<div className="text-6xl px-9 p-10">
 			<Link
 				to="/play/tournament-bracket"
-				state={{ players: shuffledPlayers }}
+				state={{ playerIds: shuffledPlayerIds }}
 				className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg"
 			>
 				<button className="bg-amber-200 shadow-lg rounded-lg p-10 px-10 transform hover:scale-110">
