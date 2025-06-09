@@ -12,25 +12,23 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: npm
           cache-dependency-path: backend/tests/package-lock.json
 
       - name: Install Dependencies
         run: |
-          cd backend/user_service && npm ci
+          cd backend/libs/jwt_authenticator && npm ci
+          cd ../logger && npm ci
+          cd ../error_lib && npm ci
+          cd ../../user_service && npm ci
           cd ../game_service && npm ci
           cd ../tests && npm ci
 
-      - name: Create test .env files
+      - name: Copy sample test env files to .env files
         run: |
-          echo 'DATABASE_URL="file:./dev-user-test.db?mode=memory&cache=shared"' > backend/user_service/.env.test
-          echo 'DATABASE_URL="file:./dev-game-test.db?mode=memory&cache=shared"' > backend/game_service/.env.test
-
-      - name: Copy test envs to .env
-        run: |
-          cp backend/user_service/.env.test backend/user_service/.env
-          cp backend/game_service/.env.test backend/game_service/.env
+          cp backend/user_service/sample_env.test backend/user_service/.env
+          cp backend/game_service/sample_env.test backend/game_service/.env
 
       - name: Push Prisma Schemas
         run: |
@@ -93,7 +91,7 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: npm
           cache-dependency-path: e2e/package.json
 

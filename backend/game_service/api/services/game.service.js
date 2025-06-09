@@ -31,12 +31,29 @@ const axiosConfig = isProduction ? { httpsAgent: agent } : {};
 export const gameService = {
   async startGame(player1Id, player2Id)
   {
+    logger.info(`Starting game for players ${player1Id} and ${player2Id}`);
     try {
-      const p1Response = await axios.get( `${SERVICE_URL}/validate/${player1Id}`, axiosConfig );
+      const p1Response = await axios.get(
+      `${SERVICE_URL}/validate/${player1Id}`,
+      {
+        headers: {
+        "x-internal-key": process.env.INTERNAL_KEY,
+        },
+        ...axiosConfig,
+      }
+      );
       if (p1Response.status !== 200)
-        throw new ErrorCustom(`Error retrieving player`, p1Response.status);
+      throw new ErrorCustom(`Error retrieving player`, p1Response.status);
 
-	  const p2Response = await axios.get(`${SERVICE_URL}/validate/${player2Id}`, axiosConfig );
+      const p2Response = await axios.get(
+      `${SERVICE_URL}/validate/${player2Id}`,
+      {
+        headers: {
+        "x-internal-key": process.env.INTERNAL_KEY,
+        },
+        ...axiosConfig,
+      }
+      );
       if (p2Response.status !== 200)
         throw new ErrorCustom(`Error retrieving player`, p2Response.status);
 
@@ -82,12 +99,18 @@ export const gameService = {
 
       //Update P1 userstats
       try {
-        await axios.patch(`${SERVICE_URL}/${game.player1Id}/update-stats`,
+        await axios.patch(
+          `${SERVICE_URL}/${game.player1Id}/update-stats`,
           {
-            isWinner: game.player1Id === winnerId,
-            gameId: id,
+        isWinner: game.player1Id === winnerId,
+        gameId: id,
           },
-		  axiosConfig
+          {
+        headers: {
+          "x-internal-key": process.env.INTERNAL_KEY,
+        },
+        ...axiosConfig,
+          }
         );
       } catch (err) {
         console.log(`Failed to update player 1's stats`);
@@ -98,12 +121,17 @@ export const gameService = {
       if (game.player2Id) {
         try {
           await axios.patch(
-            `${SERVICE_URL}/${game.player2Id}/update-stats`,
-            {
-              isWinner: game.player2Id === winnerId,
-              gameId: id,
-            },
-            axiosConfig
+        `${SERVICE_URL}/${game.player2Id}/update-stats`,
+        {
+          isWinner: game.player2Id === winnerId,
+          gameId: id,
+        },
+        {
+          headers: {
+            "x-internal-key": process.env.INTERNAL_KEY,
+          },
+          ...axiosConfig,
+        }
           );
         } catch (err) {
           console.log(`Failed to update player 2's stats`);

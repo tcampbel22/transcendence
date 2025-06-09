@@ -54,6 +54,7 @@ describe("Backend User API Tests", () => {
 	it("should return 401 for invalid login", async () => {
 	const response = await supertest(app.server)
 		.post("/api/login")
+		.set("x-internal-key", "dj")
 		.send({ username: "wrong", password: "wrong" });
 
 	expect(response.status).toBe(401);
@@ -63,6 +64,7 @@ describe("Backend User API Tests", () => {
 	it("should return 201, user created successfully", async () => {
 	const response = await supertest(app.server)
 		.post("/api/register")
+		.set("x-internal-key", "dj")
 		.send({ username: "testuser", email: "hahe@gmail.com", password: "kissa" });
 		
 		expect(response.status).toBe(201);
@@ -71,14 +73,16 @@ describe("Backend User API Tests", () => {
 	//Deletes that user
 	it("should return 204 and delete the user", async () => {
 		const response = await supertest(app.server)
-			.delete(`/api/${userId}/delete-user`);
+			.delete(`/api/${userId}/delete-user`)
+			.set("x-internal-key", "dj");
 		expect(response.status).toBe(204);
 	});
 
 	//Deletes that doesn't exist
 	it("should return 404", async () => {
 		const response = await supertest(app.server)
-			.delete("/api/11/delete-user");
+			.delete("/api/11/delete-user")
+			.set("x-internal-key", "dj");
 		expect(response.status).toBe(404);
 	});
 	
@@ -86,6 +90,7 @@ describe("Backend User API Tests", () => {
 	it("should return 200", async () => {
 		const response = await supertest(app.server)
 			.get(`/api/validate/${userId}`)
+			.set("x-internal-key", "dj");
 		expect(response.status).toBe(200);
 	});
 
@@ -93,6 +98,7 @@ describe("Backend User API Tests", () => {
 	it("should return 404", async () => {
 		const response = await supertest(app.server)
 			.get("/api/validate/999")
+			.set("x-internal-key", "dj");
 		expect(response.status).toBe(404);
 	});
 
@@ -100,6 +106,7 @@ describe("Backend User API Tests", () => {
 	it("should return 400", async () => {
 		const response = await supertest(app.server)
 			.post("/api/register")
+			.set("x-internal-key", "dj")
 			.send({ username: "", email: "hahe@gmail.com", password: "kissa" });
 			
 		expect(response.status).toBe(400);
@@ -109,6 +116,7 @@ describe("Backend User API Tests", () => {
 	it("should return 400", async () => {
 		const response = await supertest(app.server)
 			.post("/api/register")
+			.set("x-internal-key", "dj")
 			.send({ username: "testuser", email: "", password: "kissa" });
 			
 		expect(response.status).toBe(400);
@@ -118,6 +126,7 @@ describe("Backend User API Tests", () => {
 	it("should return 400", async () => {
 		const response = await supertest(app.server)
 			.post("/api/register")
+			.set("x-internal-key", "dj")
 			.send({ username: "testuser", email: "hahe@gmail.com", password: "" });
 			
 		expect(response.status).toBe(400);
@@ -127,6 +136,7 @@ describe("Backend User API Tests", () => {
 	it("should return 200", async () => {
 		const response = await supertest(app.server)
 			.get(`/api/${userId}/stats`)
+			.set("x-internal-key", "dj");
 		expect(response.status).toBe(200);
 	});
 
@@ -134,6 +144,7 @@ describe("Backend User API Tests", () => {
 	it("should return 404", async () => {
 		const response = await supertest(app.server)
 			.get("/api/999/stats")
+			.set("x-internal-key", "dj");
 		expect(response.status).toBe(404);
 	});
 
@@ -141,6 +152,7 @@ describe("Backend User API Tests", () => {
 	it("should return 201 and update the users stats", async () => {
 		const response = await supertest(app.server)
 			.patch(`/api/${userId}/update-stats`)
+			.set("x-internal-key", "dj")
 			.send({ isWinner: true })
 		expect(response.status).toBe(201)
 	});
@@ -149,12 +161,14 @@ describe("Backend User API Tests", () => {
 	it("Adds a friend and then attempt to add them again", async () => {
 		const response = await supertest(app.server)
 			.post(`/api/${userId}/friends`)
+			.set("x-internal-key", "dj")
 			.send({ friendUsername: "friend" });
 		expect(response.status).toBe(201)
 		const response2 = await supertest(app.server)
 			.post(`/api/${userId}/friends`)
+			.set("x-internal-key", "dj")
 			.send({ friendUsername: "friend" });
-		expect(response2.status).toBe(401)
+		expect(response2.status).toBe(409) // Changed from 401 to 409 (Conflict)
 	});
 
 	// add friend and then delete them
@@ -162,11 +176,13 @@ describe("Backend User API Tests", () => {
 		// First add a friend
 		const response = await supertest(app.server)
 			.post(`/api/${userId}/friends`)
+			.set("x-internal-key", "dj")
 			.send({ friendUsername: "friend" });
 		expect(response.status).toBe(201);
 		// Delete the friend
 		const response2 = await supertest(app.server)
 			.delete(`/api/${userId}/delete-friend`)
+			.set("x-internal-key", "dj")
 			.send({ friendUsername: "friend" });
 		expect(response2.status).toBe(201);
 	});
@@ -175,6 +191,7 @@ describe("Backend User API Tests", () => {
 	it("Should return 404 as there is no friendship", async () => {
 		const response = await supertest(app.server)
 			.delete(`/api/${userId}/delete-friend`)
+			.set("x-internal-key", "dj")
 			.send({ friendUsername: "friend" });
 		expect(response.status).toBe(404)
 	});
@@ -183,6 +200,7 @@ describe("Backend User API Tests", () => {
 	it("Should return 404 as friend does not exist", async () => {
 		const response = await supertest(app.server)
 			.post(`/api/${userId}/friends`)
+			.set("x-internal-key", "dj")
 			.send({ friendUsername: "fake_friend" });
 		expect(response.status).toBe(404)
 	});
@@ -191,6 +209,7 @@ describe("Backend User API Tests", () => {
 	it("Should return 409 as user cannot delete themselves", async () => {
 		const response = await supertest(app.server)
 			.post(`/api/${userId}/friends`)
+			.set("x-internal-key", "dj")
 			.send({ friendUsername: "fake" });
 		expect(response.status).toBe(409)
 	});
@@ -200,15 +219,18 @@ describe("Backend User API Tests", () => {
 		// First add a friend
 		const response = await supertest(app.server)
 			.post(`/api/${userId}/friends`)
+			.set("x-internal-key", "dj")
 			.send({ friendUsername: "friend" });
 		expect(response.status).toBe(201);
 			// Get users friend list
 		const response2 = await supertest(app.server)
 			.get(`/api/${userId}/friends`)
+			.set("x-internal-key", "dj");
 		expect(response2.status).toBe(200)
 		// Get friends friend list
 		const response3 = await supertest(app.server)
 			.get(`/api/${friendId}/friends`)
+			.set("x-internal-key", "dj");
 		expect(response3.status).toBe(200)
 	});
 	// Get match history
@@ -248,6 +270,7 @@ describe("Backend User API Tests", () => {
 			.reply(200, mockUserGamesResponse)
 		const response = await supertest(app.server)
 		  .get(`/api/${userId}/match-history`)
+		  .set("x-internal-key", "dj");
 		expect(response.status).toBe(200);
 	});
 
@@ -259,6 +282,7 @@ describe("Backend User API Tests", () => {
 			.reply(200, mockUserGamesResponse)
 		const response = await supertest(app.server)
 		.get(`/api/${userId}/match-history`)
+		.set("x-internal-key", "dj");
 		expect(response.status).toBe(200);
 	});
 });

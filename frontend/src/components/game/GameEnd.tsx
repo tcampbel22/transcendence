@@ -45,7 +45,7 @@ const GameEnd = ({user, opponentUserId, winner, p1score, p2score, gameId} : EndG
         }
 		console.log("payload inside postwinner:", payload)
         try {
-            const res = await api.patch(`${API_URL}/${gameId}/finish-game`, payload);
+            const res = await api.patch(`${API_URL}/${gameId}/finish-game`, payload, { withCredentials: true });
             console.log("match finished", res.data);
 			console.log("userstate after match: ", user);
             navigate('/hub', {state:user});

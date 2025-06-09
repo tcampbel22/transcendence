@@ -1,5 +1,5 @@
 import { profileService } from "../services/profile.service.js"
-import { ErrorNotFound, ErrorUnAuthorized, handleError } from "@app/errors"
+import { ErrorBadRequest, ErrorNotFound, ErrorUnAuthorized, handleError } from "@app/errors"
 import logger from "@eleekku/logger"
 import fs from "fs";
 import util from "util";
@@ -74,7 +74,7 @@ export const profileController = {
 				throw new ErrorNotFound(`No file uploaded`);
 			const fileExtension = path.extname(data.filename).toLowerCase();
 			if (!['.jpg', '.jpeg', '.png'].includes(fileExtension))
-				throw new ErrorUnAuthorized(`File should be jpg, jpeg or png`);
+				throw new ErrorBadRequest(`File should be jpg, jpeg or png`);
 			
 			const filename = `user_${id}${fileExtension}`;
 

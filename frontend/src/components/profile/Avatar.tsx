@@ -33,7 +33,7 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 		const fetchUserInfo = async () => {
 			try {
 				console.log(`Base url: ${BASE_URL}`)
-				const response = await api.get(`${API_URL}/${userId}`);
+				const response = await api.get(`${API_URL}/${userId}`, { withCredentials: true });
 				console.log("user status:" ,response.data)
 				setUsername(response.data.username);
 				setEmail(response.data.email);
@@ -64,13 +64,13 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 	const set2FA = async () => {
 		if (enabled)
 		{	
-			const response = await axios.put(`${API_URL}/${userId}/2fa`, { is2faEnabled: false });
+			const response = await api.put(`${API_URL}/${userId}/2fa`, { is2faEnabled: false });
 			console.log("2FA disabled:", response.data);
 			setEnabled(false);
 		}
 		else
 		{
-			const response = await axios.put(`${API_URL}/${userId}/2fa`, { is2faEnabled: true });
+			const response = await api.put(`${API_URL}/${userId}/2fa`, { is2faEnabled: true });
 			console.log("2FA enabled:", response.data);
 			setEnabled(true);
 		}

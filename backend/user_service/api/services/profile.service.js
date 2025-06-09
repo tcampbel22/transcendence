@@ -256,7 +256,12 @@ export const profileService = {
 	  }
 	  const axiosConfig = isProduction ? { httpsAgent: agent } : {}; // Needed to add so ssl is bypassed in testing
 	// Fetch match history from the game service
-		const response = await axios.get(`${gameServiceBaseUrl}/user/${id}`, axiosConfig);
+    const response = await axios.get(`${gameServiceBaseUrl}/user/${id}`, {
+      headers: {
+        "x-internal-key": process.env.INTERNAL_KEY,
+      },
+      ...axiosConfig
+    });
       if (response.status !== 200)
         throw new ErrorCustom(
           `Error retrieving match history ${response.statusText}`,
@@ -383,7 +388,7 @@ export const profileService = {
       },
     });
     if (duplicate)
-      throw new ErrorUnAuthorized(
+      throw new ErrorConflict(
         `User ${id} is already friends with friend ${friend.id}`,
       );
     //Create friendship for friend
