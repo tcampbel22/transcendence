@@ -58,10 +58,12 @@ const Login = () => {
       console.log("2fa status:", response.data.is2faEnabled);
       console.log("login userId deivy:", response.data);
       if (!response.data.is2faEnabled) {
+		localStorage.clear();
         navigate('/hub', { state: { userId: response.data.userId, username: response.data.username, is2faEnabled: response.data.is2faEnabled } });
         return;
       }
 			const otpToken = await axios.post(`${API_AUTH}/send-email`, { to: userEmail });
+			localStorage.clear();
 			navigate('/2fa', { state: { userData: response.data, otpToken: otpToken.data.token } });
 		} catch (error: any) {
 			console.error("Error:", error.response?.data || error.message);
