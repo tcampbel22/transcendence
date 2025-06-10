@@ -48,7 +48,7 @@ const ChangePassword = ({onClose, userId, onSave}: EditPasswordProps) => {
                 <h2>New Password</h2>
                 <input
                 type="password"
-                placeholder="New username"
+                placeholder="New password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="border p-2 w-full rounded mb-4"
