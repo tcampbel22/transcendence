@@ -1,5 +1,5 @@
 import { gameService } from "../services/game.service.js";
-import { profileController } from "../../../user_service/api/controllers/profile.controller.js";
+// import { profileController } from "../../../user_service/api/controllers/profile.controller.js";
 import logger from "@eleekku/logger";
 import { handleError } from "@app/errors";
 
@@ -22,39 +22,20 @@ export const gameController = {
       return handleError(err, reply, `Failed to create the game`);
     }
   },
-  async finishGame(request, reply) {
-    try {
-      const { id } = request.params;
-      const { p1score, p2score, winnerId, loserId } = request.body;
-      const game = await gameService.finishGame(
-        parseInt(id),
-        parseInt(p1score),
-        parseInt(p2score),
-        parseInt(winnerId),
-		parseInt(loserId),
-      );
-
-	  //update stats here:
-	  await profileController.updateStats(winnerId, true);
-	  await profileController.updateStats(loserId, false);
-
-
-      logger.info(`Game ${game.id} finished successfully`);
-      return reply.code(201).send({
-        message: `Game finished`,
-        id: game.id,
-      });
-    } catch (err) {
-      logger.error(
-        `finishGame: failed to update finished game ${request.params.id}`,
-        err,
-      );
-      request.log.error(
-        `finishGame: failed to update finished game ${request.params.id}`,
-      );
-      return handleError(err, reply, `Failed to update the game`);
-    }
-  },
+	async finishGame(request, reply) {
+		try {
+			const { id } = request.params;
+			const { p1score, p2score, winnerId } = request.body;
+			const game = await gameService.finishGame(parseInt(id), parseInt(p1score), parseInt(p2score), parseInt(winnerId));
+			return reply.code(201).send({
+				message: `Game finished`,
+				id: game.id,
+		});
+		} catch (err) {
+			request.log.error(`finishGame: failed to update finished game ${request.params.id}`);
+			return reply.code(500).send({ message: `Failed to update finished game ${request.params.id}` });
+		}
+	},
   async getGame(request, reply) {
     try {
       const { id: gameId } = request.params;
