@@ -7,13 +7,20 @@ import { Link } from "react-router-dom";
 import { Header1 } from "../utils/Headers";
 import { ListProps, ButtonProps, TournamentCardProps, PlayerProps, FilterProps } from "../../types/types";
 
-
+function shuffleArray(array: PlayerProps[]): number[] {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr.map(player => player.id);
+}
 
 const List: React.FC<ListProps> = ({ name, togglePlayers, buttonText }) => {
-	const colour = buttonText === 'Add' ? 'amber-600' : 'red-500' 
-	return ( 
+	const colour = buttonText === 'Add' ? 'bg-amber-600' : 'bg-red-500'
+	return (
 	<li className="flex justify-between items-center px-7">
-		<span>{name}</span> 
+		<span>{name}</span>
 		<Button colour={colour} text={buttonText} togglePlayers={togglePlayers}/>
 	</li>
 	)
@@ -21,32 +28,32 @@ const List: React.FC<ListProps> = ({ name, togglePlayers, buttonText }) => {
 
 const Button: React.FC<ButtonProps> = ({ colour, text, togglePlayers } ) => {
 	return (
-		<button 
+		<button
 			onClick={() => togglePlayers && togglePlayers()}
-			className={`bg-${colour} shadow-lg rounded-lg p-1 pl-3 pr-3 transform hover:scale-110`}>
+			className={`${colour} shadow-lg rounded-lg p-1 pl-3 pr-3 transform hover:scale-110`}>
 			{text}
 		</button>
 	)
 }
 // Need to fix this, it needs to link to the tournament bracket page which will generate the bracket based on the players array
 //  passed though as a state.
-const StartTournament = ({ startTournament }: { startTournament: boolean }) => {
+const StartTournament = ({ startTournament, players }: { startTournament: boolean, players: PlayerProps[] }) => {
 	if (!startTournament)
-		return ;
-	const players = [1, 2, 3, 4, 5, 6, 7, 8];
-	localStorage.removeItem("tournament_bracket");
+	  return ;
+
+	const shuffledPlayerIds = shuffleArray(players);
+	console.log("Shuffled player IDs:", shuffledPlayerIds);
 	return (
 		<div className="text-6xl px-9 p-10">
 			<Link
-					to="/play/tournament-bracket"
-					state={{ players }}
-					className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg"
-					>
+				to="/play/tournament-bracket"
+				state={{ playerIds: shuffledPlayerIds }}
+				className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg"
+			>
 				<button className="bg-amber-200 shadow-lg rounded-lg p-10 px-10 transform hover:scale-110">
 					Start Tournament
 				</button>
-				</Link>
-			
+			</Link>
 		</div>
 	);
 };
@@ -86,9 +93,9 @@ const FilterCard: React.FC<TournamentCardProps> = ({ data, players, togglePlayer
 						if (togglePlayers)
 							togglePlayers(u.id);
 					}
-					return <List 
-						key={u.id} 
-						name={u.username} 
+					return <List
+						key={u.id}
+						name={u.username}
 						togglePlayers={handleUserClick}
 						buttonText={buttonText}
 						// username={players[0].username}
@@ -123,13 +130,13 @@ const TournamentSetUp: React.FC = () => {
 	const [filteredUsers, setFilteredUsers] = useState<UserProps[]>([]);
 	const [players, setPlayers] = useState<PlayerProps[]>([{ username, id: userId }]); //Adds the current user immediately to the players
 	const [filter, setFilter] = useState<string>('');
-	
+
 
 	useEffect(() => {
 		console.log("Updated players:", players);
 	}, [players]);
-	
-	
+
+
 	useEffect(() => {
 		const filtered = users.filter(user => {
 			return user.username.toLowerCase().includes(filter.toLowerCase())
@@ -144,7 +151,7 @@ const TournamentSetUp: React.FC = () => {
 		setFilter(e.target.value);
 	}
 
-	const togglePlayers = (id: number) => 
+	const togglePlayers = (id: number) =>
 	{
 		setPlayers(prevPlayers => {
 		const isAdded = prevPlayers.some(player => player.id === id);
@@ -164,15 +171,15 @@ const TournamentSetUp: React.FC = () => {
 			<TitleCard image={"/images/opponents.webp"}/>
 			<PlayerFilter filter={filter} handleFilter={handleFilter}/>
 			<div className="flex justify-center px-10 gap-20">
-				<FilterCard 
-					data={filteredUsers} 
-					players={players} 
+				<FilterCard
+					data={filteredUsers}
+					players={players}
 					togglePlayers={togglePlayers}
 					c_id={userId}
 					/>
 				<PlayersCard players={players}/>
 			</div>
-			<StartTournament startTournament={players.length === tournamentType ? true : false}/>
+			<StartTournament startTournament={players.length === tournamentType} players={players} />
 		</div>
 	)
 }
