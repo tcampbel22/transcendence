@@ -38,7 +38,7 @@ type ListProps = {
 
 type PlayerProps = {
 	username: string,
-	id: number
+	id: number,
 }
 
 type ButtonProps = {

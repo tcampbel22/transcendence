@@ -7,8 +7,8 @@ const TournamentBracket: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const routerState = (location.state as { players?: number[] }) || {};
-  const players = routerState.players ?? [];
+  const routerState = (location.state as { shuffledPlayerIds?: number[] }) || {};
+  const players = routerState.shuffledPlayerIds ?? [];
 
   // Always load from localStorage; init if players are passed
   const [bracket] = useTournamentBracket(players);

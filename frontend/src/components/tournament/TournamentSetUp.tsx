@@ -5,6 +5,7 @@ import { UserProps } from "../../types/types";
 import  useAllUsers  from '../../hooks/useAllUsers'
 import { Link } from "react-router-dom";
 import { Header1 } from "../utils/Headers";
+import { useUsername } from "../../hooks/useUsername";
 import { ListProps, ButtonProps, TournamentCardProps, PlayerProps, FilterProps } from "../../types/types";
 
 function shuffleArray(array: PlayerProps[]): number[] {
@@ -42,12 +43,13 @@ const StartTournament = ({ startTournament, players }: { startTournament: boolea
 	  return ;
 
 	const shuffledPlayerIds = shuffleArray(players);
+	localStorage.removeItem("tournament_bracket");
 	console.log("Shuffled player IDs:", shuffledPlayerIds);
 	return (
 		<div className="text-6xl px-9 p-10">
 			<Link
 				to="/play/tournament-bracket"
-				state={{ playerIds: shuffledPlayerIds }}
+				state={{ shuffledPlayerIds }}
 				className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg"
 			>
 				<button className="bg-amber-200 shadow-lg rounded-lg p-10 px-10 transform hover:scale-110">
