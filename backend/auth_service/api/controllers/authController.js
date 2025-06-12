@@ -16,7 +16,7 @@
      const httpsAgent = new https.Agent({
         rejectUnauthorized: false,
     });
-
+    //this part is for register a new user
      try 
      {
         const payload = {
@@ -34,14 +34,14 @@
         } else {
          response = await axios.post("http://localhost:3002/api/register", payload);
         }
-        console.log("%cIn auth we are sending this: ", "color: green", response.data);
          const userData = encodeURIComponent(JSON.stringify({ 
                                                               userId: response.data.id,
                                                               username: response.data.username, 
                                                               redirectURL 
                                                             }));
          reply.redirect(`/auth/google/callback.html?user=${userData}`);
-     } 
+     }
+    //this will handle user already in database or errors
      catch (error) { 
          if (error.response && error.response.status === 409) {
             
@@ -60,7 +60,6 @@
             else {
             response = await axios.post("http://localhost:3002/api/login", loginInput, {withCredentials: true});
             }
-            console.log("authController.js: Google callback login response:", response.data);
             const userData = encodeURIComponent(JSON.stringify({ 
                                                                     userId: response.data.userId, 
                                                                     username: response.data.username, 
