@@ -56,11 +56,15 @@ module.exports = {
 		backgroundImage: {
 		  'gradient-moving': 'linear-gradient(270deg, #ffffff, #94a3b8, #3b82f6)',
 		},
+		dropShadow: {
+		  'glow': '0 0 10px rgba(217, 119, 6, 0.7)',
+		},
 		animation: {
 		  'bg-pan': 'bg-pan 20s ease infinite',
 		  'slide-in': 'slideIn 0.6s ease-out forwards',
 		  'fade-in': 'fadeIn 1s ease-in forwards',
 		  'pop': 'pop 0.3s ease-out forwards',
+		  'pulse-slow': 'pulse 3s ease-in-out infinite',
 		},
 		keyframes: {
 			pop: {
