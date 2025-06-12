@@ -3,7 +3,6 @@ import { generateOTPToken, verifyOTPToken } from "../service/otpService.js";
 import crypto from "crypto";
 
 export const sendEmail = async (request, reply) => {
-    console.log("Sending email... ", request.body);
     const { to } = request.body;
 
     const otp = crypto.randomInt(100000, 999999).toString();
@@ -21,18 +20,13 @@ export const sendEmail = async (request, reply) => {
         await sendgridClient.send(msg);
         reply.send({ success: true, message: "Email sent successfully!", token: otpToken });
     } catch (error) {
-        console.error("Error sending email:", error);
         reply.send({ success: false, message: "Failed to send email. Please try again later." });
     }
 };
 
 export const validateOTP = async (request, reply) => {
     const { otp, otpToken } = request.body;
-
-    console.log("body:", request.body);
-
     const isValid = verifyOTPToken(otpToken, otp);
-
     if (isValid) {
         reply.send({ success: true, message: "OTP verified successfully!" });
     } else {
