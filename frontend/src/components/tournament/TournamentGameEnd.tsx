@@ -104,7 +104,7 @@ import { AxiosError } from 'axios';
 // Props for the end-of-game popup
 interface EndGameProps {
   gameId: number | null;
-  user: { userId: number; username: string };
+  user: { userId: number; username: { username: string | undefined } | string };
   opponentUserId: number;
   winner: 'left' | 'right' | null;
   p1score: number;
@@ -122,7 +122,9 @@ const TournamentGameEnd: React.FC<EndGameProps> = ({
   stage,
 }) => {
   const navigate = useNavigate();
-  const { userId, username: userUsername } = user;
+  const { userId } = user;
+  // Handle both object and string username formats
+  const userUsername = typeof user.username === 'object' ? user.username.username : user.username;
   const { username: p2Username } = useUsername(opponentUserId);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const submittedOnce = useRef(false);
@@ -155,9 +157,9 @@ const TournamentGameEnd: React.FC<EndGameProps> = ({
     }
   };
 
-  // Derive the display name of the winner
+  // Derive the display name of the winner with fallbacks
   const winnerName =
-    winner === 'left' ? userUsername : p2Username || 'Player';
+    winner === 'left' ? (userUsername || 'You') : (p2Username || 'Opponent');
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center">
