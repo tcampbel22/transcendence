@@ -33,124 +33,141 @@ const TournamentBracket8: React.FC = () => {
   }
 
   return (
-    <div className="p-6 min-h-screen" style={{ backgroundImage: 'url("/images/epic_background.webp")' }}>
+    <div className="p-6 min-h-screen flex flex-col" style={{ backgroundImage: 'url("/images/epic_background.webp")' }}>
       <h1 className="text-3xl font-bold text-center mb-6 bg-beige text-black p-3 rounded-lg shadow-lg w-80 mx-auto flex items-center justify-center">
         <span className="text-2xl mr-3">🏆</span>Tournament<span className="text-2xl ml-3">🏆</span>
       </h1>
 
       <div className="flex justify-center">
-        <div className="relative max-w-5xl w-full">
+        <div className="relative max-w-6xl w-full">
           {/* Decorative background elements */}
           <div className="absolute inset-0 opacity-20 backdrop-blur-sm">
             <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-amber-500/50"></div>
             <div className="absolute bottom-1/4 right-1/4 w-48 h-48 rounded-full bg-amber-700/50"></div>
           </div>
 
-          {/* Section Titles */}
-          <div className="grid grid-cols-3 mb-4 text-center">
-            <div>
-              <h2 className="text-xl font-bold text-black bg-beige rounded-full py-1 px-3 shadow-sm max-w-[120px] mx-auto">
-                Round 1
-              </h2>
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-black bg-beige rounded-full py-1 px-3 shadow-sm max-w-[140px] mx-auto">
-                Semifinals
-              </h2>
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-black bg-beige rounded-full py-1 px-3 shadow-sm max-w-[100px] mx-auto">
-                Final
-              </h2>
-            </div>
-          </div>
-
-          {/* Triangle Bracket Structure */}
+          {/* Tournament Bracket Grid Structure */}
           <div className="relative">
-            {/* Round 1 */}
-            <div className="grid grid-cols-3">
-              <div className="flex flex-col items-center">
-                <div className="flex flex-col justify-around h-[800px] py-8">
-                  {bracket.round1.map((match, index) => (
-                    <div key={`r1-${index}`} className="relative mb-8">
-                      <MatchBox
-                        playerA={match.playerA}
-                        playerB={match.playerB}
-                        winner={match.winner}
-                        hasPlayed={match.hasPlayed}
-                        onClick={() => {
-                          navigate("/play/1v1/tournament", {
-                            state: {
-                              p1UserId: match.playerA,
-                              p2UserId: match.playerB,
-                              matchIndex: index,
-                              stage: "round1",
-                            },
-                          });
-                        }}
-                      />
-
-                      {/* Connection lines */}
-                      {index % 2 === 0 && (
-                        <>
-                          {/* Horizontal line from match */}
-                          <div className={`absolute top-1/2 right-0 w-16 h-[3px] ${match.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-                          
-                          {/* Vertical line connecting pairs */}
-                          <div className={`absolute top-1/2 right-[-16px] w-[3px] h-[200px] ${match.hasPlayed && bracket.round1[index+1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-                          
-                          {/* Horizontal line to semifinal */}
-                          <div className={`absolute top-[calc(50%+100px)] right-[-16px] w-16 h-[3px] ${match.hasPlayed && bracket.round1[index+1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-                        </>
-                      )}
-                    </div>
-                  ))}
-                </div>
+            {/* Grid layout with 3 columns and 8 rows */}
+            <div className="grid grid-cols-3 gap-x-16 mx-auto max-w-5xl">
+              {/* Section Titles - Row 1 */}
+              <div className="flex items-center justify-center h-[60px] mb-4">
+                <h2 className="text-xl font-bold text-black bg-beige rounded-full py-1 px-6 shadow-sm w-36 text-center">
+                  Quarter Finals
+                </h2>
+              </div>
+              <div className="flex items-center justify-center h-[60px] mb-4">
+                <h2 className="text-xl font-bold text-black bg-beige rounded-full py-1 px-6 shadow-sm w-36 text-center">
+                  Semifinals
+                </h2>
+              </div>
+              <div className="flex items-center justify-center h-[60px] mb-4">
+                <h2 className="text-xl font-bold text-black bg-beige rounded-full py-1 px-6 shadow-sm w-36 text-center">
+                  Final
+                </h2>
+              </div>
+              {/* Round 1 - Match 1 (Row 2, Column 1) */}
+              <div className="flex items-center justify-center relative h-[120px]">
+                <MatchBox
+                  playerA={bracket.round1[0]?.playerA}
+                  playerB={bracket.round1[0]?.playerB}
+                  winner={bracket.round1[0]?.winner}
+                  hasPlayed={bracket.round1[0]?.hasPlayed}
+                  onClick={() => {
+                    navigate("/play/1v1/tournament", {
+                      state: {
+                        p1UserId: bracket.round1[0]?.playerA,
+                        p2UserId: bracket.round1[0]?.playerB,
+                        matchIndex: 0,
+                        stage: "round1",
+                      },
+                    });
+                  }}
+                />
+                {/* Connection lines */}
+                <div className={`absolute top-1/2 right-[-16px] w-48 h-[3px] ${bracket.round1[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
               </div>
 
-              {/* Semifinals - positioned to create triangle effect */}
-              <div className="flex flex-col items-center">
-                <div className="flex flex-col justify-around h-[500px] py-8 mt-32">
-                  {bracket.semifinals.map((match, index) => (
-                    <div key={`sf-${index}`} className="relative mb-8">
-                      <MatchBox
-                        playerA={match.playerA}
-                        playerB={match.playerB}
-                        winner={match.winner}
-                        hasPlayed={match.hasPlayed}
-                        onClick={() => {
-                          navigate("/play/1v1/tournament", {
-                            state: {
-                              p1UserId: match.playerA,
-                              p2UserId: match.playerB,
-                              matchIndex: index,
-                              stage: "semifinal",
-                            },
-                          });
-                        }}
-                      />
+              {/* Empty Cell - Row 2, Column 2 */}
+              <div className="h-[30px]"></div>
 
-                      {/* Connection lines */}
-                      {index === 0 && (
-                        <>
-                          {/* Horizontal line from semifinal */}
-                          <div className={`absolute top-1/2 right-0 w-16 h-[3px] ${match.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-                          
-                          {/* Vertical line connecting semifinals */}
-                          <div className={`absolute top-1/2 right-[-16px] w-[3px] h-[250px] ${match.hasPlayed && bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-                          
-                          {/* Horizontal line to final */}
-                          <div className={`absolute top-[calc(50%+125px)] right-[-16px] w-16 h-[3px] ${match.hasPlayed && bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-                        </>
-                      )}
-                    </div>
-                  ))}
-                </div>
+              {/* Empty Cell - Row 2, Column 3 */}
+              <div className="h-[30px]"></div>
+
+              {/* Empty Cell - Row 3, Column 1 */}
+              <div className="relative h-[120px] flex items-center justify-center">
+                <div className={`absolute top-[-60px] right-[calc(50%-16px)] w-[3px] h-[80px] ${bracket.round1[0]?.hasPlayed && bracket.round1[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-0 right-[calc(50%-16px)] w-32 h-[3px] ${bracket.round1[0]?.hasPlayed && bracket.round1[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
               </div>
 
-              {/* Final - positioned at the point of the triangle */}
-              <div className="flex items-center justify-center">
-                <div className="transform scale-110 mt-[230px]">
+              {/* Semifinal 1 - Row 3, Column 2 */}
+              <div className="flex items-center justify-center relative h-[120px]">
+                <MatchBox
+                  playerA={bracket.semifinals[0]?.playerA}
+                  playerB={bracket.semifinals[0]?.playerB}
+                  winner={bracket.semifinals[0]?.winner}
+                  hasPlayed={bracket.semifinals[0]?.hasPlayed}
+                  onClick={() => {
+                    navigate("/play/1v1/tournament", {
+                      state: {
+                        p1UserId: bracket.semifinals[0]?.playerA,
+                        p2UserId: bracket.semifinals[0]?.playerB,
+                        matchIndex: 0,
+                        stage: "semifinal",
+                      },
+                    });
+                  }}
+                />
+                {/* Connection lines */}
+                <div className={`absolute top-1/2 right-[-16px] w-48 h-[3px] ${bracket.semifinals[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+              </div>
+
+              {/* Empty Cell - Row 2, Column 3 */}
+              <div className="h-[30px]"></div>
+
+              {/* Round 1 - Match 2 (Row 4, Column 1) */}
+              <div className="flex items-center justify-center relative h-[120px]">
+                <MatchBox
+                  playerA={bracket.round1[1]?.playerA}
+                  playerB={bracket.round1[1]?.playerB}
+                  winner={bracket.round1[1]?.winner}
+                  hasPlayed={bracket.round1[1]?.hasPlayed}
+                  onClick={() => {
+                    navigate("/play/1v1/tournament", {
+                      state: {
+                        p1UserId: bracket.round1[1]?.playerA,
+                        p2UserId: bracket.round1[1]?.playerB,
+                        matchIndex: 1,
+                        stage: "round1",
+                      },
+                    });
+                  }}
+                />
+                {/* Connection lines */}
+                <div className={`absolute top-1/2 right-[-16px] w-48 h-[3px] ${bracket.round1[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+              </div>
+
+              {/* Empty Cell - Row 2, Column 2 */}
+              <div className="h-[120px]"></div>
+
+              {/* Empty Cell - Row 4, Column 3 */}
+              <div className="h-[30px]"></div>
+
+              {/* Empty Cell - Row 5, Column 1 */}
+              <div className="relative h-[120px] flex items-center justify-center">
+              </div>
+
+              {/* Empty Cell - Row 5, Column 2 */}
+              <div className="relative h-[120px] flex items-center justify-end">
+                {/* Connecting lines from semifinals to final */}
+                <div className={`absolute top-[-100px] right-[calc(50%-16px)] w-[3px] h-[100px] ${bracket.semifinals[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute bottom-[-100px] right-[calc(50%-16px)] w-[3px] h-[100px] ${bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-0 right-[calc(50%-16px)] w-32 h-[3px] ${bracket.semifinals[0]?.hasPlayed || bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+              </div>
+
+              {/* Final Match - Row 5, Column 3 */}
+              <div className="flex items-center justify-center h-[120px]">
+                <div className="flex items-center">
                   <MatchBox
                     playerA={bracket.final.playerA}
                     playerB={bracket.final.playerB}
@@ -166,16 +183,105 @@ const TournamentBracket8: React.FC = () => {
                       });
                     }}
                   />
+
+                  {/* Trophy if tournament is complete */}
+                  {bracket.final.hasPlayed && (
+                    <div className="ml-8">
+                      <div className="text-6xl drop-shadow-glow animate-pulse-slow">🏆</div>
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
 
-            {/* Trophy icon if tournament is complete */}
-            {bracket.final.hasPlayed && (
-              <div className="absolute top-[230px] right-0 transform translate-x-full">
-                <div className="text-6xl ml-4 drop-shadow-glow animate-pulse-slow">🏆</div>
+              {/* Empty Cell - Row 5, Column 1 */}
+              <div className="flex items-center justify-center relative h-[120px]">
+                <MatchBox
+                  playerA={bracket.round1[2]?.playerA}
+                  playerB={bracket.round1[2]?.playerB}
+                  winner={bracket.round1[2]?.winner}
+                  hasPlayed={bracket.round1[2]?.hasPlayed}
+                  onClick={() => {
+                    navigate("/play/1v1/tournament", {
+                      state: {
+                        p1UserId: bracket.round1[2]?.playerA,
+                        p2UserId: bracket.round1[2]?.playerB,
+                        matchIndex: 2,
+                        stage: "round1",
+                      },
+                    });
+                  }}
+                />
+                {/* Connection lines */}
+                <div className={`absolute top-1/2 right-[-16px] w-48 h-[3px] ${bracket.round1[2]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
               </div>
-            )}
+
+              {/* Empty Cell - Row 5, Column 2 */}
+              <div className="h-[30px]"></div>
+
+              {/* Empty Cell - Row 6, Column 3 */}
+              <div className="h-[30px]"></div>
+
+              {/* Empty Cell - Row 7, Column 1 */}
+              <div className="relative h-[120px] flex items-center justify-center">
+                <div className={`absolute top-[-60px] right-[calc(50%-16px)] w-[3px] h-[80px] ${bracket.round1[2]?.hasPlayed && bracket.round1[3]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-0 right-[calc(50%-16px)] w-32 h-[3px] ${bracket.round1[2]?.hasPlayed && bracket.round1[3]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+              </div>
+
+              {/* Semifinal 2 - Row 7, Column 2 */}
+              <div className="flex items-center justify-center relative h-[120px]">
+                <MatchBox
+                  playerA={bracket.semifinals[1]?.playerA}
+                  playerB={bracket.semifinals[1]?.playerB}
+                  winner={bracket.semifinals[1]?.winner}
+                  hasPlayed={bracket.semifinals[1]?.hasPlayed}
+                  onClick={() => {
+                    navigate("/play/1v1/tournament", {
+                      state: {
+                        p1UserId: bracket.semifinals[1]?.playerA,
+                        p2UserId: bracket.semifinals[1]?.playerB,
+                        matchIndex: 1,
+                        stage: "semifinal",
+                      },
+                    });
+                  }}
+                />
+                {/* Connection lines */}
+                <div className={`absolute top-1/2 right-[-16px] w-48 h-[3px] ${bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+              </div>
+
+              {/* Empty Cell - Row 6, Column 3 */}
+              <div className="h-[30px]"></div>
+
+              {/* Round 1 - Match 4 (Row 8, Column 1) */}
+              <div className="flex items-center justify-center relative h-[120px]">
+                <MatchBox
+                  playerA={bracket.round1[3]?.playerA}
+                  playerB={bracket.round1[3]?.playerB}
+                  winner={bracket.round1[3]?.winner}
+                  hasPlayed={bracket.round1[3]?.hasPlayed}
+                  onClick={() => {
+                    navigate("/play/1v1/tournament", {
+                      state: {
+                        p1UserId: bracket.round1[3]?.playerA,
+                        p2UserId: bracket.round1[3]?.playerB,
+                        matchIndex: 3,
+                        stage: "round1",
+                      },
+                    });
+                  }}
+                />
+                {/* Connection lines */}
+                <div className={`absolute top-1/2 right-[-16px] w-48 h-[3px] ${bracket.round1[3]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+              </div>
+
+              {/* Empty Cell - Row 8, Column 2 */}
+              <div className="relative h-[80px] flex items-center justify-center">
+                {/* Connecting vertical line from match 3 to match 4 */}
+              </div>
+
+              {/* Empty Cell - Row 8, Column 3 */}
+              <div className="h-[80px]"></div>
+            </div>
           </div>
         </div>
       </div>
