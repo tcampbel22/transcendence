@@ -11,11 +11,9 @@ const Profile = () => {
 	const userId = userIdFromState() as number;
 	const [is2faEnabled, setIs2faEnabled] = useState (false);
 	const API_URL = import.meta.env.VITE_API_USER;
-	const [victories, setVictories] = useState(0)
-	const [losses, setLoses] = useState(0)
+	const [victories, setVictories] = useState(0);
+	const [losses, setLoses] = useState(0);
 
-
-	console.log("in profile: ", userId)
 	useEffect (() => {
 		const getUserData = async () => {
 			try {

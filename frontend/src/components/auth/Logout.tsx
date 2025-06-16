@@ -9,6 +9,7 @@ const Logout = () => {
 	useEffect(() => {
 		const performLogout = async () => {
 			try {
+				localStorage.clear();
 				await api.get(`${API_URL}/logout`, { withCredentials: true });
 				// Optionally clear frontend state (user context, etc.)
 				navigate('/'); // Redirect to front page after logout

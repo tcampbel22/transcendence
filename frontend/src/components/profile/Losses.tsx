@@ -5,6 +5,7 @@ type Loss = {
 }
 
 const Losses = ({losses}: Loss) => {
+	console.log(losses)
 	return (
 		<div 	className="bg-beige col-span-1 rounded items-center border border-white shadow-md">
 				<h1 className="text-black font-bold text-2xl">losses</h1>

@@ -97,8 +97,8 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 	return (
         <div className="bg-beige border border-white col-span-1 row-span-2 items-center flex flex-col h-screen py-8 shadow-md text-black rounded">
 			<h1 className="font-bold text-2xl m-4 ">{username}</h1>
-			<div className="relative w-80 h-80">
-				<div className="bg-white w-80 h-80 rounded-full border-4 border-black flex shadow-md flex-col items-center justify-center bg-cover bg-center">
+			<div className="relative w-auto h-auto">
+				<div className="bg-white w-auto h-auto rounded-full border-4 border-black flex shadow-md flex-col items-center justify-center bg-cover bg-center">
 					<img 
 						src={imageUrl} 
 						alt="Profile Picture"

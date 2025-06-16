@@ -9,7 +9,7 @@ import { useStartGame } from "../../hooks/useStartGame";
 
 type userObj = {
   userId: number;
-  username: string;
+  username: { username: string | undefined };
 };
 
 type PongProps = {
@@ -134,21 +134,6 @@ const Pong: React.FC<PongProps> = ({
                                             gameId={gameId}
                                   />
     };
-	  {/* {gameOver ? (
-      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-70">
-        <div className="bg-white p-6 rounded-lg text-center">
-          <h2 className="text-2xl font-bold mb-4">
-            {winner === 'left' ? player1 : player2} Wins!
-          </h2>
-          <button 
-            onClick={resetGame}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-          >
-            Play Again
-          </button>
-        </div>
-      </div>
-    ) : <GameControls userId={userId} resetGame={resetGame} setIsStarted={setIsStarted}/> } */}
     </div>
    </div>
   );

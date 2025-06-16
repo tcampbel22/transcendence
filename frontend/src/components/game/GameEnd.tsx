@@ -7,7 +7,7 @@ import { AxiosError } from 'axios';
 
 type userObj = {
     userId: number;
-    username: string;
+    username: { username: string | undefined };
 };
 
 type EndGameProps = {
@@ -41,12 +41,10 @@ const GameEnd = ({user, opponentUserId, winner, p1score, p2score, gameId} : EndG
             gameId: gameId,
             p1score: p1score,
             p2score: p2score,
-            winnerId: winner === 'left' ? userId : opponentUserId
+            winnerId: winner === 'left' ? userId : opponentUserId,
         }
-
         try {
             const res = await api.patch(`${API_URL}/${gameId}/finish-game`, payload, { withCredentials: true });
-            console.log("match finished", res.data);
             navigate('/hub', {state:user});
         } catch (err) {
             const error = err as AxiosError;
@@ -67,7 +65,7 @@ const GameEnd = ({user, opponentUserId, winner, p1score, p2score, gameId} : EndG
                     <p className=   {`font-semibold text-lg ${winner === 'left' ? 'text-green-500' : 'text-red-600'}`}>
                                     {winner === 'left' ? 'Winner' : 'Loser'}
                     </p>
-                    <p className="text-sm text-gray-600 font-bold">{username}</p>
+                    <p className="text-sm text-gray-600 font-bold">{useUsername(userId).username}</p>
                 </div>
 
                 {/* Score */}
