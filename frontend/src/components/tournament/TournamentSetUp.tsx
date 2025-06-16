@@ -44,7 +44,6 @@ const StartTournament = ({ startTournament, players }: { startTournament: boolea
 
 	const shuffledPlayerIds = shuffleArray(players);
 	localStorage.removeItem("tournament_bracket");
-	console.log("Shuffled player IDs:", shuffledPlayerIds);
 	return (
 		<div className="text-6xl px-9 p-10">
 			<Link
@@ -135,7 +134,6 @@ const TournamentSetUp: React.FC = () => {
 
 
 	useEffect(() => {
-		console.log("Updated players:", players);
 	}, [players]);
 
 
@@ -149,7 +147,6 @@ const TournamentSetUp: React.FC = () => {
 
 	const handleFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
 		e.preventDefault();
-		console.log(e.target.value);
 		setFilter(e.target.value);
 	}
 

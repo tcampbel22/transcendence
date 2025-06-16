@@ -25,7 +25,6 @@ export const useStartGame = ({ isGameStarted, userId, opponentUserId, setGameId 
               withCredentials: true,
             }
           );
-          console.log("Game started successfully:", response.data);
           setGameId(response.data.gameId); 
         } catch (error) {
           console.error("Failed to start the game:", error);

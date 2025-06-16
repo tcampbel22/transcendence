@@ -31,7 +31,6 @@ const OTPInput: React.FC = () => {
     }
 
     try {
-      console.log("Sending OTP verification request:", { otp, otpToken });
       const response = await axios.post(`${API_AUTH}/verify-otp`, { otp, otpToken });
 
       if (response.data.success) {
@@ -52,12 +51,9 @@ const OTPInput: React.FC = () => {
     setSuccessMessage(null);
 
     try {
-      console.log("Resending OTP to:", userData.email);
-
       const response = await axios.post(`${API_AUTH}/send-email`, { to: userData.email });
 
       if (response.data.success) {
-        console.log("New OTP token:", response.data.token);
         setSuccessMessage("A new code has been sent to your email.");
         navigate("/2fa", { state: { userData, otpToken: response.data.token } });
       } else {

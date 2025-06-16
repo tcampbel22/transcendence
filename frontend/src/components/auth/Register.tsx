@@ -20,11 +20,6 @@ const Register = () => {
 
 	const registerUser = async () => {
 
-		console.log("user registered!");
-		console.log("Username:", username);
-		console.log("Password:", password);
-		console.log("email:", email);
-
 		const payload = {
 			username,
 			email,
@@ -36,8 +31,6 @@ const Register = () => {
 	}
 
 	const uploadProfileImage = async (userId: number) => {
-		// Don't proceed if no image selected
-		console.log(userId);
 		if (!image) return;
 		
 		// Create proper FormData
@@ -55,7 +48,6 @@ const Register = () => {
 					withCredentials: true // Include credentials
 				}
 		);
-			console.log("Profile image uploaded:", response.data);
 		} catch (error: any) {
 			console.error("Image upload failed:", error.response?.data || error.message);
 			throw new Error(error.response?.data?.message || "Image upload failed");

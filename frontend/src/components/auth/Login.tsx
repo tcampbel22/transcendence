@@ -26,7 +26,6 @@ const Login = () => {
 			if (event.origin !== "https://localhost:4433" && event.origin !== "http://localhost:5173") 
 					return;
 			if (!event.data.statusCode) {
-          console.log("response", event.data);
           navigate('/hub', { state: { userId: event.data.userId, username: event.data.username } });
 				}						 
 			else {
@@ -41,22 +40,15 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    console.log("uname:", username); //testing purposes
-    console.log("pword:", password);
-
 		const loginInput = {
 			username,
 			password,
 		}
 		try {
 			const response = await api.post(`${API_URL}/login`, loginInput, { withCredentials: true });
-			//console.log("logged in succesfully", response.data)
 			const userEmail = response.data.email;
 
 			// Request OTP
-      console.log("2fa status:", response.data.is2faEnabled);
-      console.log("login userId deivy:", response.data);
       if (!response.data.is2faEnabled) {
 		localStorage.clear();
         navigate('/hub', { state: { userId: response.data.userId, username: response.data.username, is2faEnabled: response.data.is2faEnabled } });
@@ -116,15 +108,6 @@ const Login = () => {
           Don't have an account?{" "}
           <Link to="/register" className="text-blue-600 hover:underline">
             Register
-          </Link>
-        </p>
-        <p>
-          Forgot your password?{" "}
-          <Link
-            to="/restore_password"
-            className="text-blue-600 hover:underline"
-          >
-            Reset Password
           </Link>
         </p>
         <button

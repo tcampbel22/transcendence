@@ -24,7 +24,6 @@ const GameControls = ({userId, resetGame, setIsGameStarted, setOpponentUserId}: 
     const handleClick = () => {
 		setIsGameStarted(true);
         resetGame();
-		console.log(selected);
     }
 
     return (
