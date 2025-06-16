@@ -23,7 +23,6 @@ const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
 				newUsername: newUsername,
 			};
 
-			console.log(payload);
 			//need to check with Tim that this is the correct place where to change the username
 			await api.put(`${API_URL}/${userId}`, {newUsername: newUsername}, {withCredentials: true}); //product version
 			setMessage("Username changed succesfully");

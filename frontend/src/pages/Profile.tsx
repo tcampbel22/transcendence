@@ -17,12 +17,9 @@ const Profile = () => {
 	useEffect (() => {
 		const getUserData = async () => {
 			try {
-				console.log("getting user data for profile : ", API_URL)
 				const userData = await api.get(`${API_URL}/${userId}`, { withCredentials: true });
-				console.log("user data in profile:", userData.data);
 				setIs2faEnabled(userData.data.is2faEnabled);
 				const gameData = await api.get(`${API_URL}/${userId}/stats`, { withCredentials: true });
-				console.log("game data:", gameData.data)
 				setVictories(gameData.data.wins) //these are the actual ones for the game testing purposes commented out
 				setLoses(gameData.data.losses)
 				//setIs2faEnabled(gameData.data.is2faEnabled);

@@ -24,7 +24,6 @@ const ChangePassword = ({onClose, userId, onSave}: EditPasswordProps) => {
             };
 
             const res = await api.put(`${API_URL}/${userId}/reset-password`, payload);
-            console.log(res);
             setMessage('Password changed succesfully!');
             setMessageType('success')
             onSave();

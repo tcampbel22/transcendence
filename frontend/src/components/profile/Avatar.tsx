@@ -32,9 +32,7 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 	useEffect(() => {
 		const fetchUserInfo = async () => {
 			try {
-				console.log(`Base url: ${BASE_URL}`)
 				const response = await api.get(`${API_URL}/${userId}`, { withCredentials: true });
-				console.log("user status:" ,response.data)
 				setUsername(response.data.username);
 				setEmail(response.data.email);
 				if (response.data.picture) {
@@ -42,8 +40,6 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 				  } else {
 					setImageUrl(`${BASE_URL}/uploads/default.png`);
 				  }
-				  
-				console.log("user picture status:" , `${imageUrl}`)
 			} 
 			catch (err) {
 				const error = err as AxiosError;
@@ -65,13 +61,11 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 		if (enabled)
 		{	
 			const response = await api.put(`${API_URL}/${userId}/2fa`, { is2faEnabled: false });
-			console.log("2FA disabled:", response.data);
 			setEnabled(false);
 		}
 		else
 		{
 			const response = await api.put(`${API_URL}/${userId}/2fa`, { is2faEnabled: true });
-			console.log("2FA enabled:", response.data);
 			setEnabled(true);
 		}
 	}

@@ -8,7 +8,6 @@ const TournamentType = () => {
 	const location = useLocation();
   	const userInfo = location.state as { userId: number; username: string };
 	const eightPlayersToggle = useAllUsers().length > 7;
-	console.log(userInfo);
 	return (
         <div className="flex flex-col items-center justify-start w-full min-h-screen pt-16 px-4">
 			<TitleCard image="/images/tournament-welcome.webp"/>

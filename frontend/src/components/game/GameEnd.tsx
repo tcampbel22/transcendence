@@ -31,7 +31,6 @@ const GameEnd = ({user, opponentUserId, winner, p1score, p2score, gameId} : EndG
 
     const postWinner = async () => {
         if (!gameId || isSubmitting || submittedOnce.current) {
-            console.log("Submission skipped - game not ready or already submitted");
             return;
         }
         setIsSubmitting(true);
