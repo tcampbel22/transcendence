@@ -44,6 +44,7 @@ build-frontend:
 	fi
 
 up:
+	@cd backend/libs/jwt_authenticator && npm install
 	@echo "$(YELLOW)Building docker images...$(RESET)"
 	@docker compose -f $(DOCKER_COMPOSE_FILE) up -d
 	@echo "$(GREEN)Docker images built.$(RESET)"
@@ -55,6 +56,7 @@ down:
 	@echo "$(GREEN)Docker containers stopped.$(RESET)"
 
 basic: ssl_cert build-frontend
+	@cd backend/libs/jwt_authenticator && npm install
 	@echo "$(YELLOW)Building docker images...$(RESET)"
 	@docker-compose -f $(DOCKER_COMPOSE_FILE) up -d nginx file_service user_service  game_service googlesignin
 	@echo "$(GREEN)Docker images built.$(RESET)"
