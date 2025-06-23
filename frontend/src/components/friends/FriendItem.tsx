@@ -6,7 +6,6 @@ type FriendItemProps = {
   
   const FriendItem = ({ friend, onDelete }: FriendItemProps) => {
 	
-
 	return (
 	<div className="flex items-center justify-between px-4 py-2 hover:bg-gray-200">
 	  <div className="flex items-center space-x-2">

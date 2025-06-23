@@ -7,7 +7,7 @@ import React, { useEffect } from "react";
 
 const Login = () => {
   const API_URL = import.meta.env.VITE_API_USER;
-	const API_AUTH = import.meta.env.VITE_API_AUTH;
+const API_AUTH = import.meta.env.VITE_API_AUTH;
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [loginError, setLoginError] = useState("");
@@ -59,7 +59,6 @@ const Login = () => {
 			navigate('/2fa', { state: { userData: response.data, otpToken: otpToken.data.token } });
 		} catch (error: any) {
 			console.error("Error:", error.response?.data || error.message);
-			// navigate('/hub')
 			setLoginError("invalid username or password")
 			return;
 		}

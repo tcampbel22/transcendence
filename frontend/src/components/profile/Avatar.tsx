@@ -89,7 +89,7 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 
 	//image change logic, change password logic and account deletion needs to be added.
 	return (
-        <div className="bg-beige border border-white col-span-1 row-span-2 items-center flex flex-col h-screen py-8 shadow-md text-black rounded">
+        <div className="bg-beige border border-white col-span-1 row-span-2 items-center flex flex-col h-screen py-8 shadow-md text-black rounded overflow-auto">
 			<h1 className="font-bold text-2xl m-4 ">{username}</h1>
 			<div className="relative w-auto h-auto">
 				<div className="bg-white w-auto h-auto rounded-full border-4 border-black flex shadow-md flex-col items-center justify-center bg-cover bg-center">
@@ -128,16 +128,32 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 				<p className="">email:</p>
 				<p>{email}</p>
 			</div>
-			<button onClick={() => setEditOpen(true)} className="border border-black rounded p-1 hover:bg-black hover:text-white mt-auto shadow-md">
-				edit profile
-			</button>
-			<button onClick={() => setPasswordOpen(true)} className="border border-black rounded p-1 hover:bg-black hover:text-white mt-3 shadow-md">
-				change password
-			</button>
-			<button onClick={() => set2FA()} className="border border-black rounded p-1 hover:bg-black hover:text-white mt-auto shadow-md">  {enabled ? 'Disable 2FA' : 'Enable 2FA'} </button>
-			<button onClick={() => setDeleteOpen(true)} className="shadow-md bg-beige border border-black text-black rounded p-1 hover:bg-red-500 hover:text-beige mt-auto">
-				commit seppuku
-			</button>
+			<div className="flex flex-col items-center w-full px-4 max-w-xs mx-auto space-y-8 mt-24">
+				<button
+					onClick={() => setEditOpen(true)}
+					className="w-full py-3 text-lg border border-black rounded hover:bg-black hover:text-white shadow-md transition"
+				>
+					edit profile
+				</button>
+				<button
+					onClick={() => setPasswordOpen(true)}
+					className="w-full py-3 text-lg border border-black rounded hover:bg-black hover:text-white shadow-md transition"
+				>
+					change password
+				</button>
+				<button
+					onClick={() => set2FA()}
+					className="w-full py-3 text-lg border border-black rounded hover:bg-black hover:text-white shadow-md transition"
+				>
+					{enabled ? 'disable 2FA' : 'enable 2FA'}
+				</button>
+				<button
+					onClick={() => setDeleteOpen(true)}
+					className="w-full py-3 text-lg shadow-md bg-beige border border-black text-black rounded hover:bg-red-500 hover:text-beige transition"
+				>
+					delete user
+				</button>
+			</div>
 			{editIsOpen && <EditProfile onClose={() => setEditOpen(false)} userId={userId} onSave={() => setRefreshUser(prev => !prev)}/>}
 			{passwordIsOpen && <ChangePassword onClose={() => setPasswordOpen(false)} userId={userId} onSave={() => setRefreshUser(prev => !prev)}/>}
 			{deleteIsOpen && <DeleteProfile onClose={() => setDeleteOpen(false)} userId={userId}/> }

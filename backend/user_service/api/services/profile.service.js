@@ -338,7 +338,6 @@ export const profileService = {
     const rawFriendsData = await prisma.user.findUnique({
       where: { id: id },
       select: {
-        isOnline: true,
         friends: {
           select: {
             friend: {
@@ -346,6 +345,7 @@ export const profileService = {
                 id: true,
                 username: true,
                 picture: true,
+				isOnline: true
               },
             },
           },
@@ -357,7 +357,7 @@ export const profileService = {
       id: formatFriends.friend.id,
       username: formatFriends.friend.username,
       picture: formatFriends.friend.picture,
-      status: formatFriends.friend.isOnline ? "Online" : "Offline",
+      status: formatFriends.friend.isOnline,
     }));
     return friendsList;
   },

@@ -1,22 +1,16 @@
 import {useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../../lib/api'
-import { error } from 'console';
-import { ContainerWithChildren } from 'postcss/lib/container';
+
 
 const Register = () => {
 	const API_URL = import.meta.env.VITE_API_USER;
-	const BASE_URL = import.meta.env.VITE_BASE_USER_URL || '';
 	const [username, setUsername] = useState('')
   	const [password, setPassword] = useState('')
 	const [email, setEmail] = useState('')
 	const [registered, setRegistered] = useState(false)
-	const [image, setImage] = useState<File | null>(null)
-	const [preview, setPreview] = useState<string | null>(null)
 	const [loginError, setError] = useState('')
 	const navigate = useNavigate();
-	//const API_URL = "http://localhost:3002/api"
-	//const API_URL = "https://localhost:4433/users";
 
 	const registerUser = async () => {
 
@@ -30,51 +24,16 @@ const Register = () => {
 		return response.data.id
 	}
 
-	const uploadProfileImage = async (userId: number) => {
-		if (!image) return;
-		
-		// Create proper FormData
-		const formData = new FormData();
-		formData.append("file", image, image.name);
-		try {
-			// Send FormData, not the raw image
-			const response = await api.put(
-				`${API_URL}/${userId}/picture`,
-				formData,
-				{
-					headers: {
-						'Content-Type': 'multipart/form-data', // Important!
-					},
-					withCredentials: true // Include credentials
-				}
-		);
-		} catch (error: any) {
-			console.error("Image upload failed:", error.response?.data || error.message);
-			throw new Error(error.response?.data?.message || "Image upload failed");
-		}
-	}
-
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		setError('')
-		let userId : number;
 		try {
-			userId = await registerUser();
-			if (image) {
-				try {
-					await uploadProfileImage(userId)
-				} catch (error: any) {
-					await api.delete((`${API_URL}/${userId}/delete-user`));
-					setError(error.response?.data?.message || 'Failed to upload image, please try again')
-					return;
-				}
-			}
+			await registerUser();
 			setRegistered(true);
 			setTimeout(() => {
 			  navigate('/');
 			}, 1500);
 		} catch (error: any) {
-			// console.error("Error:", error.response?.data || error.message);
 			setError(error.response?.data?.message || 'Registration failed')
 		}
 	}
@@ -108,26 +67,6 @@ const Register = () => {
 						className='border-2 border-black px-1 rounded w-auto focus:outline-none'
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
-				/>
-				{preview && (
-						<div className="w-24 h-24 rounded-full overflow-hidden border-2 border-blue-500 shadow-md">
-							<img
-								src={preview}
-								alt="Profile Preview"
-								className="w-full h-full object-cover"
-							/>
-						</div>
-				)}
-				<input 	type="file"
-						accept='image/*'
-						onChange={(e) => {const file = e.target.files?.[0]
-							if (file) {
-								setImage(file)
-								setPreview(URL.createObjectURL(file))
-							}
-						}}
-						className=''
-						
 				/>
 				<button  type="submit" className='border-2 border-black font-bold rounded px-1 hover:shadow-lg '>Register</button>
 				{loginError && 
