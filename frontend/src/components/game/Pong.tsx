@@ -116,24 +116,24 @@ const Pong: React.FC<PongProps> = ({
     <div className="relative">
 	{isGameStarted && <GameCanvas 	ballX={ballX}
 	   				ballY={ballY} 
-					leftPaddleY={leftPaddleY} 
-					rightPaddleY={rightPaddleY}
-		/>
-	}
+					   leftPaddleY={leftPaddleY} 
+					   rightPaddleY={rightPaddleY}
+					   />
+					}
     {!isGameStarted && <GameControls  userId={userInfo.userId} 
                                       resetGame={resetGame} 
                                       setIsGameStarted={setIsGameStarted}
                                       setOpponentUserId={setOpponentUserId}
-                      />
-    };
+									  />
+									};
     {gameOver && isGameStarted && <GameEnd  user={userInfo}
                                             opponentUserId={opponentUserId}
                                             winner={winner}
                                             p1score={leftScore}
                                             p2score={rightScore}
                                             gameId={gameId}
-                                  />
-    };
+											/>
+										};
     </div>
    </div>
   );

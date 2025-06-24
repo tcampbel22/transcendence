@@ -9,7 +9,7 @@ const App: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen text-center"
+      className="w-full min-h-screen bg-center min-w-[900px]"
       style={{
         backgroundImage: 'url("/images/epic_background.webp")',
       }}

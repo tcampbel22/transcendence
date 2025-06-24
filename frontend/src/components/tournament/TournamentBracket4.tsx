@@ -79,8 +79,8 @@ const TournamentBracket4: React.FC = () => {
                   }}
                 />
                 {/* Connection lines from first semifinal */}
-                <div className={`absolute top-1/2 right-0 w-32 h-[3px] ${bracket.semifinals[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-                <div className={`absolute top-1/2 right-32 w-[3px] h-[200px] ${bracket.semifinals[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-1/2 right-0 w-28 h-[3px] ${bracket.semifinals[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-1/2 right-0 w-[3px] h-[200px] ${bracket.semifinals[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
               </div>
 
               {/* Empty Cell - Second Row, Second Column */}
@@ -88,8 +88,8 @@ const TournamentBracket4: React.FC = () => {
 
               {/* Connecting Line Cell - Third Row, First Column */}
               <div className="relative h-[300px] flex items-center justify-end">
-                <div className={`absolute top-0 right-0 w-[3px] h-[150px] ${bracket.semifinals[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-                <div className={`absolute top-[150px] right-0 w-32 h-[3px] ${bracket.semifinals[0]?.hasPlayed && bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-0 right-0 w-[3px] h-[200px] ${bracket.semifinals[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-[150px] right-[-190px] w-48 h-[3px] ${bracket.semifinals[0]?.hasPlayed && bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
               </div>
 
               {/* Final Match - Third Row, Second Column */}
@@ -139,8 +139,8 @@ const TournamentBracket4: React.FC = () => {
                   }}
                 />
                 {/* Connection lines from second semifinal */}
-                <div className={`absolute top-1/2 right-0 w-32 h-[3px] ${bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-                <div className={`absolute top-1/2 right-32 w-[3px] h-[200px] transform -translate-y-[200px] ${bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-1/2 right-0 w-28 h-[3px] ${bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-1/2 right-0 w-[3px] h-[200px] transform -translate-y-[200px] ${bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
               </div>
 
               {/* Empty Cell - Fourth Row, Second Column */}

@@ -43,7 +43,7 @@ const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
 		<div className="bg-beige p-6 rounded shadow-lg w-96">
-		  <h2 className="text-xl font-bold mb-4">Edit Username</h2>
+		  <h2 className="text-xl text-center font-bold mb-4">Edit Username</h2>
   
 		  <input
 			type="text"
