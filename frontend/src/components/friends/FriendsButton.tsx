@@ -1,4 +1,3 @@
-import { useFriendslist } from "../../hooks/useFriendsList";
 import { deleteFriend } from "../../hooks/deleteFriend"
 import { useState } from "react";
 import { AxiosError } from "axios";

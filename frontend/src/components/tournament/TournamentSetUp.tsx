@@ -49,7 +49,7 @@ const StartTournament = ({ startTournament, players }: { startTournament: boolea
 			<Link
 				to="/play/tournament-bracket"
 				state={{ shuffledPlayerIds }}
-				className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg"
+				className="w-full h-full flex items-center justify-center rounded-lg"
 			>
 				<button className="bg-amber-200 shadow-lg rounded-lg p-10 px-10 transform hover:scale-110">
 					Start Tournament
@@ -62,8 +62,8 @@ const StartTournament = ({ startTournament, players }: { startTournament: boolea
 
 const PlayersCard = ({players}: {players: PlayerProps[]}) => {
 	return (
-		<div className="w-full max-w-md bg-beige rounded-lg shadow-lg p-1 text-2xl pt-4 pb-4">
-			<div className="mb-6 text-3xl">
+		<div className="w-full max-w-md bg-beige rounded-lg shadow-lg p-1 text-center text-2xl pt-4 pb-4">
+			<div className="mb-6 text-3xl text-center">
 				<Header1 text="Selected Players"/>
 			</div>
 			<ul className="mb-4">
@@ -81,7 +81,7 @@ const FilterCard: React.FC<TournamentCardProps> = ({ data, players, togglePlayer
 		return <p className="w-full max-w-md bg-beige rounded-lg shadow-lg p-1 text-2xl pt-4 pb-4">No players found</p>
 	return (
 		<div className="w-full max-w-md bg-beige rounded-lg shadow-lg p-1 text-2xl pt-4 pb-4">
-			<div className="mb-6 text-3xl">
+			<div className="mb-6 text-3xl text-center">
 				<Header1 text="Choose Players"/>
 			</div>
 			<ul className="space-y-2 max-h-100 overflow-y-auto pr-2">
@@ -110,7 +110,7 @@ const FilterCard: React.FC<TournamentCardProps> = ({ data, players, togglePlayer
 
 const PlayerFilter: React.FC<FilterProps> = ({ filter, handleFilter }) => {
 	return (
-		<div className="mb-20">
+		<div className="mb-20 flex justify-center ">
 			<label htmlFor="name"></label>
 				<input
 					value={filter}
@@ -166,9 +166,9 @@ const TournamentSetUp: React.FC = () => {
 		});
 	};
 	return (
-		<div>
+		<div className="overflow-auto">
 			<TitleCard image={"/images/opponents.webp"}/>
-			<PlayerFilter filter={filter} handleFilter={handleFilter}/>
+				<PlayerFilter filter={filter} handleFilter={handleFilter}/>
 			<div className="flex justify-center px-10 gap-20">
 				<FilterCard
 					data={filteredUsers}

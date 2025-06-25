@@ -89,9 +89,9 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 
 	//image change logic, change password logic and account deletion needs to be added.
 	return (
-        <div className="bg-beige border border-white col-span-1 row-span-2 items-center flex flex-col h-screen py-8 shadow-md text-black rounded">
-			<h1 className="font-bold text-2xl m-4 ">{username}</h1>
-			<div className="relative w-auto h-auto">
+        <div className="bg-beige border border-white items-center flex flex-col h-screen min-h-[1000px] max-h-[1211px] py-8 shadow-md text-black rounded overflow-auto">
+			<h1 className="font-bold text-4xl m-4 ">{username}</h1>
+			<div className="relative w-auto h-auto flex flex-col items-center">
 				<div className="bg-white w-auto h-auto rounded-full border-4 border-black flex shadow-md flex-col items-center justify-center bg-cover bg-center">
 					<img 
 						src={imageUrl} 
@@ -117,27 +117,42 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 				{imageFile && (
 					<button 
 						onClick={uploadProfileImage} 
-						className="mt-2 px-3 py-1 bg-beige border-2 border-black text-black rounded hover:bg-black hover:text-beige">
+						className="mt-2 px-3 py-1 bg-gradient-to-r from-amber-200 to-amber-500 border-2 border-black text-black rounded hover:from-black hover:to-black hover:text-beige">
 						Upload
 					</button>
 				)}
 			</div>
 			<br />
 			<br />
-			<div className="">
-				<p className="">email:</p>
-				<p>{email}</p>
+			<div className="font-bold text-2xl m-4">
+				<p className="">email: {email}</p>
 			</div>
-			<button onClick={() => setEditOpen(true)} className="border border-black rounded p-1 hover:bg-black hover:text-white mt-auto shadow-md">
-				edit profile
-			</button>
-			<button onClick={() => setPasswordOpen(true)} className="border border-black rounded p-1 hover:bg-black hover:text-white mt-3 shadow-md">
-				change password
-			</button>
-			<button onClick={() => set2FA()} className="border border-black rounded p-1 hover:bg-black hover:text-white mt-auto shadow-md">  {enabled ? 'Disable 2FA' : 'Enable 2FA'} </button>
-			<button onClick={() => setDeleteOpen(true)} className="shadow-md bg-beige border border-black text-black rounded p-1 hover:bg-red-500 hover:text-beige mt-auto">
-				commit seppuku
-			</button>
+			<div className="flex flex-col items-center w-full px-4 max-w-xs mx-auto space-y-8 mt-24">
+				<button
+					onClick={() => setEditOpen(true)}
+					className="bg-gradient-to-r from-amber-300 to-amber-500 w-full py-3 text-lg border border-black rounded hover:from-black hover:to-black hover:text-white shadow-md transition"
+				>
+					edit profile
+				</button>
+				<button
+					onClick={() => setPasswordOpen(true)}
+					className="bg-gradient-to-r from-amber-300 to-amber-500 w-full py-3 text-lg border border-black rounded hover:from-black hover:to-black hover:text-white shadow-md transition"
+				>
+					change password
+				</button>
+				<button
+					onClick={() => set2FA()}
+					className="bg-gradient-to-r from-amber-300 to-amber-500 w-full py-3 text-lg border border-black rounded hover:from-black hover:to-black hover:text-white shadow-md transition"
+				>
+					{enabled ? 'disable 2FA' : 'enable 2FA'}
+				</button>
+				<button
+					onClick={() => setDeleteOpen(true)}
+					className="bg-gradient-to-r from-red-400 to-red-600 w-full py-3 text-lg shadow-md border border-black text-black rounded hover:from-red-600 hover:to-red-700 hover:text-beige transition"
+				>
+					delete user
+				</button>
+			</div>
 			{editIsOpen && <EditProfile onClose={() => setEditOpen(false)} userId={userId} onSave={() => setRefreshUser(prev => !prev)}/>}
 			{passwordIsOpen && <ChangePassword onClose={() => setPasswordOpen(false)} userId={userId} onSave={() => setRefreshUser(prev => !prev)}/>}
 			{deleteIsOpen && <DeleteProfile onClose={() => setDeleteOpen(false)} userId={userId}/> }

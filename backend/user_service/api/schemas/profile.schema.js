@@ -279,7 +279,7 @@ export const getFriendsListSchema = {
               id: { type: "integer" },
               username: { type: "string" },
               picture: { type: "string" },
-              status: { type: "string", enum: ["Online", "Offline"] },
+              status: { type: "boolean" },
             },
           },
         },

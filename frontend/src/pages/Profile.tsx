@@ -33,12 +33,23 @@ const Profile = () => {
 
 	//avatar component for the profile picture, not sure if this is the place to extract user info and send it to the component or just user id there
 	return (
-		<div className="grid grid-cols-3 gap-4 p-6">
-			<Avatar userId={userId} is2faEnabled={is2faEnabled} />
-			<GamesPlayed userId={userId}/>
-			<Wins victories={victories} />
-			<Losses losses={losses} />
-		</div>
+			<div className="grid grid-cols-3 grid-rows-3 gap-4 p-4">
+				<div className="col-span-1 row-span-3 " style={{ gridTemplateRows: "1fr 2fr 2fr" }}>
+					<Avatar userId={userId} is2faEnabled={is2faEnabled} />
+				</div>
+
+				<div className="col-span-1 row-span-1">
+					<Wins victories={victories} />
+				</div>
+
+				<div className="col-span-1 row-span-1">
+					<Losses losses={losses} />
+				</div>
+
+				<div className="col-span-2 row-span-2">
+					<GamesPlayed userId={userId} />
+				</div>
+			</div>
 	)
 }
 

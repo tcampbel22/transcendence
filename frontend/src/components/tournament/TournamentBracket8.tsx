@@ -52,7 +52,7 @@ const TournamentBracket8: React.FC = () => {
             <div className="grid grid-cols-3 gap-x-16 mx-auto max-w-5xl">
               {/* Section Titles - Row 1 */}
               <div className="flex items-center justify-center h-[60px] mb-4">
-                <h2 className="text-xl font-bold text-black bg-beige rounded-full py-1 px-6 shadow-sm w-36 text-center">
+                <h2 className="text-xl font-bold text-black bg-beige rounded-full py-1 px-6 shadow-sm text-center">
                   Quarter Finals
                 </h2>
               </div>
@@ -85,7 +85,7 @@ const TournamentBracket8: React.FC = () => {
                   }}
                 />
                 {/* Connection lines */}
-                <div className={`absolute top-1/2 right-[-16px] w-48 h-[3px] ${bracket.round1[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-1/2 right-[-25px] w-20 h-[3px] ${bracket.round1[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
               </div>
 
               {/* Empty Cell - Row 2, Column 2 */}
@@ -96,8 +96,9 @@ const TournamentBracket8: React.FC = () => {
 
               {/* Empty Cell - Row 3, Column 1 */}
               <div className="relative h-[120px] flex items-center justify-center">
-                <div className={`absolute top-[-60px] right-[calc(50%-16px)] w-[3px] h-[80px] ${bracket.round1[0]?.hasPlayed && bracket.round1[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-                <div className={`absolute top-0 right-[calc(50%-16px)] w-32 h-[3px] ${bracket.round1[0]?.hasPlayed && bracket.round1[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-[-60px] right-[-25px] w-[3px] h-[120px] ${bracket.round1[0]?.hasPlayed && bracket.round1[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-[60px] right-[-25px] w-[3px] h-[120px] ${bracket.round1[0]?.hasPlayed && bracket.round1[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-15 right-[-122px] w-24 h-[3px] ${bracket.round1[0]?.hasPlayed && bracket.round1[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
               </div>
 
               {/* Semifinal 1 - Row 3, Column 2 */}
@@ -119,7 +120,7 @@ const TournamentBracket8: React.FC = () => {
                   }}
                 />
                 {/* Connection lines */}
-                <div className={`absolute top-1/2 right-[-16px] w-48 h-[3px] ${bracket.semifinals[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-1/2 right-[-25px] w-20 h-[3px] ${bracket.semifinals[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
               </div>
 
               {/* Empty Cell - Row 2, Column 3 */}
@@ -144,7 +145,7 @@ const TournamentBracket8: React.FC = () => {
                   }}
                 />
                 {/* Connection lines */}
-                <div className={`absolute top-1/2 right-[-16px] w-48 h-[3px] ${bracket.round1[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-1/2 right-[-25px] w-20 h-[3px] ${bracket.round1[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
               </div>
 
               {/* Empty Cell - Row 2, Column 2 */}
@@ -160,9 +161,9 @@ const TournamentBracket8: React.FC = () => {
               {/* Empty Cell - Row 5, Column 2 */}
               <div className="relative h-[120px] flex items-center justify-end">
                 {/* Connecting lines from semifinals to final */}
-                <div className={`absolute top-[-100px] right-[calc(50%-16px)] w-[3px] h-[100px] ${bracket.semifinals[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-                <div className={`absolute bottom-[-100px] right-[calc(50%-16px)] w-[3px] h-[100px] ${bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-                <div className={`absolute top-0 right-[calc(50%-16px)] w-32 h-[3px] ${bracket.semifinals[0]?.hasPlayed || bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-[-180px] right-[-25px] w-[3px] h-[240px] ${bracket.semifinals[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute bottom-[-180px] right-[-25px] w-[3px] h-[240px] ${bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-15 right-[-120px] w-24 h-[3px] ${bracket.semifinals[0]?.hasPlayed || bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
               </div>
 
               {/* Final Match - Row 5, Column 3 */}
@@ -212,7 +213,7 @@ const TournamentBracket8: React.FC = () => {
                   }}
                 />
                 {/* Connection lines */}
-                <div className={`absolute top-1/2 right-[-16px] w-48 h-[3px] ${bracket.round1[2]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-1/2 right-[-25px] w-20 h-[3px] ${bracket.round1[2]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
               </div>
 
               {/* Empty Cell - Row 5, Column 2 */}
@@ -223,8 +224,8 @@ const TournamentBracket8: React.FC = () => {
 
               {/* Empty Cell - Row 7, Column 1 */}
               <div className="relative h-[120px] flex items-center justify-center">
-                <div className={`absolute top-[-60px] right-[calc(50%-16px)] w-[3px] h-[80px] ${bracket.round1[2]?.hasPlayed && bracket.round1[3]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-                <div className={`absolute top-0 right-[calc(50%-16px)] w-32 h-[3px] ${bracket.round1[2]?.hasPlayed && bracket.round1[3]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-[-60px] right-[-25px] w-[3px] h-[120px] ${bracket.round1[2]?.hasPlayed && bracket.round1[3]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-15 right-[-120px] w-24 h-[3px] ${bracket.round1[2]?.hasPlayed && bracket.round1[3]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
               </div>
 
               {/* Semifinal 2 - Row 7, Column 2 */}
@@ -246,7 +247,7 @@ const TournamentBracket8: React.FC = () => {
                   }}
                 />
                 {/* Connection lines */}
-                <div className={`absolute top-1/2 right-[-16px] w-48 h-[3px] ${bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-1/2 right-[-25px] w-20 h-[3px] ${bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
               </div>
 
               {/* Empty Cell - Row 6, Column 3 */}
@@ -271,8 +272,10 @@ const TournamentBracket8: React.FC = () => {
                   }}
                 />
                 {/* Connection lines */}
-                <div className={`absolute top-1/2 right-[-16px] w-48 h-[3px] ${bracket.round1[3]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-              </div>
+                <div className={`absolute top-1/2 right-[-25px] w-20 h-[3px] ${bracket.round1[3]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+                <div className={`absolute top-[-60px] right-[-25px] w-[3px] h-[120px] ${bracket.round1[4]?.hasPlayed && bracket.round1[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+				  
+			  </div>
 
               {/* Empty Cell - Row 8, Column 2 */}
               <div className="relative h-[80px] flex items-center justify-center">

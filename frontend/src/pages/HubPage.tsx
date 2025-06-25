@@ -46,7 +46,7 @@ const Hub = () => {
 	const { friendsList, reFetch } = useFriendslist(userId);
 
   return (
-    <div className="flex flex-col items-center justify-start w-full min-h-screen pt-16 px-4 overflow-x-hidden">
+    <div className="flex flex-col items-center justify-start w-full min-h-screen pt-16 px-4">
       <TitleCard image={"/images/welcome.webp"} />
       <div className="absolute top-5 right-10">
         <AddFriendButton userId={userInfo.userId} onSuccess={reFetch} />
