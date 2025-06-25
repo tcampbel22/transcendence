@@ -1,15 +1,17 @@
 import { useState, useRef } from 'react';
 import  {useUsername} from '../../hooks/useUsername'
-import { useCreateGame } from '../../hooks/useCreateGame';
-import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../../lib/api';
+import { AxiosError } from 'axios';
+
 
 type userObj = {
     userId: number;
-    username: string;
+    username: { username: string | undefined };
 };
 
 type EndGameProps = {
+    gameId: number | null,
     user: userObj,
     opponentUserId: number,
     winner: string | null ,
@@ -17,20 +19,18 @@ type EndGameProps = {
     p2score: number
 };
 
-const GameEnd = ({user, opponentUserId, winner, p1score, p2score} : EndGameProps) => {
+const GameEnd = ({user, opponentUserId, winner, p1score, p2score, gameId} : EndGameProps) => {
     const navigate = useNavigate();
     const {userId, username } = user;
     const API_URL = import.meta.env.VITE_API_GAME;
     const { username: p2Username } = useUsername(opponentUserId);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const submittedOnce = useRef(false);
-    const { gameId: gameId } = useCreateGame({ p1Id: userId, p2Id: opponentUserId });
    
 
 
     const postWinner = async () => {
         if (!gameId || isSubmitting || submittedOnce.current) {
-            console.log("Submission skipped - game not ready or already submitted");
             return;
         }
         setIsSubmitting(true);
@@ -40,12 +40,10 @@ const GameEnd = ({user, opponentUserId, winner, p1score, p2score} : EndGameProps
             gameId: gameId,
             p1score: p1score,
             p2score: p2score,
-            winnerId: winner === 'left' ? userId : opponentUserId
+            winnerId: winner === 'left' ? userId : opponentUserId,
         }
-
         try {
-            const res = await axios.patch(`${API_URL}/${gameId}/finish-game`, payload);
-            console.log("match finished", res.data);
+            const res = await api.patch(`${API_URL}/${gameId}/finish-game`, payload, { withCredentials: true });
             navigate('/hub', {state:user});
         } catch (err) {
             const error = err as AxiosError;
@@ -66,7 +64,7 @@ const GameEnd = ({user, opponentUserId, winner, p1score, p2score} : EndGameProps
                     <p className=   {`font-semibold text-lg ${winner === 'left' ? 'text-green-500' : 'text-red-600'}`}>
                                     {winner === 'left' ? 'Winner' : 'Loser'}
                     </p>
-                    <p className="text-sm text-gray-600 font-bold">{username}</p>
+                    <p className="text-sm text-gray-600 font-bold">{useUsername(userId).username}</p>
                 </div>
 
                 {/* Score */}

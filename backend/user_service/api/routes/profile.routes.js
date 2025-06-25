@@ -1,9 +1,9 @@
 import { profileController } from "../controllers/profile.controller.js"
 import * as schemas from "../schemas/profile.schema.js"
-// import authenticate from "../../../libs/jwt_authenticator/jwt_authenticator.js";
+import authenticate from "../../../libs/jwt_authenticator/jwt_authenticator.js";
 
 export default async function profileRoutes(fastify, options) {
-	//	fastify.addHook("preHandler", authenticate); UNCOMMENT THIS LINE TO ENABLE AUTHENTICATION
+	fastify.addHook("preHandler", authenticate); //UNCOMMENT THIS LINE TO ENABLE AUTHENTICATION
     
 	// Check if user exists
     fastify.get("/api/validate/:id", { schema: schemas.validateUserSchema }, profileController.validateUser);
@@ -22,6 +22,9 @@ export default async function profileRoutes(fastify, options) {
     
     // Update profile pic
     fastify.put("/api/:id/picture", { schema: schemas.updatePictureSchema }, profileController.updatePicture);
+
+    // update 2fa status
+    fastify.put("/api/:id/2fa", { schema: schemas.update2faSchema }, profileController.update2faStatus);
     
     // Update password
     fastify.put("/api/:id/reset-password", { schema: schemas.updatePasswordSchema }, profileController.updatePassword);

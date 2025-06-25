@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Wins from "../components/profile/Wins";
 import Losses from "../components/profile/Losses";
-import axios from "axios";
+import api from "../lib/api";
 import Avatar from "../components/profile/Avatar";
 import GamesPlayed from "../components/profile/GamesPlayed";
 import {userIdFromState} from "../hooks/userIdFromState"
@@ -9,18 +9,20 @@ import {userIdFromState} from "../hooks/userIdFromState"
 
 const Profile = () => {
 	const userId = userIdFromState() as number;
+	const [is2faEnabled, setIs2faEnabled] = useState (false);
 	const API_URL = import.meta.env.VITE_API_USER;
-	const [victories, setVictories] = useState(0)
-	const [losses, setLoses] = useState(0)
+	const [victories, setVictories] = useState(0);
+	const [losses, setLoses] = useState(0);
 
-
-	console.log("in profile: ", userId)
 	useEffect (() => {
 		const getUserData = async () => {
 			try {
-				const gameData = await axios.get(`${API_URL}/${userId}/stats`);
+				const userData = await api.get(`${API_URL}/${userId}`, { withCredentials: true });
+				setIs2faEnabled(userData.data.is2faEnabled);
+				const gameData = await api.get(`${API_URL}/${userId}/stats`, { withCredentials: true });
 				setVictories(gameData.data.wins) //these are the actual ones for the game testing purposes commented out
 				setLoses(gameData.data.losses)
+				//setIs2faEnabled(gameData.data.is2faEnabled);
 			} catch (error) {
 				console.error('error getting data:', error)
 			}
@@ -31,12 +33,23 @@ const Profile = () => {
 
 	//avatar component for the profile picture, not sure if this is the place to extract user info and send it to the component or just user id there
 	return (
-		<div className="grid grid-cols-3 gap-4 p-6">
-			<Avatar userId={userId}/>
-			<GamesPlayed userId={userId}/>
-			<Wins victories={victories} />
-			<Losses losses={losses} />
-		</div>
+			<div className="grid grid-cols-3 grid-rows-3 gap-4 p-4">
+				<div className="col-span-1 row-span-3 " style={{ gridTemplateRows: "1fr 2fr 2fr" }}>
+					<Avatar userId={userId} is2faEnabled={is2faEnabled} />
+				</div>
+
+				<div className="col-span-1 row-span-1">
+					<Wins victories={victories} />
+				</div>
+
+				<div className="col-span-1 row-span-1">
+					<Losses losses={losses} />
+				</div>
+
+				<div className="col-span-2 row-span-2">
+					<GamesPlayed userId={userId} />
+				</div>
+			</div>
 	)
 }
 

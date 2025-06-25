@@ -1,6 +1,7 @@
 import { loginService } from "../services/login.service.js";
 import jsonwebtoken from "jsonwebtoken";
 import logger from "@eleekku/logger"
+import { ErrorNotFound, ErrorUnAuthorized, handleError } from "@app/errors"
 
 export const loginController = {
 
@@ -14,19 +15,22 @@ export const loginController = {
 				return reply.status(401).send({ message: "invalid username or password" });
 
 			reply.setCookie("token", login.token, {
+				path: "/",
 				httpOnly: true,
-				secure: true,
-				sameSite: "strict",
-				maxAge: 3600,
+				secure: process.env.NODE_ENV === "production",
+				sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax",
+				maxAge: 3600
 			});
 			logger.info(`User logged in: ${login.user.username}, ID: ${login.user.id}`);
 			reply.status(200).send({
 				userId: login.user.id,
 				username: login.user.username,
+				email: login.user.email,
+				isOnline: login.user.isOnline,
+				is2faEnabled: login.user.is2faEnabled
 			});  
 		} catch (err) {
 			logger.error(`Error logging in user: ${err.message}`);
-			request.log.error(err);
 			reply.status(500).send({ message: "loginUser: Internal server error!" });
 		}
 	},
@@ -34,15 +38,32 @@ export const loginController = {
 	async logoutUser(request, reply) {
 		try {
 			const token = request.cookies.token;
-			// Decode the token to get user information
-			const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
-			logger.info(`User logged out: ${decoded.username}, ID: ${decoded.id}`);
+			let userId = null;
+			let username = null;
+
+			if (token) {
+			try {
+				const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+				userId = decoded.id;
+				username = decoded.username;
+				logger.info(`User logged out: ${username}, ID: ${userId}`);
+				await loginService.logoutUser(parseInt(userId));
+			} catch (err) {
+				// Token is invalid or expired, just proceed to clear cookie
+				logger.info("Logout: token was invalid or expired.");
+			}
+			} else {
+			logger.info("Logout: no token present.");
+			}
+
 			reply.clearCookie("token");
-			reply.status(200).send({ message: "Logged out successfully" });
+			reply.status(200).send({ 
+			message: "Logged out successfully"
+			});
 		} catch (err) {
 			logger.error(`Error logging out user: ${err.message}`);
-			request.log.error(err);
-			reply.status(500).send({ message: "logoutUser: Internal server error!" });
+			return handleError(err, reply, `Failed to logout user`);
 		}
 	}
+
 };

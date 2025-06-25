@@ -1,5 +1,5 @@
 import { profileService } from "../services/profile.service.js"
-import { ErrorNotFound, ErrorUnAuthorized, handleError } from "@app/errors"
+import { ErrorBadRequest, ErrorNotFound, ErrorUnAuthorized, handleError } from "@app/errors"
 import logger from "@eleekku/logger"
 import fs from "fs";
 import util from "util";
@@ -31,6 +31,8 @@ export const profileController = {
 				username: user.username,
 				email: user.email,
 				picture: user.picture,
+				isOnline: user.isOnline,
+				is2faEnabled: user.is2faEnabled,
 			})
 		} catch (err) {
 			request.log.error(err);
@@ -40,10 +42,7 @@ export const profileController = {
 	async getUserList(request, reply){
 		try {
 			const users = await profileService.getUserList();
-			return reply.code(200).send({
-				message: `User list fetched successfully`,
-				users: users
-			})
+			return reply.code(200).send(users)
 		} catch (err) {
 			request.log.error(err);
 			return handleError(err, reply, `Failed to fetch users`);
@@ -68,17 +67,19 @@ export const profileController = {
 	},
 	async updatePicture(request, reply) {
 		const { id } = request.params;
-		// const { newPicture } = request.body;
 		
 		try {
 			const data = await request.file();
 			if (!data)
 				throw new ErrorNotFound(`No file uploaded`);
 			const fileExtension = path.extname(data.filename).toLowerCase();
-			if (!['jpg', '.jpeg', '.png'].includes(fileExtension))
-				throw new ErrorUnAuthorized(`File should be jpg, jpeg or png`);
-			const filename = `user_${id}_${Date.now()}${fileExtension}`;
-			const filepath = `./uploads/${filename}`;
+			if (!['.jpg', '.jpeg', '.png'].includes(fileExtension))
+				throw new ErrorBadRequest(`File should be jpg, jpeg or png`);
+			
+			const filename = `user_${id}${fileExtension}`;
+
+			const uploadDir = process.env.NODE_ENV === 'production' ? '/app/uploads' : './uploads';
+			const filepath = `${uploadDir}/${filename}`;
 			const pictureUrl = `/uploads/${filename}`;
 			
 			const pump = util.promisify(pipeline);
@@ -93,7 +94,7 @@ export const profileController = {
 			});
 		} catch (err) {
 			request.log.error(err);
-			return handleError(err, reply, `Failed to update user${id}'s profile picture`);
+			return handleError(err, reply, `Failed to update user ${id}'s profile picture`);
 		}
 	},
 
@@ -113,6 +114,30 @@ export const profileController = {
 			return handleError(err, reply, `Failed to update user ${id}'s password`);
 		}
 	},
+
+	async update2faStatus(request, reply) {
+		const { id } = request.params;
+		const { is2faEnabled } = request.body;
+		if (typeof is2faEnabled !== 'boolean') {
+			return reply.code(400).send({ message: 'is2faEnabled must be a boolean' });
+		}
+		try {
+			const user = await profileService.update2faStatus(parseInt(id), is2faEnabled);
+			logger.info(`User ${id}'s 2FA status updated to ${user.is2faEnabled}`);
+			return reply.code(201).send({
+				message: `User ${id}'s 2FA status updated successfully`,
+				id: user.id,
+				is2faEnabled: user.is2faEnabled,
+			});
+		}
+		catch (err) {
+			logger.error(`Failed to update user ${id}'s 2FA status: ${err.message}`);
+			request.log.error(err);
+			return handleError(err, reply, `Failed to update user ${id}'s 2FA status`);
+		}
+	},
+
+
 	async validatePassword(request, reply) {
 		const { id, password } = request.body
 		try {
@@ -166,11 +191,8 @@ export const profileController = {
 	async getMatchHistory(request, reply) {
 		const { id } = request.params;
 		try {
-			const matchHistory = await profileService.getMatchHistory(parseInt(id));
-			return reply.code(200).send({
-				message: `User ${id}'s match history fetched successfully`,
-				matchHistory,
-			})
+			const matchHistory = await profileService.getMatchHistory(parseInt(id));	
+			return reply.code(200).send(matchHistory)
 		} catch (err) {
 			logger.error(`Failed to fetch user ${id}'s match history: ${err.message}`);
 			request.log.error(err);
@@ -204,6 +226,7 @@ export const profileController = {
 				friendList,
 			});
 		} catch (err) {
+			logger.error(`Failed to fetch user ${id}'s friend list: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to fetch user ${id}'s friend list`);
 		}

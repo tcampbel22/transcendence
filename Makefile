@@ -1,6 +1,6 @@
 DOCKER_COMPOSE_FILE = docker-compose.yml
 ENV_FILE = .env
-DIR_NAMES = nginx game_service user_service file_service googleAuth
+DIR_NAMES = game_service user_service file_service auth_service nginx
 
 # Colors for better output
 GREEN = $$(printf '\033[0;32m')
@@ -11,6 +11,7 @@ RESET = $$(printf '\033[0m')
 all: ssl_cert build-frontend up
 
 ssl_cert:
+	@mkdir -p ./backend/nginx/ssl
 	@for name in $(DIR_NAMES); do \
 	SSL_DIR=./backend/$$name/ssl; \
 	mkdir -p $$SSL_DIR; \
@@ -21,7 +22,7 @@ ssl_cert:
 		openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 			-keyout $$SSL_KEY \
 			-out $$SSL_CERT \
-			-subj "/C=FI/ST=Uusimaa/L=Helsinki/O=42/OU=Hive/CN=soyboys.42.fr" \
+			-subj "/C=FI/ST=Uusimaa/L=Helsinki/O=42/OU=Hive/CN=nginx" \
 			2>/dev/null; \
 		echo "$(GREEN)SSL certificate generated.$(RESET)"; \
 	else \
@@ -30,6 +31,9 @@ ssl_cert:
 	if [ "$$name" != "nginx" ]; then \
 		cp $$SSL_CERT ./backend/nginx/ssl/$$name.cert.pem; \
 		cp $$SSL_KEY ./backend/nginx/ssl/$$name.key.pem; \
+	else \
+		cp $$SSL_CERT ./backend/user_service/ssl/nginx.cert.pem; \
+		cp $$SSL_CERT ./backend/game_service/ssl/nginx.cert.pem; \
 	fi; \
 	done
 
@@ -40,6 +44,7 @@ build-frontend:
 	fi
 
 up:
+	@cd backend/libs/jwt_authenticator && npm install
 	@echo "$(YELLOW)Building docker images...$(RESET)"
 	@docker compose -f $(DOCKER_COMPOSE_FILE) up -d
 	@echo "$(GREEN)Docker images built.$(RESET)"
@@ -51,9 +56,23 @@ down:
 	@echo "$(GREEN)Docker containers stopped.$(RESET)"
 
 basic: ssl_cert build-frontend
-		@echo "$(YELLOW)Building docker images...$(RESET)"
-	@docker-compose -f $(DOCKER_COMPOSE_FILE) up -d nginx file_service user_service  game_service googlesignin 
+	@cd backend/libs/jwt_authenticator && npm install
+	@echo "$(YELLOW)Building docker images...$(RESET)"
+	@docker-compose -f $(DOCKER_COMPOSE_FILE) up -d nginx file_service user_service  game_service googlesignin
 	@echo "$(GREEN)Docker images built.$(RESET)"
+
+redo:
+	@echo "$(YELLOW)Stopping container...$(RESET)"
+	@if [ "$(filter-out $@,$(MAKECMDGOALS))" ]; then \
+		echo "$(YELLOW)Rebuilding specific service: $(filter-out $@,$(MAKECMDGOALS))...$(RESET)"; \
+		docker compose -f $(DOCKER_COMPOSE_FILE) down $(filter-out $@,$(MAKECMDGOALS)); \
+		docker compose -f $(DOCKER_COMPOSE_FILE) up --build -d $(filter-out $@,$(MAKECMDGOALS)); \
+	else \
+		echo "$(YELLOW)Rebuilding all services...$(RESET)"; \
+		docker compose down; \
+		docker compose up --build -d; \
+	fi
+	@echo "$(GREEN)Rebuild complete.$(RESET)"
 
 clean: down
 	@echo "$(YELLOW)Removing docker images...$(RESET)"
@@ -65,7 +84,7 @@ clean: down
 	@rm -rf ./backend/game_service/ssl
 	@rm -rf ./backend/user_service/ssl
 	@rm -rf ./backend/file_service/ssl
-	@rm -rf ./backend/googleAuth/ssl
+	@rm -rf ./backend/auth_service/ssl
 
 #WARNING!! THIS WILL PERMANTLY REMOVE THE DB, ONLY USE IN TESTING ENV
 db_clean: clean
@@ -86,3 +105,6 @@ logs:
 re: clean all
 
 re_basic: clean basic
+
+%:
+	@:

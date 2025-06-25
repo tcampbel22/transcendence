@@ -9,50 +9,39 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set DATABASE environment variable
-        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
-
-      - name: Create complete .env file
-        run: |
-          cat > .env << EOL
-          ELASTIC_USERNAME=${{ secrets.ELASTIC_USERNAME }}
-          ELASTIC_PASSWORD=${{ secrets.ELASTIC_PASSWORD }}
-          ELASTIC_HOSTS=${{ secrets.ELASTIC_HOSTS }}
-          KIBANA_PASSWORD=${{ secrets.KIBANA_PASSWORD }}
-          STACK_VERSION=${{ secrets.STACK_VERSION }}
-          CLUSTER_NAME=${{ secrets.CLUSTER_NAME }}
-          LICENSE=${{ secrets.LICENSE }}
-          ES_PORT=${{ secrets.ES_PORT }}
-          KIBANA_PORT=${{ secrets.KIBANA_PORT }}
-          EOL
-
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: npm
           cache-dependency-path: backend/tests/package-lock.json
 
-      - name: Install user_service Dependencies
-        run: cd backend/user_service && npm ci
+      - name: Install Dependencies
+        run: |
+          cd backend/libs/jwt_authenticator && npm ci
+          cd ../logger && npm ci
+          cd ../error_lib && npm ci
+          cd ../../user_service && npm ci
+          cd ../game_service && npm ci
+          cd ../tests && npm ci
 
-      - name: Install game_service Dependencies
-        run: cd backend/game_service && npm install
+      - name: Copy sample test env files to .env files
+        run: |
+          cp backend/user_service/sample_env.test backend/user_service/.env
+          cp backend/game_service/sample_env.test backend/game_service/.env
 
-      - name: Install test Dependencies
-        run: cd backend/tests && npm ci
+      - name: Push Prisma Schemas
+        run: |
+          cd backend/user_service
+          npx prisma generate --schema=./database/prisma/schema.prisma
+          npx prisma db push --schema=./database/prisma/schema.prisma
+          
+          cd ../game_service
+          npx prisma generate --schema=./database/prisma/schema.prisma
+          npx prisma db push --schema=./database/prisma/schema.prisma
 
-      - name: Init user_service database
-        run: cd backend/user_service && bash database/db_entrypoint.sh
-      
-      - name: Init game_service database
-        run: cd backend/game_service && bash database/db_entrypoint.sh
-
-      - name: Run Jest with verbose config path
-        run: cd backend/tests && NODE_OPTIONS=--experimental-vm-modules npx jest --config=jest.config.js --verbose
-      
       - name: Run Tests
-        run: cd backend/tests && npm test
+        run: cd backend/tests && NODE_OPTIONS=--experimental-vm-modules npm test
 
   e2e-tests:
     name: E2E Tests
@@ -92,7 +81,7 @@ jobs:
 
       - name: Create google env
         run: |
-          cat > backend/googleAuth/.env << EOL
+          cat > backend/auth_service/.env << EOL
           GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
           GOOGLE_CALLBACK_URL=${{ secrets.GOOGLE_CALLBACK_URL }}a
@@ -102,7 +91,7 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: npm
           cache-dependency-path: e2e/package.json
 

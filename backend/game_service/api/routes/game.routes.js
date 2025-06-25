@@ -1,8 +1,10 @@
 import { gameController } from "../controllers/game.controller.js";
 import * as schema from "../schemas/game.schema.js"
+import authenticate from "../../../libs/jwt_authenticator/jwt_authenticator.js";
 
 export default async function gameRoutes(fastify, options) {
 
+	fastify.addHook("preHandler", authenticate); 
 	//Create a new game instance
 	fastify.post("/api/create-game", {schema: schema.createGameSchema }, gameController.createGame);
 	//Record the winner of the game and score

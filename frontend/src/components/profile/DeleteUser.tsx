@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import api from "../../lib/api";
 import { useNavigate } from "react-router-dom";
 
 type DeleteProfileProps = {
@@ -17,7 +18,7 @@ const DeleteProfile = ({userId, onClose}: DeleteProfileProps) => {
 	const handleDelete = async () => {
 		setLoading(true); 
 		try {
-			await axios.delete(`${API_URL}/${userId}/delete-user`);
+			await api.delete(`${API_URL}/${userId}/delete-user`, {withCredentials: true});
             setMessageType('success');
             setMessage("gg my guy");
 			setTimeout(() => {
@@ -35,7 +36,7 @@ const DeleteProfile = ({userId, onClose}: DeleteProfileProps) => {
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
 		    <div className="bg-beige p-6 rounded shadow-lg w-96">
-                <h2 className="text-xl font-bold mb-4">Are You Sure?</h2>
+                <h2 className="text-xl text-center font-bold mb-4">Are You Sure?</h2>
                     {message && <p className={`text-sm text-center mb-2 ${
                         messageType === 'success' ? 'text-green-600' : 'text-red-600'}`}>
                                 {message}

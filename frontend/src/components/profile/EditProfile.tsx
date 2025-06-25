@@ -1,5 +1,7 @@
 import { useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import api from "../../lib/api";
+import { userInfo } from "os";
 
 type EditProfileProps = {
 	onClose: () => void;
@@ -21,10 +23,8 @@ const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
 				newUsername: newUsername,
 			};
 
-			console.log(payload);
 			//need to check with Tim that this is the correct place where to change the username
-			const res = await axios.put(`${API_URL}/${userId}`, {newUsername: newUsername}); //product version
-			console.log(res);
+			await api.put(`${API_URL}/${userId}`, {newUsername: newUsername}, {withCredentials: true}); //product version
 			setMessage("Username changed succesfully");
 			setMessageType('success')
 			onSave();
@@ -34,7 +34,7 @@ const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
 			setLoading(true);
 		} catch (err) {
 			const error = err as AxiosError
-			setMessage(error.message || "Something wen't wrong");
+			setMessage(error.message || "Something went wrong");
 			setMessageType('error')
 		} finally {
 			setLoading(false);
@@ -43,7 +43,7 @@ const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
 		<div className="bg-beige p-6 rounded shadow-lg w-96">
-		  <h2 className="text-xl font-bold mb-4">Edit Username</h2>
+		  <h2 className="text-xl text-center font-bold mb-4">Edit Username</h2>
   
 		  <input
 			type="text"

@@ -5,10 +5,11 @@ import { useGameLoop } from '../../hooks/useGameLoop'
 import { usePaddles } from '../../hooks/usePaddles';
 import { useKeyPress } from '../../hooks/useKeyPress';
 import GameEnd from './GameEnd';
+import { useStartGame } from "../../hooks/useStartGame";
 
 type userObj = {
   userId: number;
-  username: string;
+  username: { username: string | undefined };
 };
 
 type PongProps = {
@@ -47,6 +48,7 @@ const Pong: React.FC<PongProps> = ({
   const ballSpeedY = useRef<number>(0);
   const keysPressed = useKeyPress();
   const [isGameStarted, setIsGameStarted] = useState(false);
+  const [gameId, setGameId] = useState<number | null>(null);
 
   const updateLeftScore = (newScore: number) => {
     setLeftScore(newScore);
@@ -102,42 +104,36 @@ const Pong: React.FC<PongProps> = ({
       rightScore
     });
 
+  useStartGame({
+    isGameStarted,
+    userId: userInfo.userId,
+    opponentUserId,
+    setGameId
+  });
+
   return (
-	<div className="bg-black flex items-center justify-center p-4">
+	<div className="bg-blacks flex items-center justify-center p-4 rounded">
     <div className="relative">
-	  <GameCanvas 	ballX={ballX}
+	{isGameStarted && <GameCanvas 	ballX={ballX}
 	   				ballY={ballY} 
-					leftPaddleY={leftPaddleY} 
-					rightPaddleY={rightPaddleY}
-		/>
+					   leftPaddleY={leftPaddleY} 
+					   rightPaddleY={rightPaddleY}
+					   />
+					}
     {!isGameStarted && <GameControls  userId={userInfo.userId} 
                                       resetGame={resetGame} 
                                       setIsGameStarted={setIsGameStarted}
                                       setOpponentUserId={setOpponentUserId}
-                      />
-    };
+									  />
+									};
     {gameOver && isGameStarted && <GameEnd  user={userInfo}
                                             opponentUserId={opponentUserId}
                                             winner={winner}
                                             p1score={leftScore}
                                             p2score={rightScore}
-                                  />
-    };
-	  {/* {gameOver ? (
-      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-70">
-        <div className="bg-white p-6 rounded-lg text-center">
-          <h2 className="text-2xl font-bold mb-4">
-            {winner === 'left' ? player1 : player2} Wins!
-          </h2>
-          <button 
-            onClick={resetGame}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-          >
-            Play Again
-          </button>
-        </div>
-      </div>
-    ) : <GameControls userId={userId} resetGame={resetGame} setIsStarted={setIsStarted}/> } */}
+                                            gameId={gameId}
+											/>
+										};
     </div>
    </div>
   );

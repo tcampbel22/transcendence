@@ -1,32 +1,37 @@
 import { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
+import api from "../lib/api";
+import { AxiosError } from "axios";
 
 type Friends = {
     id: number,
     username: string,
     picture: string | null,
-    status: "online" | "offline"
+    status: boolean
 }
 
 export const useFriendslist = (userId : number) => {
     const API_URL = import.meta.env.VITE_API_USER;
     const [friendsList, setFriendsList] = useState<Friends[] | null>(null);
+	const [refetch, setRefetch] = useState(false);
 
     useEffect (() => {
             const getFriendsList = async () => {
                 try {
-                    const res = await axios.get(`${API_URL}/${userId}/friends`); //get friends list
-                    setFriendsList(res.data); //set it for usage in the dropdown list
-                    // setFriendsList(mockFriends);
-    
+                    const res = await api.get(`${API_URL}/${userId}/friends`, {withCredentials: true}); //get friends list
+                    setFriendsList(res.data.friendList || []); //set it for usage in the dropdown list
                 } catch (err) {
                     const error = err as AxiosError;
                     console.error("Error fetching friends:", error);
-                    setFriendsList([{ id: 1, username: "No Friends", picture: null, status: "offline" }]);
+                    setFriendsList([]);
                 }
             }
             getFriendsList();
-        }, []);
+        }, [userId, refetch]);
 
-    return friendsList;
+		const reFetch = async () => {
+			setRefetch(prev => !prev)
+		}
+
+		
+    return { friendsList, reFetch };
 };
