@@ -1,4 +1,0 @@
-DATABASE_URL="file:../data/game.db"
-NODE_ENV="production"
-JWT_SECRET="daniel1"
-INTERNAL_KEY="dj"

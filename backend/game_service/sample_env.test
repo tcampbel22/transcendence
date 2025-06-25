@@ -1,3 +1,0 @@
-DATABASE_URL="file:memory?mode=memory&cache=shared"
-NODE_ENV="test"
-INTERNAL_KEY="dj"
