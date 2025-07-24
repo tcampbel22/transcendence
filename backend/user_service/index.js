@@ -53,8 +53,8 @@ try {
     }, // for cookies signature
   );
   fastify.register(fastifyStatic, {
-    root: path.join(process.cwd(), "uploads"), // Adjust this path to your uploads directory
-    prefix: "/uploads/", // The URL path prefix for your images
+    root: path.join(process.cwd(), "uploads"),
+    prefix: "/uploads/",
   });
 } catch (err) {
   logger.error(err);
