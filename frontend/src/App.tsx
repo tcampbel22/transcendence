@@ -7,7 +7,7 @@ const App: React.FC = () => {
 
   return (
     <div
-      className="max-w-screen bg-gray-150"
+      className="max-w-screen h-full bg-gray-900 font-mono text-amber-200 overflow-auto"
     >
       <AppRoutes />
     </div>

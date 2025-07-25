@@ -7,8 +7,8 @@ type FriendItemProps = {
   const FriendItem = ({ friend, onDelete }: FriendItemProps) => {
 	
 	return (
-	<div className="flex items-center justify-between px-4 py-2 hover:bg-gray-200">
-	  <div className="flex items-center space-x-2">
+	<div className="flex items-center justify-between px-4 py-2 ">
+	  <div className="flex items-center space-x-2 text-xl">
 		<span>{friend.username}</span>
 		<span
 		  className={`w-2 h-2 rounded-full ${
@@ -19,10 +19,11 @@ type FriendItemProps = {
 	  </div>
 	  <button
 		aria-label={`Remove ${friend.username}`}
-		className="text-sm opacity-50 hover:opacity-100"
+		className="font-bold hover:scale-130"
+		title="Unfriend"
 		onClick={onDelete}
 	  >
-		🗑️
+		X
 	  </button>
 	</div>
 	);

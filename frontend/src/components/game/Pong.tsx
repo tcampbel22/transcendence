@@ -6,36 +6,26 @@ import { usePaddles } from '../../hooks/usePaddles';
 import { useKeyPress } from '../../hooks/useKeyPress';
 import GameEnd from './GameEnd';
 import { useStartGame } from "../../hooks/useStartGame";
-
-type userObj = {
-  userId: number;
-  username: { username: string | undefined };
-};
+import { PlayerProps } from '../../types/types';
 
 type PongProps = {
   onScoreChange?: (leftScore: number, rightScore: number) => void;
-  onGameEnd?: (winner: string) => void;  // Add this for tournament progression
-  player1?: string;                      // Add player names
+  player1?: string;
   player2?: string;
-  winningScore?: number; // Make winning score configurable
-  userInfo: userObj;               
+  userInfo: PlayerProps;               
 };
 
 const PADDLE_HEIGHT = 100;
 const BOARD_WIDTH = 1000;
 const BOARD_HEIGHT = 500;
 const BALL_SPEED = 10;
-const WINNING_SCORE = 1;
+const WINNING_SCORE = 5;
 
 const Pong: React.FC<PongProps> = ({
   onScoreChange, 
-  onGameEnd,
-  player1 = "Left Player", 
-  player2 = "Right Player",
-  winningScore = WINNING_SCORE,
   userInfo 
 }) => {
-  const [opponentUserId, setOpponentUserId] = useState(0);
+  const [opponent, setOpponent] = useState<PlayerProps>()
   const [leftPaddleY, setLeftPaddleY] = useState(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
   const [rightPaddleY, setRightPaddleY] = useState(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
   const [ballX, setBallX] = useState(BOARD_WIDTH / 2);
@@ -53,20 +43,18 @@ const Pong: React.FC<PongProps> = ({
   const updateLeftScore = (newScore: number) => {
     setLeftScore(newScore);
     onScoreChange?.(newScore, rightScore);
-    if (newScore >= (winningScore || WINNING_SCORE)) {
+    if (newScore >= (WINNING_SCORE)) {
       setGameOver(true);
       setWinner('left');
-      onGameEnd?.(player1); // Notify tournament system who won
     }
   };
 
   const updateRightScore = (newScore: number) => {
     setRightScore(newScore);
     onScoreChange?.(leftScore, newScore);
-    if (newScore >= (winningScore || WINNING_SCORE)) {
+    if (newScore >= (WINNING_SCORE)) {
       setGameOver(true);
       setWinner('right');
-      onGameEnd?.(player2); // Notify tournament system who won
     }
   };
 
@@ -103,38 +91,38 @@ const Pong: React.FC<PongProps> = ({
       leftScore,
       rightScore
     });
-
   useStartGame({
     isGameStarted,
-    userId: userInfo.userId,
-    opponentUserId,
+    userId: userInfo.id,
+	opponent,
     setGameId
   });
-
   return (
-	<div className="bg-blacks flex items-center justify-center p-4 rounded">
-    <div className="relative">
-	{isGameStarted && <GameCanvas 	ballX={ballX}
-	   				ballY={ballY} 
-					   leftPaddleY={leftPaddleY} 
-					   rightPaddleY={rightPaddleY}
-					   />
-					}
-    {!isGameStarted && <GameControls  userId={userInfo.userId} 
-                                      resetGame={resetGame} 
-                                      setIsGameStarted={setIsGameStarted}
-                                      setOpponentUserId={setOpponentUserId}
-									  />
-									};
-    {gameOver && isGameStarted && <GameEnd  user={userInfo}
-                                            opponentUserId={opponentUserId}
-                                            winner={winner}
-                                            p1score={leftScore}
-                                            p2score={rightScore}
-                                            gameId={gameId}
-											/>
-										};
-    </div>
+	<div className="flex items-center justify-center">
+    	<div className="relative">
+			{!isGameStarted && <GameControls  userId={userInfo.id} 
+				resetGame={resetGame} 
+				setIsGameStarted={setIsGameStarted}
+				setOpponent={setOpponent}
+				/>}
+			{isGameStarted && <GameCanvas 	ballX={ballX}
+							ballY={ballY} 
+							leftPaddleY={leftPaddleY} 
+							rightPaddleY={rightPaddleY}
+							p1score={leftScore}
+							p2score={rightScore}
+							player1={userInfo.username}
+							player2={opponent?.username}
+							
+							/>}
+			{gameOver && isGameStarted && <GameEnd  user={userInfo}
+													opponentUserId={opponent?.id}
+													winner={winner}
+													p1score={leftScore}
+													p2score={rightScore}
+													gameId={gameId}
+													/>}
+		</div>
    </div>
   );
 };

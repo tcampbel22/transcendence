@@ -1,15 +1,16 @@
 import { useEffect } from "react";
 import axios from "axios";
 import api from "../lib/api";
+import { PlayerProps } from "../types/types";
 
 type StartGameProps = {
   isGameStarted: boolean;
   userId: number;
-  opponentUserId: number;
+  opponent?: PlayerProps;
   setGameId: (gameId: number) => void;
 };
 
-export const useStartGame = ({ isGameStarted, userId, opponentUserId, setGameId }: StartGameProps) => {
+export const useStartGame = ({ isGameStarted, userId, opponent, setGameId }: StartGameProps) => {
   useEffect(() => {
     if (isGameStarted) {
       const startGame = async () => {
@@ -19,7 +20,7 @@ export const useStartGame = ({ isGameStarted, userId, opponentUserId, setGameId 
             `${API_URL}/create-game`,
             {
               player1Id: userId,
-              player2Id: opponentUserId,
+              player2Id: opponent?.id,
             },
             {
               withCredentials: true,
@@ -33,5 +34,5 @@ export const useStartGame = ({ isGameStarted, userId, opponentUserId, setGameId 
 
       startGame();
     }
-  }, [isGameStarted, userId, opponentUserId]);
+  }, [isGameStarted, userId, opponent?.id]);
 };

@@ -18,7 +18,7 @@ export const useFriendslist = (userId : number) => {
             const getFriendsList = async () => {
                 try {
                     const res = await api.get(`${API_URL}/${userId}/friends`, {withCredentials: true}); //get friends list
-                    setFriendsList(res.data.friendList || []); //set it for usage in the dropdown list
+                    setFriendsList(res.data.friendList || ["You have no friends"]); //set it for usage in the dropdown list
                 } catch (err) {
                     const error = err as AxiosError;
                     console.error("Error fetching friends:", error);

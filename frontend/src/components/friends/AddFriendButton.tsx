@@ -39,29 +39,28 @@ const AddFriendButton = ({userId, onSuccess} : Id) => {
     }
 
     return (
-        <div className="relative z-50 inline-block px-3">
-            <button title="Add Friend" className={`transition-all duration-200 ease-in-out 
-          ${'w-12 rounded bg-beige'} 
-             bg-beige text-white text-center py-2 shadow text-2xl flex items-center justify-center`} 
-            onClick={handleClick}
+        <div className="flex flex-col rounded border border-amber-200 text-center text-xl">
+            <button 
+				title="Add Friend" 
+				className="flex flex-col justify-center transition-all duration-200 ease-in-out p-6 hover:bg-amber-200 hover:text-gray-900" 
+            	onClick={handleClick}
             >
-                🗣️
+                Add Friend
             </button>
                 {open && (
-                    <div className="absolute top-full text-center mt-2 right-0 w-64 bg-beige border border-black rounded shadow p-2">
-                        <p>Add Friend</p>
-                        <input  className="border-black border rounded px-2"
+                    <div className="flex flex-col items-center text-center  my-2 rounded p-4 m-2">
+                        <input  className="border-amber-200 text-amber-100 border rounded px-2 my-2"
                                 type="text" 
-                                placeholder="Enter Username"
+                                placeholder="Enter Username..."
                                 onChange={(e) => setFriendsName(e.target.value)}
                         />
                         <button onClick={handleAddFriend}
-                                className="border border-black px-1 rounded m-1 hover:bg-black hover:text-beige"
+                                className="border border-amber-200 px-2 rounded my-2 hover:bg-amber-200 hover:text-gray-900"
                         >
-                            Add Friend
+                            Add
                         </button>
                         {message && (
-                            <p className={`mt-2 text-sm ${isError ? "text-red-600" : "text-green-600"}`}>
+                            <p className={`mt-2 text-sm font-bold ${isError ? "text-red-400" : "text-green-400"}`}>
                                 {message}
                             </p>
                         )}

@@ -34,16 +34,19 @@ const FriendsButton = ({userId, friendsList, onSuccess} : Id) => {
 		}
 	  };
     return (
-        <div className="relative z-50 inline-block">
-        <button title='Friends List' className={`transition-all duration-200 ease-in-out 
-          ${open ? 'w-64 rounded-t bg-beige' : 'w-12 rounded bg-beige'}
-          bg-beige text-white py-2 shadow text-2xl flex items-center justify-center`} onClick={toggleOpen}>
-                🫂
+        <div className="flex flex-col rounded border border-amber-200 text-center text-xl">
+        <button title='Friends List' 
+		className={`flex justify-center p-6
+				transition-all duration-200 ease-in-out hover:bg-amber-200 hover:text-gray-900
+          		${open ? 'min-w-50' : 'w-auto'}`} onClick={toggleOpen}>
+                Friends
         </button>
 		{open && (
-        	<div className="absolute top-full left-0 w-64 bg-beige rounded-b shadow max-h-60 overflow-y-auto">
-				{friendsList?.map(f => (
-				<FriendItem key={f.id} friend={f} onDelete={() => handleDelete(f.username)} />))}
+        	<div className="max-h-60 overflow-y-auto">
+				{friendsList && friendsList.length > 0 ? 
+				(friendsList?.map(f => (
+				<FriendItem key={f.id} friend={f} onDelete={() => handleDelete(f.username)} />))
+			): <p className="p-4">You have no friends :(</p>}
         	</div>
      	 )}
     </div>

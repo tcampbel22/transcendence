@@ -3,9 +3,9 @@ import { TitleProps } from "../../types/types";
 
 const TitleCard: React.FC<TitleProps> = ({ image }) => {
 	return (
-		<div className="flex flex-col items-center justify-center w-full mb-12">
+		<div className="flex items-center justify-center mb-1 overflow-auto">
 				<div 
-					className="w-full max-w-3xl h-80 mx-auto bg-contain bg-no-repeat bg-center shadow-lg"
+					className="basis-xl md:basis-2xl w-200 h-100 bg-cover bg-center"
 					style={{ backgroundImage: `url(${image})`}} >
 				</div>
 		</div>

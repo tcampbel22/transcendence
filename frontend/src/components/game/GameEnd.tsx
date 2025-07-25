@@ -3,17 +3,12 @@ import  {useUsername} from '../../hooks/useUsername'
 import { useNavigate } from 'react-router-dom';
 import api from '../../lib/api';
 import { AxiosError } from 'axios';
-
-
-type userObj = {
-    userId: number;
-    username: { username: string | undefined };
-};
+import { PlayerProps } from '../../types/types';
 
 type EndGameProps = {
     gameId: number | null,
-    user: userObj,
-    opponentUserId: number,
+    user: PlayerProps,
+    opponentUserId?: number,
     winner: string | null ,
     p1score: number,
     p2score: number
@@ -21,7 +16,7 @@ type EndGameProps = {
 
 const GameEnd = ({user, opponentUserId, winner, p1score, p2score, gameId} : EndGameProps) => {
     const navigate = useNavigate();
-    const {userId, username } = user;
+    const {id, username } = user;
     const API_URL = import.meta.env.VITE_API_GAME;
     const { username: p2Username } = useUsername(opponentUserId);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,7 +35,7 @@ const GameEnd = ({user, opponentUserId, winner, p1score, p2score, gameId} : EndG
             gameId: gameId,
             p1score: p1score,
             p2score: p2score,
-            winnerId: winner === 'left' ? userId : opponentUserId,
+            winnerId: winner === 'left' ? id : opponentUserId,
         }
         try {
             const res = await api.patch(`${API_URL}/${gameId}/finish-game`, payload, { withCredentials: true });
@@ -64,7 +59,7 @@ const GameEnd = ({user, opponentUserId, winner, p1score, p2score, gameId} : EndG
                     <p className=   {`font-semibold text-lg ${winner === 'left' ? 'text-green-500' : 'text-red-600'}`}>
                                     {winner === 'left' ? 'Winner' : 'Loser'}
                     </p>
-                    <p className="text-sm text-gray-600 font-bold">{useUsername(userId).username}</p>
+                    <p className="text-sm text-gray-600 font-bold">{useUsername(id).username}</p>
                 </div>
 
                 {/* Score */}

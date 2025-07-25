@@ -4,10 +4,12 @@ import api from "../../lib/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect } from "react";
+import { TitleCard } from "../utils/TitleCard";
+import { AuthInput } from "../utils/AuthInput";
 
 const Login = () => {
   const API_URL = import.meta.env.VITE_API_USER;
-const API_AUTH = import.meta.env.VITE_API_AUTH;
+	const API_AUTH = import.meta.env.VITE_API_AUTH;
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [loginError, setLoginError] = useState("");
@@ -30,6 +32,9 @@ const API_AUTH = import.meta.env.VITE_API_AUTH;
 				}						 
 			else {
 				setLoginError("Unable to connect with Google Sign-In");
+				setTimeout(() => {
+					setLoginError('');
+				  }, 3000);
 			}
 		};	  
 		window.addEventListener("message", receiveMessage);	  
@@ -60,6 +65,9 @@ const API_AUTH = import.meta.env.VITE_API_AUTH;
 		} catch (error: any) {
 			console.error("Error:", error.response?.data || error.message);
 			setLoginError("invalid username or password")
+			setTimeout(() => {
+				setLoginError('');
+			  }, 3000);
 			return;
 		}
 		setPassword('')
@@ -67,60 +75,43 @@ const API_AUTH = import.meta.env.VITE_API_AUTH;
 	}
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen gap-4 animate-fade-in">
-      <div className="bg-beige p-10 rounded border-2 border-black flex flex-col items-center">
-        <h1 className="font-bold text-5xl text-black mb-6">Welcome to Pong</h1>
-        <h2 className="font-bold text-3xl mb-5 text-black">Login</h2>
-        <form
-          className="flex flex-col items-center gap-4 mb-6"
-          onSubmit={handleSubmit}
-        >
-          <input
-            type="text"
-            placeholder="Username"
-            className="border-2 border-black px-1 rounded w-auto focus:outline-none"
-            value={username}
-            autoComplete="Username"
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="border-2 border-black px-1 rounded w-auto focus:outline-none"
-            value={password}
-            autoComplete="Password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button
-            type="submit"
-            className="border-2 border-black font-bold rounded px-2 hover:shadow-lg m-2 hover:bg-black hover:text-white"
-          >
-            Sign in
-          </button>
-        </form>
-        {loginError && (
-          <p className="text-red-600 font-semibold text-center my-2">
-            {loginError}
-          </p>
-        )}
-        <p>
-          Don't have an account?{" "}
-          <Link to="/register" className="text-blue-600 hover:underline">
-            Register
-          </Link>
-        </p>
-        <button
-          onClick={handleGoogleLogin}
-          className="flex items-center border-2 border-gray-300 font-medium rounded px-3 py-1 hover:shadow-lg bg-white hover:bg-gray-100 mt-6 text-sm"
-        >
-          <img
-            src="/images/google-icon.webp"
-            alt="Google Icon"
-            className="w-4 h-4 mr-2"
-          />
-          Login with Google
-        </button>
-      </div>
+    <div className="flex flex-col justify-center items-center animate-fade-in">
+      	<TitleCard image={"/images/pong.webp"} />
+	  	<div className="basis-md p-10 rounded border-2 text-xl border-amber-200 flex flex-col items-center">
+        	<h2 className="font-bold text-3xl mb-5 ">Login</h2>
+			<form
+				className="flex flex-col items-center gap-4 mb-6"
+				onSubmit={handleSubmit}
+				>
+				<AuthInput type="text" placeholder="Username..." value={username} auto="Username" setValue={setUsername}/>
+				<AuthInput type="password" placeholder="Password..." value={password} auto="Password" setValue={setPassword}/>
+				<button
+					type="submit"
+					className="border border-amber-200 rounded px-2 py-1 mt-2 hover:bg-amber-200 hover:text-gray-900"
+				>
+					Sign in
+				</button>
+			</form>
+			{loginError && (
+			<p className="text-red-400 font-semibold text-center my-3">{loginError}</p> )}
+			<p>
+				Don't have an account?{" "}
+				<Link to="/register" className="text-blue-600 hover:underline">
+					Register
+				</Link>
+			</p>
+			<button
+				onClick={handleGoogleLogin}
+				className="flex items-center border border-amber-200 font-medium rounded px-3 py-1 hover:bg-amber-200 hover:text-gray-900 mt-6"
+				>
+				<img
+					src="/images/google-icon.webp"
+					alt="Google Icon"
+					className="w-8 h-8 mr-2"
+				/>
+				Login with Google
+			</button>
+      	</div>
     </div>
   );
 };

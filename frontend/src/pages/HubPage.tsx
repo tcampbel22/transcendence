@@ -41,23 +41,29 @@ const Hub = () => {
 	
 	const name = useUsername(userInfo?.userId).username;
 
-  	const { userId, username, is2faEnabled } = userInfo;
+  	const { userId, username } = userInfo;
 	const tournamentToggle = useAllUsers().length < 4;
 	const { friendsList, reFetch } = useFriendslist(userId);
-
+	console.log(`id: ${userId}`)
   return (
-    <div className="flex flex-col items-center justify-start w-full min-h-screen pt-16 px-4">
-      <TitleCard image={"/images/welcome.webp"} />
-      <div className="absolute top-5 right-10">
-        <AddFriendButton userId={userInfo.userId} onSuccess={reFetch} />
-        <FriendsButton
-          userId={userInfo.userId}
-          friendsList={friendsList}
-          onSuccess={reFetch}
-        />
-      </div>
-      <div className="flex flex-col lg:flex-row items-center justify-center gap-6">
-        <Card image="/images/1v1_2.webp" link={"/play/1v1"} data={userInfo} />
+    <div className="flex flex-col w-full">
+      	<div className="relative flex flex-col lg:flex-row justify-center py-10">
+			<TitleCard image={"/images/pong.webp"} />
+        	<div className="flex flex-col lg:flex-row justify-center items-center lg:items-start lg:absolute lg:right-5 gap-2">
+				<AddFriendButton userId={userInfo.userId} onSuccess={reFetch} />
+				<div className="flex flex-col">
+					<FriendsButton
+					userId={userInfo.userId}
+					friendsList={friendsList}
+					onSuccess={reFetch}
+					/>
+
+				</div>
+
+			</div>
+      	</div>
+      	<div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-10">
+        <Card image="/images/1v1_2.png" link={"/play/1v1"} data={userInfo} />
         {tournamentToggle ? (
           <Card image="/images/noTournament.webp" />
         ) : (
@@ -75,7 +81,7 @@ const Hub = () => {
         <Card image="/images/logout.webp" link={"/logout"} data={userId} />
       </div>
     </div>
-  );
-};
+  )
+}
 
 export default Hub;

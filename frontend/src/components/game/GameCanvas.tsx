@@ -2,9 +2,10 @@ import React, { useEffect, useRef } from "react";
 
 const BOARD_WIDTH = 1000;
 const BOARD_HEIGHT = 500;
+const BOARD_MIDDLE = BOARD_HEIGHT / 2;
 const PADDLE_WIDTH = 10;
 const PADDLE_HEIGHT = 100;
-const BALL_SIZE = 14;
+const BALL_SIZE = 20;
 const radius = 14;
 const PADDLE_OFFSET = 5;
 
@@ -14,14 +15,22 @@ type GameCanvasProps = {
   ballY: number;
   leftPaddleY: number;
   rightPaddleY: number;
+  p1score: number;
+  p2score: number;
+  player1?: string;
+  player2?: string;
 };
 
-const GameCanvas = ({
+const GameCanvas:React.FC<GameCanvasProps> = ({
   ballX,
   ballY,
   leftPaddleY,
   rightPaddleY,
-}: GameCanvasProps) => {
+  p1score,
+  p2score,
+  player1,
+  player2
+}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -30,40 +39,45 @@ const GameCanvas = ({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Clear and background - smooth brown/gold-to-tan gradient
     ctx.clearRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
-    const bgGrad = ctx.createLinearGradient(0, 0, 0, BOARD_HEIGHT);
-    bgGrad.addColorStop(0, "#392613");    // Deep dark brown
-    bgGrad.addColorStop(0.4, "#7D512B");  // Mid warm brown
-    bgGrad.addColorStop(0.85, "#C69C6D"); // Sand/tan
-    bgGrad.addColorStop(1, "#F3E3CE");    // Light parchment
-    ctx.fillStyle = bgGrad;
+    ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
 
-    // Kungfu dojo border - dark brown + gold glow
-    ctx.save();
-    ctx.strokeStyle = "#372500";
-    ctx.shadowColor = "#FFD70088";
-    ctx.shadowBlur = 18;
-    ctx.lineWidth = 6;
-    ctx.strokeRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
-    ctx.restore();
+	ctx.setLineDash([50, 15])
+	ctx.strokeStyle = "#ffe4a1"
+	ctx.lineWidth = 10
 
-    // Glowing net - dash of gold/yellow/orange
-    ctx.setLineDash([0, 25]);
-    ctx.strokeStyle = "#FFB347";
-    ctx.shadowColor = "#FFD700";
-    ctx.shadowBlur = 10;
-    ctx.lineWidth = 4;
-    for (let y = 0; y < BOARD_HEIGHT; y += 30) {
-      ctx.beginPath();
-      ctx.moveTo(BOARD_WIDTH / 2, y);
-      ctx.lineTo(BOARD_WIDTH / 2, y + 16);
-      ctx.stroke();
-    }
-    ctx.restore();
+	ctx.globalAlpha = 0.5;
+	ctx.font = "50px mono";
+	ctx.textAlign = 'center'
+	ctx.textBaseline = 'bottom';
+	ctx.fillStyle = "#ffe4a1";
+	ctx.fillText(`${player1}`, BOARD_WIDTH / 4, BOARD_MIDDLE / 4);
+	
+	ctx.font = "180px mono";
+	ctx.textAlign = 'center'
+	ctx.textBaseline = 'bottom';
+	ctx.fillStyle = "#ffe4a1";
+	ctx.fillText(`${p1score}`, BOARD_WIDTH / 4, BOARD_MIDDLE); 
+	
+	ctx.font = "180px mono"; 
+	ctx.textAlign = 'center'
+	ctx.textBaseline = 'bottom';
+	ctx.fillStyle = "#ffe4a1";
+	ctx.fillText(`${p2score}`, 3 *(BOARD_WIDTH / 4), BOARD_MIDDLE);  
 
-    // Ball with faint gold/off-white glow
+	ctx.font = "50px mono";
+	ctx.textAlign = 'center'
+	ctx.textBaseline = 'bottom';
+	ctx.fillStyle = "#ffe4a1";
+	ctx.fillText(`${player2}`, 3 *(BOARD_WIDTH / 4), BOARD_MIDDLE / 4);
+	ctx.globalAlpha = 1;
+
+	ctx.beginPath()
+	ctx.moveTo(500,500)
+	ctx.lineTo(500, 0)
+	ctx.stroke()
+
     ctx.beginPath();
     ctx.arc(
       ballX + BALL_SIZE / 2,
@@ -72,50 +86,21 @@ const GameCanvas = ({
       0,
       Math.PI * 2
     );
-    const ballGrad = ctx.createRadialGradient(
-      ballX + BALL_SIZE / 2,
-      ballY + BALL_SIZE / 2,
-      0,
-      ballX + BALL_SIZE / 2,
-      ballY + BALL_SIZE / 2,
-      BALL_SIZE / 2 + 4
-    );
-    ballGrad.addColorStop(0, "#fffbe6");         // off-white
-    ballGrad.addColorStop(0.45, "#ffe4a1");      // light gold
-    ballGrad.addColorStop(1, "#ffbb0066");       // soft gold/orange edge
-    ctx.fillStyle = ballGrad;
-    ctx.shadowColor = "#FFD700";
-    ctx.shadowBlur = 22;
+	//Ball
+    ctx.fillStyle = "#ffe4a1";
     ctx.fill();
     ctx.restore();
-
-    // Left paddle - reddish/dark brown to deep brown, subtle glow
+	//Left Paddle
     ctx.beginPath();
-    const leftGrad = ctx.createLinearGradient(5, leftPaddleY, 5, leftPaddleY + PADDLE_HEIGHT);
-    leftGrad.addColorStop(0, "#943100");
-    leftGrad.addColorStop(1, "#372500");
-    ctx.fillStyle = leftGrad;
-    ctx.shadowColor = "#e38400af";
-    ctx.shadowBlur = 10;
-    (ctx as any).roundRect(5, leftPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT, radius);
+    ctx.fillStyle = "#ffe4a1";
+    (ctx as any).rect(5, leftPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT, radius);
     ctx.fill();
     ctx.restore();
-
-    // Right paddle - dark brown to gold, subtle glow
+	//Rigth paddle
     ctx.beginPath();
     const rightX = BOARD_WIDTH - PADDLE_WIDTH - PADDLE_OFFSET;
-    const rightGrad = ctx.createLinearGradient(
-      rightX,
-      rightPaddleY,
-      rightX,
-      rightPaddleY + PADDLE_HEIGHT
-    );
-    rightGrad.addColorStop(0, "#372500");
-    rightGrad.addColorStop(1, "#FFD700");
-    ctx.fillStyle = rightGrad;
-    ctx.shadowColor = "#ffd70088";
-    ctx.shadowBlur = 11;
-    (ctx as any).roundRect(
+    ctx.fillStyle = "#ffe4a1";
+    (ctx as any).rect(
       rightX,
       rightPaddleY,
       PADDLE_WIDTH,
@@ -126,13 +111,14 @@ const GameCanvas = ({
     ctx.restore();
   }, [ballX, ballY, leftPaddleY, rightPaddleY]);
 
+
+
   return (
     <canvas
       ref={canvasRef}
       width={BOARD_WIDTH}
       height={BOARD_HEIGHT}
-      className="rounded-2xl shadow-2xl border-0"
-      style={{ background: "transparent" }}
+      className="shadow-xl border-10"
     />
   );
 };
