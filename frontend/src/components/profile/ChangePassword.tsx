@@ -42,8 +42,8 @@ const ChangePassword = ({onClose, userId, onSave}: EditPasswordProps) => {
     }
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-amber-100 p-6 rounded shadow-lg w-96">
+        <div className="fixed inset-0 flex justify-center items-center z-50">
+            <div className="p-6 rounded shadow-lg w-96">
                 <h2 className="text-center text-xl font-bold pb-4">Enter New Password</h2>
                 <input
                 type="password"
@@ -67,7 +67,7 @@ const ChangePassword = ({onClose, userId, onSave}: EditPasswordProps) => {
 			</button>
 			<button
 			  onClick={handleSave}
-			  className="shadow-md bg-beige text-black border border-black px-2 py-1 rounded hover:bg-black hover:text-beige">
+			  className="shadow-md px-2 py-1 rounded hover:bg-amber-200 hover:text-gray-900">
                 Save
 			</button>
             </div>

@@ -56,7 +56,7 @@ const Register:React.FC = () => {
 
 	return (
 	<div className="flex flex-col justify-center items-center gap-4">
-      	<TitleCard image={"/images/pong.webp"} />
+      	<TitleCard image={"/images/pong_12.svg"} />
 		<div className='basis-md p-10 rounded text-xl border-2 border-amber-200 flex flex-col items-center'>
 			<h2 className="text-3xl mb-5 items-center text-center animate-fade-in delay-400 font-bold">Register</h2>
 			<div className='animate-slide-in'>

@@ -75,7 +75,7 @@ const GameEnd = ({user, opponentUserId, winner, p1score, p2score, gameId} : EndG
                     <p className="text-sm text-gray-600 font-bold">{p2Username}</p>
                 </div>
          </div>
-         <button onClick={postWinner} disabled={!gameId || isSubmitting} className='border-2 border-black rounded px-1 m-2 hover:bg-black hover:text-beige shadow-sm'>submit</button>
+         <button onClick={postWinner} disabled={!gameId || isSubmitting} className='border-2 border-amber-200 rounded px-1 m-2 hover:bg-black hover:text-beige shadow-sm'>submit</button>
     </div>
 </div>
     )

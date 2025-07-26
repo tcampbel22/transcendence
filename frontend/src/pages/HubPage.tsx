@@ -41,14 +41,13 @@ const Hub = () => {
 	
 	const name = useUsername(userInfo?.userId).username;
 
-  	const { userId, username } = userInfo;
+  	const { userId } = userInfo;
 	const tournamentToggle = useAllUsers().length < 4;
 	const { friendsList, reFetch } = useFriendslist(userId);
-	console.log(`id: ${userId}`)
   return (
     <div className="flex flex-col w-full">
-      	<div className="relative flex flex-col lg:flex-row justify-center py-10">
-			<TitleCard image={"/images/pong.webp"} />
+      	<div className="flex flex-col lg:flex-row justify-center py-10">
+			<TitleCard image={"/images/pong_12.svg"} />
         	<div className="flex flex-col lg:flex-row justify-center items-center lg:items-start lg:absolute lg:right-5 gap-2">
 				<AddFriendButton userId={userInfo.userId} onSuccess={reFetch} />
 				<div className="flex flex-col">
@@ -63,7 +62,7 @@ const Hub = () => {
 			</div>
       	</div>
       	<div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-10">
-        <Card image="/images/1v1_2.png" link={"/play/1v1"} data={userInfo} />
+        <Card image="/images/1v1.svg" link={"/play/1v1"} data={userInfo} />
         {tournamentToggle ? (
           <Card image="/images/noTournament.webp" />
         ) : (

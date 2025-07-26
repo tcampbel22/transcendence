@@ -26,7 +26,7 @@ const MatchBox: React.FC<MatchBoxProps> = ({ playerA, playerB, winner, hasPlayed
       onClick={canClick ? onClick : undefined}
       className={`
         border-2
-        ${hasPlayed ? 'border-black' : 'border-black'}
+        ${hasPlayed ? 'border-amber-200' : 'border-amber-200'}
         bg-beige
         p-5
         w-48
@@ -46,18 +46,18 @@ const MatchBox: React.FC<MatchBoxProps> = ({ playerA, playerB, winner, hasPlayed
       )}
 
       <div className="flex flex-col justify-between h-full py-2">
-        <div className={`font-bold text-lg mb-2 ${isPlayerAWinner ? 'text-black font-extrabold' : 'text-black'}`}>
+        <div className={`font-bold text-lg mb-2 ${isPlayerAWinner ? 'text-amber-200 font-extrabold' : 'text-amber-200'}`}>
           {playerAUsername}
           {isPlayerAWinner && <span className="ml-2">👑</span>}
         </div>
 
         <div className="flex items-center justify-center my-1">
           <div className="h-0.5 w-8 bg-black/50"></div>
-          <div className="text-black text-sm font-semibold mx-2">vs</div>
+          <div className="text-amber-200 text-sm font-semibold mx-2">vs</div>
           <div className="h-0.5 w-8 bg-black/50"></div>
         </div>
 
-        <div className={`font-bold text-lg mt-2 ${isPlayerBWinner ? 'text-black font-extrabold' : 'text-black'}`}>
+        <div className={`font-bold text-lg mt-2 ${isPlayerBWinner ? 'text-amber-200 font-extrabold' : 'text-amber-200'}`}>
           {playerBUsername}
           {isPlayerBWinner && <span className="ml-2">👑</span>}
         </div>
@@ -65,7 +65,7 @@ const MatchBox: React.FC<MatchBoxProps> = ({ playerA, playerB, winner, hasPlayed
 
       {canClick && (
         <div className="absolute bottom-2 right-2">
-          <span className="text-xs font-bold text-black bg-amber-100 px-2 py-1 rounded-full animate-pulse shadow-sm">▶ Press to Play</span>
+          <span className="text-xs font-bold text-amber-200 bg-amber-100 px-2 py-1 rounded-full animate-pulse shadow-sm">▶ Press to Play</span>
         </div>
       )}
     </div>

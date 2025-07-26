@@ -78,7 +78,7 @@ const TournamentGameEnd: React.FC<EndGameProps> = ({
         <button
           onClick={postWinner}
           disabled={isSubmitting}
-          className="mt-4 px-6 py-2 border-2 border-black rounded hover:bg-black hover:text-beige transition"
+          className="mt-4 px-6 py-2 border-2 border-amber-200 rounded hover:bg-black hover:text-beige transition"
         >
           {isSubmitting
             ? 'Submitting...'

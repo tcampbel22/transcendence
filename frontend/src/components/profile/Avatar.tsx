@@ -89,10 +89,10 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 
 	//image change logic, change password logic and account deletion needs to be added.
 	return (
-        <div className="bg-beige border border-white items-center flex flex-col h-screen min-h-[1000px] max-h-[1211px] py-8 shadow-md text-black rounded overflow-auto">
+        <div className="border border-amber-200 items-center flex flex-col h-screen min-h-[1000px] max-h-[1211px] py-8 shadow-md text-amber-200 rounded overflow-auto">
 			<h1 className="font-bold text-4xl m-4 ">{username}</h1>
 			<div className="relative w-auto h-auto flex flex-col items-center">
-				<div className="bg-white w-auto h-auto rounded-full border-4 border-black flex shadow-md flex-col items-center justify-center bg-cover bg-center">
+				<div className="w-auto h-auto rounded-full border-4 border-amber-200 flex shadow-md flex-col items-center justify-center">
 					<img 
 						src={imageUrl} 
 						alt="Profile Picture"
@@ -102,7 +102,7 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 				</div>
 				<button
 					onClick={() => document.getElementById("imageInput")?.click()}
-					className="absolute bottom-4 right-4 bg-beige text-black p-2 rounded-full shadow-md hover:bg-black border-2 border-white w-10 h-10 items-center"
+					className="absolute bottom-4 right-4 text-amber-200 p-2 rounded-full shadow-md hover:bg-amber-200 hover:text-gray-900 border-2 border-amber-200 w-10 h-10 items-center"
 					title="Change profile picture"
 				>
 					✏️
@@ -117,7 +117,7 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 				{imageFile && (
 					<button 
 						onClick={uploadProfileImage} 
-						className="mt-2 px-3 py-1 bg-gradient-to-r from-amber-200 to-amber-500 border-2 border-black text-black rounded hover:from-black hover:to-black hover:text-beige">
+						className="mt-2 px-3 py-1 border-2 border-amber-200 text-amber-200 rounded hover:bg-amber-200 hover:text-gray-200">
 						Upload
 					</button>
 				)}
@@ -130,25 +130,25 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 			<div className="flex flex-col items-center w-full px-4 max-w-xs mx-auto space-y-8 mt-24">
 				<button
 					onClick={() => setEditOpen(true)}
-					className="bg-gradient-to-r from-amber-300 to-amber-500 w-full py-3 text-lg border border-black rounded hover:from-black hover:to-black hover:text-white shadow-md transition"
+					className="bg-gradient-to-r from-amber-300 to-amber-500 w-full py-3 text-lg border border-amber-200 rounded hover:from-black hover:to-black hover:text-white shadow-md transition"
 				>
 					edit profile
 				</button>
 				<button
 					onClick={() => setPasswordOpen(true)}
-					className="bg-gradient-to-r from-amber-300 to-amber-500 w-full py-3 text-lg border border-black rounded hover:from-black hover:to-black hover:text-white shadow-md transition"
+					className="bg-gradient-to-r from-amber-300 to-amber-500 w-full py-3 text-lg border border-amber-200 rounded hover:from-black hover:to-black hover:text-white shadow-md transition"
 				>
 					change password
 				</button>
 				<button
 					onClick={() => set2FA()}
-					className="bg-gradient-to-r from-amber-300 to-amber-500 w-full py-3 text-lg border border-black rounded hover:from-black hover:to-black hover:text-white shadow-md transition"
+					className="bg-gradient-to-r from-amber-300 to-amber-500 w-full py-3 text-lg border border-amber-200 rounded hover:from-black hover:to-black hover:text-white shadow-md transition"
 				>
 					{enabled ? 'disable 2FA' : 'enable 2FA'}
 				</button>
 				<button
 					onClick={() => setDeleteOpen(true)}
-					className="bg-gradient-to-r from-red-400 to-red-600 w-full py-3 text-lg shadow-md border border-black text-black rounded hover:from-red-600 hover:to-red-700 hover:text-beige transition"
+					className="bg-gradient-to-r from-red-400 to-red-600 w-full py-3 text-lg shadow-md border border-amber-200 text-amber-200 rounded hover:from-red-600 hover:to-red-700 hover:text-beige transition"
 				>
 					delete user
 				</button>

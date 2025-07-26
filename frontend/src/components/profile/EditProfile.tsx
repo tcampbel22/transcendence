@@ -67,7 +67,7 @@ const EditProfile = ({onClose, userId, onSave}: EditProfileProps) => {
 			</button>
 			<button
 			  onClick={handleSave}
-			  className="shadow-md bg-beige text-black border border-black px-2 py-1 rounded hover:bg-black hover:text-beige"
+			  className="shadow-md bg-beige text-amber-200 border border-amber-200 px-2 py-1 rounded hover:bg-black hover:text-beige"
 			  disabled={loading || !newUsername}
 			>
 			  {loading ? 'Saving...' : 'Save'}

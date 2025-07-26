@@ -1,0 +1,22 @@
+<svg width="200" height="100" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style type="text/css">
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+      text {
+        font-family: 'Orbitron', sans-serif;
+      }
+    </style>
+  </defs>
+
+  <!-- Border -->
+  <rect x="2" y="2" width="196" height="96" rx="6" ry="6"
+        fill="none" stroke="#fbbf24" stroke-width="2" />
+
+  <!-- Outlined Text -->
+  <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle"
+        font-size="36" fill="none"
+        stroke="#fbbf24" stroke-width="2">
+    1v1
+  </text>
+</svg>

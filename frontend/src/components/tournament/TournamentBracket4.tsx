@@ -33,7 +33,7 @@ const TournamentBracket4: React.FC = () => {
 
   return (
     <div className="p-6 min-h-screen flex flex-col" style={{ backgroundImage: 'url("/images/epic_background.webp")'}}>
-      <h1 className="text-3xl font-bold text-center mb-6 bg-beige text-black p-3 rounded-lg shadow-lg w-80 mx-auto flex items-center justify-center">
+      <h1 className="text-3xl font-bold text-center mb-6 bg-beige text-amber-200 p-3 rounded-lg shadow-lg w-80 mx-auto flex items-center justify-center">
         <span className="text-2xl mr-3">🏆</span>Tournament<span className="text-2xl ml-3">🏆</span>
       </h1>
 
@@ -51,12 +51,12 @@ const TournamentBracket4: React.FC = () => {
             <div className="grid grid-cols-2 gap-x-20 mx-auto max-w-4xl">
               {/* Section Titles - Row 1 */}
               <div className="flex items-center justify-center h-[60px] mb-4">
-                <h2 className="text-xl font-bold text-black bg-beige rounded-full py-1 px-6 shadow-sm w-36 text-center">
+                <h2 className="text-xl font-bold text-amber-200 bg-beige rounded-full py-1 px-6 shadow-sm w-36 text-center">
                   Semifinals
                 </h2>
               </div>
               <div className="flex items-center justify-center h-[60px] mb-4">
-                <h2 className="text-xl font-bold text-black bg-beige rounded-full py-1 px-6 shadow-sm w-36 text-center">
+                <h2 className="text-xl font-bold text-amber-200 bg-beige rounded-full py-1 px-6 shadow-sm w-36 text-center">
                   Final
                 </h2>
               </div>

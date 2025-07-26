@@ -34,9 +34,9 @@ const GamesPlayed = ({userId}: GameStatsInfo) => {
 
 
     return (
-		<div className="bg-beige rounded border border-white shadow-md h-full max-h-[60vh] min-h-[583px] overflow-auto">
-            <h1 className="text-black text-center font-bold text-2xl mb-2 pt-4">Match History</h1>
-			<div className="grid grid-cols-5 font-semibold border-b pb-2 mb-2 text-black text-center m-4 overflow-auto">
+		<div className="bg-beige rounded border border-amber-200 shadow-md h-full max-h-[60vh] min-h-[583px] overflow-auto">
+            <h1 className="text-amber-200 text-center font-bold text-2xl mb-2 pt-4">Match History</h1>
+			<div className="grid grid-cols-5 font-semibold border-b pb-2 mb-2 text-amber-200 text-center m-4 overflow-auto">
 				<p>Match ID</p>
 				<p>Opponent</p>
 				<p>Result</p>
@@ -47,7 +47,7 @@ const GamesPlayed = ({userId}: GameStatsInfo) => {
 					  games.map((game, index) => (
 						  <div
 						  key={index}
-					className="grid grid-cols-5 border-b py-2 text-center text-black last:border-b-0 overflow-auto"
+					className="grid grid-cols-5 border-b py-2 text-center text-amber-200 last:border-b-0 overflow-auto"
 					>
 					<p>#{game.gameId}</p>
 					<p>{game.opponentName}</p>

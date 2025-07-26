@@ -45,14 +45,14 @@ const DeleteProfile = ({userId, onClose}: DeleteProfileProps) => {
 		            <div className="flex justify-center gap-2">
                         <button
                         onClick={onClose}
-                        className="text-blackhover:underline border-2 border-black rounded px-2 font-bold bg-beige hover:bg-green-500"
+                        className="text-amber-200hover:underline border-2 border-amber-200 rounded px-2 font-bold bg-beige hover:bg-green-500"
                         disabled={loading}
                         >
                         No
                         </button>
                         <button
                         onClick={handleDelete}
-                        className="shadow-md bg-beige text-black border-2 border-black px-2 py-1 font-bold rounded hover:bg-red-500 hover:text-beige"
+                        className="shadow-md bg-beige text-amber-200 border-2 border-amber-200 px-2 py-1 font-bold rounded hover:bg-red-500 hover:text-beige"
                         >
                         Yes
                         </button>

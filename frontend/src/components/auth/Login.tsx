@@ -76,15 +76,15 @@ const Login = () => {
 
   return (
     <div className="flex flex-col justify-center items-center animate-fade-in">
-      	<TitleCard image={"/images/pong.webp"} />
+      	<TitleCard image={"/images/pong_2.svg"} />
 	  	<div className="basis-md p-10 rounded border-2 text-xl border-amber-200 flex flex-col items-center">
         	<h2 className="font-bold text-3xl mb-5 ">Login</h2>
 			<form
 				className="flex flex-col items-center gap-4 mb-6"
 				onSubmit={handleSubmit}
 				>
-				<AuthInput type="text" placeholder="Username..." value={username} auto="Username" setValue={setUsername}/>
-				<AuthInput type="password" placeholder="Password..." value={password} auto="Password" setValue={setPassword}/>
+				<AuthInput type="text" placeholder="username..." value={username} auto="Username" setValue={setUsername}/>
+				<AuthInput type="password" placeholder="password..." value={password} auto="Password" setValue={setPassword}/>
 				<button
 					type="submit"
 					className="border border-amber-200 rounded px-2 py-1 mt-2 hover:bg-amber-200 hover:text-gray-900"
