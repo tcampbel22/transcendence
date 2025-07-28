@@ -50,10 +50,10 @@ export const profileController = {
 	},
 	async updateUsername(request, reply) {
 		const { id } = request.params;
-		const { newUsername } = request.body;
+		const { newValue } = request.body;
 		try {
-			const user = await profileService.updateUsername(parseInt(id), newUsername);
-			logger.info(`User ${id}'s username updated to ${newUsername}`);
+			const user = await profileService.updateUsername(parseInt(id), newValue);
+			logger.info(`User ${id}'s username updated to ${newValue}`);
 			return reply.code(201).send({
 				message: `User ${id}'s username updated successfully`,
 				id: user.id,
@@ -100,9 +100,10 @@ export const profileController = {
 
 	async updatePassword(request, reply) {
 		const { id } = request.params;
-		const { newPassword } = request.body;
+		const { newValue } = request.body;
+		console.error("DEBUG: newVlaue:", request.body)
 		try {
-			const user = await profileService.updatePassword(parseInt(id), newPassword);
+			const user = await profileService.updatePassword(parseInt(id), newValue);
 			logger.info(`User ${id}'s password updated`);
 			return reply.code(201).send({
 				message: `User ${id}'s password updated successfully`,

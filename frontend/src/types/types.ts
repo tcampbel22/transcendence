@@ -1,7 +1,8 @@
 type CardProps = {
 	image?: string,
 	link?: string,
-	data?: any
+	data?: any,
+	text?: string,
 }
 
 type TitleProps = {

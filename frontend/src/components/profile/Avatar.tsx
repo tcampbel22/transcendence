@@ -5,6 +5,8 @@ import  axios  from	"axios"
 import EditProfile from "./EditProfile";
 import ChangePassword from "./ChangePassword";
 import DeleteProfile from "./DeleteUser";
+import { ProfileButton } from "./ProfileButton";
+import { ProfilePopUp } from "./ProfilePopUp";
 
 type AvatarInfo = {
 	userId: number;
@@ -41,7 +43,7 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 					setImageUrl(`${BASE_URL}/uploads/default.png`);
 				  }
 			} 
-			catch (err) {
+			catch (err: any) {
 				const error = err as AxiosError;
 				console.error("Error:", error.message);
 			}
@@ -57,17 +59,10 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 		}
 	};
 
-	const set2FA = async () => {
-		if (enabled)
-		{	
-			const response = await api.put(`${API_URL}/${userId}/2fa`, { is2faEnabled: false });
-			setEnabled(false);
-		}
-		else
-		{
-			const response = await api.put(`${API_URL}/${userId}/2fa`, { is2faEnabled: true });
-			setEnabled(true);
-		}
+	const set2FA = async (enabled: boolean) => {
+		const response = await api.put(`${API_URL}/${userId}/2fa`, { is2faEnabled: enabled ? false : true });
+		setEnabled(enabled ? false: true)
+		
 	}
 
 	const uploadProfileImage = async () => {
@@ -87,22 +82,21 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 		}
 	};	
 
-	//image change logic, change password logic and account deletion needs to be added.
 	return (
-        <div className="border border-amber-200 items-center flex flex-col h-screen min-h-[1000px] max-h-[1211px] py-8 shadow-md text-amber-200 rounded overflow-auto">
-			<h1 className="font-bold text-4xl m-4 ">{username}</h1>
-			<div className="relative w-auto h-auto flex flex-col items-center">
-				<div className="w-auto h-auto rounded-full border-4 border-amber-200 flex shadow-md flex-col items-center justify-center">
+        <div className="border flex flex-col items-center justify-between h-full w-full rounded py-4 overflow-y-scroll">
+			<h1 className="font-bold text-2xl lg:text-4xl">{username}</h1>
+			<div className="relative w-auto h-auto flex flex-col items-center m-8">
+				<div className="w-auto h-auto rounded-full border-4 border-amber-200 flex flex-col items-center justify-between">
 					<img 
 						src={imageUrl} 
 						alt="Profile Picture"
 						onError={() => setImageUrl(`${BASE_URL}/uploads/default.png`)} 
-						className="w-80 h-80 rounded-full object-cover"
+						className="w-auto h-auto rounded-full object-cover"
 					/>
 				</div>
 				<button
 					onClick={() => document.getElementById("imageInput")?.click()}
-					className="absolute bottom-4 right-4 text-amber-200 p-2 rounded-full shadow-md hover:bg-amber-200 hover:text-gray-900 border-2 border-amber-200 w-10 h-10 items-center"
+					className="absolute bottom-4 right-4 p-2 rounded-full hover:bg-amber-200 hover:text-gray-900 border-2 border-amber-200 w-10 h-10 items-center"
 					title="Change profile picture"
 				>
 					✏️
@@ -117,47 +111,25 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 				{imageFile && (
 					<button 
 						onClick={uploadProfileImage} 
-						className="mt-2 px-3 py-1 border-2 border-amber-200 text-amber-200 rounded hover:bg-amber-200 hover:text-gray-200">
+						className="mt-2 px-3 py-1 border-2 border-amber-200 text-amber-200 rounded hover:bg-amber-200 hover:text-gray-900">
 						Upload
 					</button>
 				)}
 			</div>
-			<br />
-			<br />
-			<div className="font-bold text-2xl m-4">
-				<p className="">email: {email}</p>
+			<div className="font-bold text-lg lg:text-2xl m-4">
+				<p className="text-center">email: {email}</p>
 			</div>
-			<div className="flex flex-col items-center w-full px-4 max-w-xs mx-auto space-y-8 mt-24">
-				<button
-					onClick={() => setEditOpen(true)}
-					className="bg-gradient-to-r from-amber-300 to-amber-500 w-full py-3 text-lg border border-amber-200 rounded hover:from-black hover:to-black hover:text-white shadow-md transition"
-				>
-					edit profile
-				</button>
-				<button
-					onClick={() => setPasswordOpen(true)}
-					className="bg-gradient-to-r from-amber-300 to-amber-500 w-full py-3 text-lg border border-amber-200 rounded hover:from-black hover:to-black hover:text-white shadow-md transition"
-				>
-					change password
-				</button>
-				<button
-					onClick={() => set2FA()}
-					className="bg-gradient-to-r from-amber-300 to-amber-500 w-full py-3 text-lg border border-amber-200 rounded hover:from-black hover:to-black hover:text-white shadow-md transition"
-				>
-					{enabled ? 'disable 2FA' : 'enable 2FA'}
-				</button>
-				<button
-					onClick={() => setDeleteOpen(true)}
-					className="bg-gradient-to-r from-red-400 to-red-600 w-full py-3 text-lg shadow-md border border-amber-200 text-amber-200 rounded hover:from-red-600 hover:to-red-700 hover:text-beige transition"
-				>
-					delete user
-				</button>
+			<div className="flex flex-col items-center w-full max-w-xs space-y-8 ">
+				<ProfileButton text="edit username" setValue={() => setEditOpen(true)} />
+				<ProfileButton text="edit password" setValue={() => setPasswordOpen(true)} />
+				<ProfileButton text={enabled ? 'disable 2FA' : 'enable 2FA'} setValue={() => set2FA(enabled)} />
+				<ProfileButton text="delete account" setValue={() => setDeleteOpen(true)} />
 			</div>
-			{editIsOpen && <EditProfile onClose={() => setEditOpen(false)} userId={userId} onSave={() => setRefreshUser(prev => !prev)}/>}
-			{passwordIsOpen && <ChangePassword onClose={() => setPasswordOpen(false)} userId={userId} onSave={() => setRefreshUser(prev => !prev)}/>}
+			{editIsOpen && <ProfilePopUp endpoint="" onClose={() => setEditOpen(false)} userId={userId} onSave={() => setRefreshUser(prev => !prev)} valueName="username"/>}
+			{passwordIsOpen && <ProfilePopUp endpoint="/reset-password" onClose={() =>  setPasswordOpen(false)} userId={userId} onSave={() => setRefreshUser(prev => !prev)} valueName="password"/>}
 			{deleteIsOpen && <DeleteProfile onClose={() => setDeleteOpen(false)} userId={userId}/> }
         </div>
     )
 }
 
-export default Avatar;
+export default Avatar

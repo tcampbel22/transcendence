@@ -32,11 +32,10 @@ const GamesPlayed = ({userId}: GameStatsInfo) => {
 		getMatchHistory();
 	},[userId]);
 
-
     return (
-		<div className="bg-beige rounded border border-amber-200 shadow-md h-full max-h-[60vh] min-h-[583px] overflow-auto">
+		<div className="rounded border h-full w-full overflow-y-auto">
             <h1 className="text-amber-200 text-center font-bold text-2xl mb-2 pt-4">Match History</h1>
-			<div className="grid grid-cols-5 font-semibold border-b pb-2 mb-2 text-amber-200 text-center m-4 overflow-auto">
+			<div className="grid grid-cols-5 font-semibold border-b pb-2 mb-2 text-amber-200 text-center m-4">
 				<p>Match ID</p>
 				<p>Opponent</p>
 				<p>Result</p>
@@ -47,19 +46,19 @@ const GamesPlayed = ({userId}: GameStatsInfo) => {
 					  games.map((game, index) => (
 						  <div
 						  key={index}
-					className="grid grid-cols-5 border-b py-2 text-center text-amber-200 last:border-b-0 overflow-auto"
+					className="grid grid-cols-5 border-b py-2 text-center text-amber-200 last:border-b-0"
 					>
 					<p>#{game.gameId}</p>
 					<p>{game.opponentName}</p>
 					<p>{game.score}</p>
-					<p className={game.result.trim() === 'Winner' ? 'text-green-600' : 'text-red-600'}>
+					<p className={game.result.trim() === 'Winner' ? 'text-indigo-400' : 'text-red-400'}>
 						{game.result}
 					</p>
-				<p>{new Date(game.date).toLocaleDateString()}</p>
+					<p>{new Date(game.date).toLocaleDateString()}</p>
 				</div>
 				))
 			) : (
-				<div className="text-center text-gray-500 py-4">
+				<div className="text-center text-2xl text-gray-500 py-4">
 					{"No match history found"}
 				</div>
 			)}

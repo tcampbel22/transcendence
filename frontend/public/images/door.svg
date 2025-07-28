@@ -1,0 +1,10 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#FDE68A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Door frame (no rounded edges) -->
+  <rect x="60" y="70" width="90" height="110" />
+    
+  <!-- Arrow shaft inside the door -->
+  <line x1="70" y1="130" x2="120" y2="130" />
+  
+  <!-- Arrow head inside the door -->
+  <polyline points="115 105 140 130 115 155" />
+</svg>

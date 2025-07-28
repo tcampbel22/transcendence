@@ -105,7 +105,7 @@ const Pong: React.FC<PongProps> = ({
 				setIsGameStarted={setIsGameStarted}
 				setOpponent={setOpponent}
 				/>}
-			{isGameStarted && <GameCanvas 	ballX={ballX}
+			{isGameStarted && opponent && <GameCanvas 	ballX={ballX}
 							ballY={ballY} 
 							leftPaddleY={leftPaddleY} 
 							rightPaddleY={rightPaddleY}
@@ -115,7 +115,7 @@ const Pong: React.FC<PongProps> = ({
 							player2={opponent?.username}
 							
 							/>}
-			{gameOver && isGameStarted && <GameEnd  user={userInfo}
+			{gameOver && opponent && isGameStarted && <GameEnd  user={userInfo}
 													opponentUserId={opponent?.id}
 													winner={winner}
 													p1score={leftScore}

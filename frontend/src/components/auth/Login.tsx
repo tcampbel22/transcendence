@@ -76,7 +76,7 @@ const Login = () => {
 
   return (
     <div className="flex flex-col justify-center items-center animate-fade-in">
-      	<TitleCard image={"/images/pong_2.svg"} />
+      	<TitleCard image={"/images/pong_12.svg"} />
 	  	<div className="basis-md p-10 rounded border-2 text-xl border-amber-200 flex flex-col items-center">
         	<h2 className="font-bold text-3xl mb-5 ">Login</h2>
 			<form

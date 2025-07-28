@@ -24,14 +24,13 @@ const Hub = () => {
 	const savedUserInfo: FullUserInfo | null = stored ? JSON.parse(stored) : null;
 	
 	const userInfo: FullUserInfo | null = navUserInfo ?? savedUserInfo;
-	
+	console.log(userInfo?.userId)
 	useEffect(() => {
 		if (navUserInfo) {
 			localStorage.setItem("currentUser", JSON.stringify(navUserInfo));
 		}
 	}, [navUserInfo]);
-	
-	if (!userInfo) {
+	if (!userInfo || !userInfo?.userId) {
 		return (
 			<div className="p-10 text-center text-red-500">
 			Could not determine your user info. Please log in again.
@@ -62,22 +61,24 @@ const Hub = () => {
 			</div>
       	</div>
       	<div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-10">
-        <Card image="/images/1v1.svg" link={"/play/1v1"} data={userInfo} />
+        <Card image="/images/rackets.svg" link={"/play/1v1"} data={userInfo} text="1v1"/>
         {tournamentToggle ? (
-          <Card image="/images/noTournament.webp" />
+          <Card image="/images/trophy.svg" text="Tournament"/>
         ) : (
           <Card
-            image="/images/tournament.webp"
+            image="/images/trophy.webp"
             link={"/play/tournament"}
             data={{userId: userInfo.userId, username: name}}
+			text="Tournament"
           />
         )}
         <Card
-          image="/images/new_profile.webp"
+          image="/images/profile.svg"
           link={"/profile"}
           data={userInfo.userId}
+		  text="Profile"
         />
-        <Card image="/images/logout.webp" link={"/logout"} data={userId} />
+        <Card image="/images/door.svg" link={"/logout"} data={userId} text="Logout"/>
       </div>
     </div>
   )

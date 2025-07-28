@@ -1,12 +1,11 @@
 import { useEffect } from "react";
-import axios from "axios";
 import api from "../lib/api";
 import { PlayerProps } from "../types/types";
 
 type StartGameProps = {
   isGameStarted: boolean;
   userId: number;
-  opponent?: PlayerProps;
+  opponent: PlayerProps | undefined;
   setGameId: (gameId: number) => void;
 };
 

@@ -8,6 +8,7 @@ type DeleteProfileProps = {
     onClose: () => void;
 }
 
+
 const DeleteProfile = ({userId, onClose}: DeleteProfileProps) => {
  	const API_URL = import.meta.env.VITE_API_USER;
     const navigate = useNavigate();
@@ -34,25 +35,25 @@ const DeleteProfile = ({userId, onClose}: DeleteProfileProps) => {
 		}
 	}
 	return (
-		<div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-		    <div className="bg-beige p-6 rounded shadow-lg w-96">
+		<div className="fixed inset-0 bg-gray-900 opacity-95 flex justify-center items-center text-lg">
+		    <div className="p-6 rounded shadow-lg w-96 border">
                 <h2 className="text-xl text-center font-bold mb-4">Are You Sure?</h2>
                     {message && <p className={`text-sm text-center mb-2 ${
-                        messageType === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+                        messageType === 'success' ? 'text-green-400' : 'text-red-400'}`}>
                                 {message}
                             </p>
                     }
 		            <div className="flex justify-center gap-2">
                         <button
                         onClick={onClose}
-                        className="text-amber-200hover:underline border-2 border-amber-200 rounded px-2 font-bold bg-beige hover:bg-green-500"
+                        className="border-2 rounded px-4 font-bold hover:bg-amber-200 hover:text-gray-900"
                         disabled={loading}
                         >
                         No
                         </button>
                         <button
                         onClick={handleDelete}
-                        className="shadow-md bg-beige text-amber-200 border-2 border-amber-200 px-2 py-1 font-bold rounded hover:bg-red-500 hover:text-beige"
+                        className="border-2 px-4 py-1 font-bold rounded hover:bg-amber-200 hover:text-gray-900"
                         >
                         Yes
                         </button>

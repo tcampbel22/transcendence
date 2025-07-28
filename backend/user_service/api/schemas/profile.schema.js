@@ -65,9 +65,9 @@ export const updateUsernameSchema = {
   params: idParamsSchema,
   body: {
     type: "object",
-    required: ["newUsername"],
+    required: ["newValue"],
     properties: {
-      newUsername: {
+      newValue: {
         type: "string",
         minLength: 3,
         maxLength: 15,
@@ -122,9 +122,9 @@ export const updatePasswordSchema = {
   params: idParamsSchema,
   body: {
     type: "object",
-    required: ["newPassword"],
+    required: ["newValue"],
     properties: {
-      newPassword: {
+      newValue: {
         type: "string",
         minLength: 5,
         // Requires 1 uppercase, 1 number and cannot contain the word password

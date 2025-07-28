@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Wins from "../components/profile/Wins";
-import Losses from "../components/profile/Losses";
+import { WinsLosses } from "../components/profile/WinsLosses";
 import api from "../lib/api";
 import Avatar from "../components/profile/Avatar";
 import GamesPlayed from "../components/profile/GamesPlayed";
@@ -13,6 +12,7 @@ const Profile = () => {
 	const API_URL = import.meta.env.VITE_API_USER;
 	const [victories, setVictories] = useState(0);
 	const [losses, setLoses] = useState(0);
+	const [gamesPlayed, setGames] = useState(0);
 
 	useEffect (() => {
 		const getUserData = async () => {
@@ -22,7 +22,7 @@ const Profile = () => {
 				const gameData = await api.get(`${API_URL}/${userId}/stats`, { withCredentials: true });
 				setVictories(gameData.data.wins) //these are the actual ones for the game testing purposes commented out
 				setLoses(gameData.data.losses)
-				//setIs2faEnabled(gameData.data.is2faEnabled);
+				setGames(gameData.data.wins + gameData.data.losses)
 			} catch (error) {
 				console.error('error getting data:', error)
 			}
@@ -30,23 +30,28 @@ const Profile = () => {
 		getUserData()
 	}, [userId])
 
-
+	console.log(gamesPlayed)
 	//avatar component for the profile picture, not sure if this is the place to extract user info and send it to the component or just user id there
 	return (
-			<div className="grid grid-cols-3 grid-rows-3 gap-4 p-4">
+			<div className="grid grid-cols-4 grid-rows-3 gap-4 p-4 h-full overflow-x-auto">
 				<div className="col-span-1 row-span-3 " style={{ gridTemplateRows: "1fr 2fr 2fr" }}>
 					<Avatar userId={userId} is2faEnabled={is2faEnabled} />
 				</div>
 
 				<div className="col-span-1 row-span-1">
-					<Wins victories={victories} />
+					<WinsLosses value={victories} text="Wins" percent={false}/>
 				</div>
 
 				<div className="col-span-1 row-span-1">
-					<Losses losses={losses} />
+					<WinsLosses value={losses} text="Losses" percent={false}/>
+				</div>
+				
+				<div className="col-span-1 row-span-1">
+					<WinsLosses value={Number.isNaN(victories / gamesPlayed) ? 0 : victories / gamesPlayed * 100 } text="Win Percentage" percent={true}/>
 				</div>
 
-				<div className="col-span-2 row-span-2">
+
+				<div className="col-span-3 row-span-2">
 					<GamesPlayed userId={userId} />
 				</div>
 			</div>

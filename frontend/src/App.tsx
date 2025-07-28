@@ -7,8 +7,7 @@ const App: React.FC = () => {
   useAxiosInterceptor();
 
   return (
-    <div className="max-w-screen h-full bg-gray-900 font-mono text-amber-200 overflow-auto">
-		{/* <TitleCard image="/images/pong_12.svg"/> */}
+    <div className="max-w-screen h-screen bg-gray-900 font-mono text-amber-200 overflow-auto">
       	<AppRoutes />
     </div>
   );
