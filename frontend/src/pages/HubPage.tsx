@@ -24,7 +24,6 @@ const Hub = () => {
 	const savedUserInfo: FullUserInfo | null = stored ? JSON.parse(stored) : null;
 	
 	const userInfo: FullUserInfo | null = navUserInfo ?? savedUserInfo;
-	console.log(userInfo?.userId)
 	useEffect(() => {
 		if (navUserInfo) {
 			localStorage.setItem("currentUser", JSON.stringify(navUserInfo));
@@ -41,13 +40,12 @@ const Hub = () => {
 	const name = useUsername(userInfo?.userId).username;
 
   	const { userId } = userInfo;
-	const tournamentToggle = useAllUsers().length < 4;
 	const { friendsList, reFetch } = useFriendslist(userId);
   return (
     <div className="flex flex-col w-full">
-      	<div className="flex flex-col lg:flex-row justify-center py-10">
+      	<div className="flex flex-col lg:flex-row justify-center">
 			<TitleCard image={"/images/pong_12.svg"} />
-        	<div className="flex flex-col lg:flex-row justify-center items-center lg:items-start lg:absolute lg:right-5 gap-2">
+        	<div className="flex flex-col lg:flex-row justify-center items-center lg:items-start lg:absolute lg:right-5 gap-2 py-10">
 				<AddFriendButton userId={userInfo.userId} onSuccess={reFetch} />
 				<div className="flex flex-col">
 					<FriendsButton
@@ -55,23 +53,17 @@ const Hub = () => {
 					friendsList={friendsList}
 					onSuccess={reFetch}
 					/>
-
 				</div>
-
 			</div>
       	</div>
       	<div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-10">
         <Card image="/images/rackets.svg" link={"/play/1v1"} data={userInfo} text="1v1"/>
-        {tournamentToggle ? (
-          <Card image="/images/trophy.svg" text="Tournament"/>
-        ) : (
-          <Card
-            image="/images/trophy.webp"
-            link={"/play/tournament"}
-            data={{userId: userInfo.userId, username: name}}
+        <Card
+			image="/images/trophy.svg"
+			link={"/play/tournament"}
+			data={{userId: userInfo.userId, username: name}}
 			text="Tournament"
-          />
-        )}
+		/>
         <Card
           image="/images/profile.svg"
           link={"/profile"}

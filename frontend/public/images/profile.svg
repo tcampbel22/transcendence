@@ -1,5 +1,10 @@
 <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <g stroke="#FDE68A" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <g stroke="#FDE68A" 
+  	fill="none" 
+	stroke-width="3" 
+  	stroke-linecap="round" 
+	stroke-linejoin="round"
+	transform="scale(0.9) translate(10,1)">
     <!-- Head: round -->
     <circle cx="100" cy="80" r="30" />
     

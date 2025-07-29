@@ -1,13 +1,18 @@
 import React from "react";
 import { TitleProps } from "../../types/types";
+import { Link } from "react-router-dom";
 
 const TitleCard: React.FC<TitleProps> = ({ image }) => {
 	return (
-		<div className="flex items-center justify-center my-6 mb-6 overflow-auto">
-				<div 
-					className="basis-xl md:basis-2xl w-150 h-75 mx-4 bg-contain bg-no-repeat bg-center "
-					style={{ backgroundImage: `url(${image})`}} >
-				</div>
+		<div>
+			<div className="w-150 h-75">
+				<Link 
+					to="/hub"
+					className="flex basis-xl md:basis-2xl w-full h-full mx-4 bg-contain bg-no-repeat bg-center "
+					title="Back to hub"
+					style={{ backgroundImage: `url(${image})`}}>
+				</Link>
+			</div>
 		</div>
 	)
 }

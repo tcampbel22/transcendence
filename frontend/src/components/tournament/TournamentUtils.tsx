@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Header1 } from "../utils/Headers";
-import { ListProps, TournamentCardProps, PlayerProps, FilterProps } from "../../types/types";
+import { ListProps, TournamentCardProps, PlayerProps, FilterProps, ButtonProps } from "../../types/types";
 
 
 
@@ -19,32 +19,66 @@ export const PlayerList: React.FC<ListProps> = ({ name, togglePlayers, buttonTex
 	)
 }
 
-// Need to fix this, it needs to link to the tournament bracket page which will generate the bracket based on the players array
-//  passed though as a state.
-// export const StartTournament = ({ startTournament }: { startTournament: boolean }) => {
-// 	if (!startTournament)
-// 		return ;
-// 	return (
-// 		<div className="text-6xl px-9 p-10">
-// 			<Link
-// 					to="/play/tournament-bracket"
-// 					// state={data}
-// 					className="w-full h-full flex items-center justify-center backdrop-brightness-50 rounded-lg"
-// 					>
-// 				<button className="bg-amber-100 shadow-lg rounded-lg p-10 px-10 transform hover:scale-110">
-// 					Start Tournament
-// 				</button>
-// 				</Link>
 
-// 		</div>
-// 	);
-// }
-
-
-export const PlayersCard = ({players}: {players: PlayerProps[]}) => {
+const List: React.FC<ListProps> = ({ name, togglePlayers, buttonText }) => {
+	
 	return (
-		<div className="w-full max-w-md bg-beige rounded-lg shadow-lg p-1 text-2xl pt-4 pb-4">
-			<div className="mb-6 text-3xl">
+	<li className="flex justify-between items-center px-7">
+		<span>{name}</span>
+		<Button colour="" text={buttonText} togglePlayers={togglePlayers}/>
+	</li>
+	)
+}
+
+const Button: React.FC<ButtonProps> = ({ colour, text, togglePlayers } ) => {
+	return (
+		<button
+			onClick={() => togglePlayers && togglePlayers()}
+			className={`${colour} rounded px-3 py-1 border hover:text-gray-900 hover:bg-amber-200`}>
+			{text}
+		</button>
+	)
+}
+
+function shuffleArray(array: PlayerProps[]): number[] {
+	const arr = [...array];
+	for (let i = arr.length - 1; i > 0; i--) {
+	  const j = Math.floor(Math.random() * (i + 1));
+	  [arr[i], arr[j]] = [arr[j], arr[i]];
+	}
+	return arr.map(player => player.id);
+}
+
+const StartTournament = ({ players, setPlayers }: { players: PlayerProps[], setPlayers: React.Dispatch<React.SetStateAction<PlayerProps[]>> }) => {
+
+	const shuffledPlayerIds = shuffleArray(players);
+	localStorage.removeItem("tournament_bracket");
+	return (
+		<div className="fixed inset-0 flex flex-col justify-center bg-gray-900 opacity-95 items-center text-6xl">
+			<Link
+				to="/play/tournament-bracket"
+				state={{ shuffledPlayerIds }}
+			>
+				<div>
+					<button className="border m-1 p-6 rounded hover:bg-amber-200 hover:text-gray-900">
+						Start Tournament
+					</button>
+				</div>
+			</Link>
+			<button 
+				className="border rounded text-2xl m-1 p-2 hover:bg-amber-200 hover:text-gray-900" 
+				onClick={() => setPlayers([players[0]])}>
+					Back
+			</button>
+		</div>
+	);
+};
+
+
+const PlayersCard = ({players}: {players: PlayerProps[]}) => {
+	return (
+		<div className="w-full max-w-md border rounded p-1 text-center text-2xl pt-4 pb-4 overflow-y-scroll">
+			<div className="mb-6 text-3xl text-center">
 				<Header1 text="Selected Players"/>
 			</div>
 			<ul className="mb-4">
@@ -57,15 +91,15 @@ export const PlayersCard = ({players}: {players: PlayerProps[]}) => {
 }
 
 
-export const FilterCard: React.FC<TournamentCardProps> = ({ data, players, togglePlayers, c_id }) => {
+const FilterCard: React.FC<TournamentCardProps> = ({ data, players, togglePlayers, c_id }) => {
 	if (data.length === 0)
-		return <p className="w-full max-w-md bg-beige rounded-lg shadow-lg p-1 text-2xl pt-4 pb-4">No players found</p>
+		return <p className="flex justify-center items-center w-full border max-w-md rounded text-2xl">No players found</p>
 	return (
-		<div className="w-full max-w-md bg-beige rounded-lg shadow-lg p-1 text-2xl pt-4 pb-4">
-			<div className="mb-6 text-3xl">
+		<div className="w-full max-h-md border rounded p-1 text-2xl pt-4 pb-4 overflow-y-scroll">
+			<div className="mb-6 text-center">
 				<Header1 text="Choose Players"/>
 			</div>
-			<ul className="space-y-2 max-h-100 overflow-y-auto pr-2">
+			<ul className="space-y-2 max-h-100">
 				{data
 					.filter(u => u.id !== c_id)
 					.map(u => {
@@ -75,12 +109,11 @@ export const FilterCard: React.FC<TournamentCardProps> = ({ data, players, toggl
 						if (togglePlayers)
 							togglePlayers(u.id);
 					}
-					return <PlayerList
+					return <List
 						key={u.id}
 						name={u.username}
 						togglePlayers={handleUserClick}
 						buttonText={buttonText}
-						username={players[0].username}
 					/>
 				})}
 			</ul>
@@ -89,17 +122,21 @@ export const FilterCard: React.FC<TournamentCardProps> = ({ data, players, toggl
 }
 
 
-export const PlayerFilter: React.FC<FilterProps> = ({ filter, handleFilter }) => {
+const PlayerFilter: React.FC<FilterProps> = ({ filter, handleFilter }) => {
 	return (
-		<div className="mb-20">
+		<div className="flex flex-col justify-center items-center gap-2">
+			
+			<Header1 text="Search players"/>
 			<label htmlFor="name"></label>
 				<input
 					value={filter}
 					onChange={handleFilter}
 					type="text"
-					placeholder="Enter player name"
-					className="w-full max-w-xl px-5 py-6 text-2xl rounded-2xl border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-900">
+					placeholder="enter player name..."
+					className="min-w-lg px-5 py-6 text-2xl rounded border">
 				</input>
 		</div>
 	)
 }
+
+export { PlayerFilter, FilterCard, PlayersCard, StartTournament, }

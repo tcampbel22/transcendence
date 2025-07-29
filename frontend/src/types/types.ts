@@ -1,6 +1,6 @@
 type CardProps = {
 	image?: string,
-	link?: string,
+	link: string,
 	data?: any,
 	text?: string,
 }
@@ -10,7 +10,9 @@ type TitleProps = {
 }
 
 type HeaderProps = {
-	text: string
+	text: string,
+	col?: number,
+	row?: number
 }
 
 type UserProps = {
@@ -48,4 +50,20 @@ type ButtonProps = {
 	togglePlayers?: () => void
 }
 
-export { CardProps, TitleProps, HeaderProps, UserProps, FilterProps, TournamentCardProps, ListProps, PlayerProps, ButtonProps }
+type lineProps = {
+	hasPlayed: boolean;
+	xDir: string;
+	yDir: string;
+}
+
+export { CardProps, 
+	TitleProps, 
+	HeaderProps, 
+	UserProps, 
+	FilterProps, 
+	TournamentCardProps, 
+	ListProps, 
+	PlayerProps, 
+	ButtonProps,
+	lineProps
+ }

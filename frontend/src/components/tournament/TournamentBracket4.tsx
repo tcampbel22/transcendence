@@ -1,11 +1,16 @@
-import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import MatchBox from "./MatchBox";
 import { useTournamentBracket } from "../../hooks/useTournamentBracket";
+import { TitleCard } from "../utils/TitleCard";
+import { VertLine, HoriLine, BracketHeader } from "./TournamentBracketUtils";
+import { StartTournamentGame, StartTournamentGameProps } from "./TournamentControls";
+
 
 const TournamentBracket4: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [startGameData, setStartGameData] = useState<StartTournamentGameProps | null>(null)
 
   const routerState = (location.state as { shuffledPlayerIds?: number[] }) || {};
   const players = routerState.shuffledPlayerIds ?? [];
@@ -23,77 +28,44 @@ const TournamentBracket4: React.FC = () => {
         Error: No tournament data found.
         <button
           onClick={() => navigate(-1)}
-          className="mt-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+          className="mt-4 px-4 py-2 border rounded hover:bg-amber-200 hover:text-gray-900"
         >
           Go Back
         </button>
       </div>
     );
   }
-
+  
   return (
-    <div className="p-6 min-h-screen flex flex-col" style={{ backgroundImage: 'url("/images/epic_background.webp")'}}>
-      <h1 className="text-3xl font-bold text-center mb-6 bg-beige text-amber-200 p-3 rounded-lg shadow-lg w-80 mx-auto flex items-center justify-center">
-        <span className="text-2xl mr-3">🏆</span>Tournament<span className="text-2xl ml-3">🏆</span>
-      </h1>
-
-      <div className="flex justify-center">
-        <div className="relative max-w-5xl w-full">
-          {/* Decorative background elements */}
-          <div className="absolute inset-0 opacity-20 backdrop-blur-sm">
-            <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-amber-500/50"></div>
-            <div className="absolute bottom-1/4 right-1/4 w-48 h-48 rounded-full bg-amber-700/50"></div>
-          </div>
-
-          {/* Tournament Bracket Grid Structure */}
-          <div className="relative">
-            {/* Grid layout with 2 columns and 4 rows */}
-            <div className="grid grid-cols-2 gap-x-20 mx-auto max-w-4xl">
-              {/* Section Titles - Row 1 */}
-              <div className="flex items-center justify-center h-[60px] mb-4">
-                <h2 className="text-xl font-bold text-amber-200 bg-beige rounded-full py-1 px-6 shadow-sm w-36 text-center">
-                  Semifinals
-                </h2>
-              </div>
-              <div className="flex items-center justify-center h-[60px] mb-4">
-                <h2 className="text-xl font-bold text-amber-200 bg-beige rounded-full py-1 px-6 shadow-sm w-36 text-center">
-                  Final
-                </h2>
-              </div>
-              {/* Semifinal 1 - Second Row, First Column */}
-              <div className="flex items-center justify-center relative h-[200px]">
+    <div className="flex flex-col w-full h-full items-center border-amber-200 overflow-scroll">
+      <TitleCard image="/images/pong_12.svg" />
+            <div className="grid grid-cols-2 grid-rows-5 w-5xl min-h-lg">
+              
+			  <BracketHeader text="Semifinal" col={1} row={1}/>
+              <BracketHeader text="Final" col={2} row={1}/>
+			
+              <div className="col-start-1 row-start-2 flex justify-center items-start relative">
                 <MatchBox
                   playerA={bracket.semifinals[0]?.playerA}
                   playerB={bracket.semifinals[0]?.playerB}
                   winner={bracket.semifinals[0]?.winner}
                   hasPlayed={bracket.semifinals[0]?.hasPlayed}
                   onClick={() => {
-                    navigate("/play/1v1/tournament", {
-                      state: {
+                    setStartGameData({
                         p1UserId: bracket.semifinals[0]?.playerA,
                         p2UserId: bracket.semifinals[0]?.playerB,
                         matchIndex: 0,
                         stage: "semifinal",
-                      },
                     });
                   }}
                 />
-                {/* Connection lines from first semifinal */}
-                <div className={`absolute top-1/2 right-0 w-28 h-[3px] ${bracket.semifinals[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-                <div className={`absolute top-1/2 right-0 w-[3px] h-[200px] ${bracket.semifinals[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+				<HoriLine xDir="left" yDir="top" hasPlayed={bracket.semifinals[0].hasPlayed} />
+				<VertLine xDir="left" yDir="bottom" hasPlayed={bracket.semifinals[0].hasPlayed} />
               </div>
+            
 
-              {/* Empty Cell - Second Row, Second Column */}
-              <div className="h-[200px]"></div>
-
-              {/* Connecting Line Cell - Third Row, First Column */}
-              <div className="relative h-[300px] flex items-center justify-end">
-                <div className={`absolute top-0 right-0 w-[3px] h-[200px] ${bracket.semifinals[0]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-                <div className={`absolute top-[150px] right-[-190px] w-48 h-[3px] ${bracket.semifinals[0]?.hasPlayed && bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-              </div>
-
-              {/* Final Match - Third Row, Second Column */}
-              <div className="flex items-center justify-center h-[300px]">
+              
+              <div className="col-start-2 row-start-3 flex items-center justify-center relative">
                 <div className="flex items-center">
                   <MatchBox
                     playerA={bracket.final.playerA}
@@ -101,14 +73,12 @@ const TournamentBracket4: React.FC = () => {
                     winner={bracket.final.winner}
                     hasPlayed={bracket.final.hasPlayed}
                     onClick={() => {
-                      navigate("/play/1v1/tournament", {
-                        state: {
-                          p1UserId: bracket.final.playerA,
-                          p2UserId: bracket.final.playerB,
-                          stage: "final",
-                        },
-                      });
-                    }}
+						setStartGameData({
+							p1UserId: bracket.final.playerA,
+                        	p2UserId: bracket.final.playerB,
+                        	stage: "final",
+						});
+					  }}
                   />
 
                   {/* Trophy if tournament is complete */}
@@ -118,39 +88,41 @@ const TournamentBracket4: React.FC = () => {
                     </div>
                   )}
                 </div>
+				<HoriLine xDir="right" yDir="top" hasPlayed={bracket.final.hasPlayed} />
               </div>
 
               {/* Semifinal 2 - Fourth Row, First Column */}
-              <div className="flex items-center justify-center relative h-[200px]">
+              <div className="col-start-1 row-start-4 flex items-center justify-center relative">
                 <MatchBox
                   playerA={bracket.semifinals[1]?.playerA}
                   playerB={bracket.semifinals[1]?.playerB}
                   winner={bracket.semifinals[1]?.winner}
                   hasPlayed={bracket.semifinals[1]?.hasPlayed}
                   onClick={() => {
-                    navigate("/play/1v1/tournament", {
-                      state: {
+                    setStartGameData({
                         p1UserId: bracket.semifinals[1]?.playerA,
                         p2UserId: bracket.semifinals[1]?.playerB,
                         matchIndex: 1,
                         stage: "semifinal",
-                      },
                     });
                   }}
                 />
-                {/* Connection lines from second semifinal */}
-                <div className={`absolute top-1/2 right-0 w-28 h-[3px] ${bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
-                <div className={`absolute top-1/2 right-0 w-[3px] h-[200px] transform -translate-y-[200px] ${bracket.semifinals[1]?.hasPlayed ? 'bg-black shadow-md' : 'bg-black/50'}`}></div>
+				<HoriLine xDir="left" yDir="top" hasPlayed={bracket.semifinals[1].hasPlayed}  />
+				<VertLine xDir="left" yDir="top" hasPlayed={bracket.semifinals[1].hasPlayed}  />
               </div>
-
-              {/* Empty Cell - Fourth Row, Second Column */}
-              <div className="h-[200px]"></div>
             </div>
-
+			{startGameData && (
+				<StartTournamentGame
+					{...startGameData}
+					onStart={() => {
+					navigate("/play/1v1/tournament", {
+						state: startGameData,
+					});
+					}}
+					onClose={() => setStartGameData(null)}
+				/>
+				)}
           </div>
-        </div>
-      </div>
-    </div>
   );
 };
 

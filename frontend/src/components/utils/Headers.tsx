@@ -2,7 +2,7 @@ import React from "react";
 import { HeaderProps } from "../../types/types";
 
 const Header1: React.FC<HeaderProps> = ({ text }) => {
-	return (<h1>{text}</h1>)
+	return (<h1 className="text-3xl">{text}</h1>)
 }
 
 const Header2: React.FC<HeaderProps> = ({ text }) => {

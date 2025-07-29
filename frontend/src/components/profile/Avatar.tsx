@@ -111,7 +111,7 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 				{imageFile && (
 					<button 
 						onClick={uploadProfileImage} 
-						className="mt-2 px-3 py-1 border-2 border-amber-200 text-amber-200 rounded hover:bg-amber-200 hover:text-gray-900">
+						className="mt-2 px-3 py-1 border-2 border-amber-200 rounded hover:bg-amber-200 hover:text-gray-900">
 						Upload
 					</button>
 				)}

@@ -8,7 +8,7 @@ import { AxiosError } from 'axios';
 interface EndGameProps {
   gameId: number | null;
   user: { userId: number; username: { username: string | undefined } | string };
-  opponentUserId: number;
+  opponentUserId: number | undefined;
   winner: 'left' | 'right' | null;
   p1score: number;
   p2score: number;

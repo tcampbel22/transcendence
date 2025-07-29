@@ -1,7 +1,6 @@
 import React from "react";
 import AppRoutes from "./components/routes/AppRoutes";
 import useAxiosInterceptor from "./hooks/useAxiosInterceptor";
-import { TitleCard } from "./components/utils/TitleCard";
 
 const App: React.FC = () => {
   useAxiosInterceptor();

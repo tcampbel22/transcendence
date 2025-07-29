@@ -1,4 +1,5 @@
 import { useUsername } from "../../hooks/useUsername";
+import { StartTournamentGame } from "./TournamentBracket4";
 
 interface MatchBoxProps {
   playerA: number | string;
@@ -26,48 +27,41 @@ const MatchBox: React.FC<MatchBoxProps> = ({ playerA, playerB, winner, hasPlayed
       onClick={canClick ? onClick : undefined}
       className={`
         border-2
-        ${hasPlayed ? 'border-amber-200' : 'border-amber-200'}
-        bg-beige
         p-5
         w-48
         h-40
         text-center
-        rounded-lg
-        shadow-lg
+        rounded
         backdrop-blur-sm
-        ${canClick ? "hover:shadow-xl hover:scale-105 cursor-pointer hover:bg-amber-100" : hasPlayed ? "" : "opacity-80"}
+        ${canClick ? "hover:scale-105 cursor-pointer hover:bg-amber-200 hover:text-gray-900" : hasPlayed ? "" : "opacity-80"}
         transition-all duration-200
         relative
         overflow-hidden
+		
       `}
     >
       {hasPlayed && (
-        <div className="absolute -right-8 -top-8 w-16 h-16 bg-black rotate-45 opacity-80 shadow-md"></div>
+        <div className="absolute -right-8 -top-8 w-16 h-16 bg-amber-200 rotate-45 opacity-80 shadow-md"></div>
       )}
 
+
       <div className="flex flex-col justify-between h-full py-2">
-        <div className={`font-bold text-lg mb-2 ${isPlayerAWinner ? 'text-amber-200 font-extrabold' : 'text-amber-200'}`}>
+        <div className={`text-lg mb-2 ${isPlayerAWinner ? 'font-extrabold' : ''}`}>
           {playerAUsername}
-          {isPlayerAWinner && <span className="ml-2">👑</span>}
+          {isPlayerAWinner && !isTBD && <span className="ml-2">👑</span>}
         </div>
 
         <div className="flex items-center justify-center my-1">
-          <div className="h-0.5 w-8 bg-black/50"></div>
-          <div className="text-amber-200 text-sm font-semibold mx-2">vs</div>
-          <div className="h-0.5 w-8 bg-black/50"></div>
+          <div className="h-0.5 w-8 bg-amber-200/50"></div>
+          <div className="text-sm font-semibold mx-2">vs</div>
+          <div className="h-0.5 w-8 bg-amber-200/50"></div>
         </div>
 
-        <div className={`font-bold text-lg mt-2 ${isPlayerBWinner ? 'text-amber-200 font-extrabold' : 'text-amber-200'}`}>
+        <div className={`text-lg mt-2 ${isPlayerBWinner ? 'font-extrabold' : ''}`}>
           {playerBUsername}
-          {isPlayerBWinner && <span className="ml-2">👑</span>}
+          {isPlayerBWinner && !isTBD && <span className="ml-2">👑</span>}
         </div>
       </div>
-
-      {canClick && (
-        <div className="absolute bottom-2 right-2">
-          <span className="text-xs font-bold text-amber-200 bg-amber-100 px-2 py-1 rounded-full animate-pulse shadow-sm">▶ Press to Play</span>
-        </div>
-      )}
     </div>
   );
 };

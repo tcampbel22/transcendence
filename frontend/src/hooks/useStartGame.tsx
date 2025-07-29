@@ -10,12 +10,12 @@ type StartGameProps = {
 };
 
 export const useStartGame = ({ isGameStarted, userId, opponent, setGameId }: StartGameProps) => {
-  useEffect(() => {
-    if (isGameStarted) {
-      const startGame = async () => {
-        try {
-          const API_URL = import.meta.env.VITE_API_GAME;
-          const response = await api.post(
+	useEffect(() => {
+		if (isGameStarted && opponent) {
+			const startGame = async () => {
+			try {
+				const API_URL = import.meta.env.VITE_API_GAME;
+				const response = await api.post(
             `${API_URL}/create-game`,
             {
               player1Id: userId,
@@ -25,9 +25,13 @@ export const useStartGame = ({ isGameStarted, userId, opponent, setGameId }: Sta
               withCredentials: true,
             }
           );
-          setGameId(response.data.gameId); 
-        } catch (error) {
-          console.error("Failed to start the game:", error);
+          setGameId(response.data.gameId);
+		  console.log("game started")
+        } catch (error: any) {
+			console.error('Axios error response data:', error.response?.data);
+			console.error('Axios error response status:', error.response?.status);
+			console.error('Axios error request config:', error.config);
+			console.error("Failed to start the game:", error);
         }
       };
 
