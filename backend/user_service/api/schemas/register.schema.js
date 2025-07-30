@@ -8,14 +8,15 @@ export const registerSchema = {
             username: {
                 type: 'string',
                 minLength: 3,
-                maxLength: 15
+                maxLength: 15,
+				pattern: '^[A-Za-z0-9]+$'
             },
             password: {
                 type: 'string',
                 minLength: 5,
 				// Requires 1 uppercase, 1 number  and cannot contain the word password
-                // pattern: '^(?!.*password)(?=.*[A-Z])(?=.*\\d).{5,}$'
-				pattern: '^[A-Za-z0-9]+$'
+                pattern: '^(?!.*password)(?=.*[A-Z])(?=.*\\d).{5,}$'
+				// pattern: '^[A-Za-z0-9]+$'
             },
             email: { 
                 type: 'string',
@@ -30,7 +31,9 @@ export const registerSchema = {
 			required: ['id', 'username', 'email', 'picture'],
 			properties: {
 				id: { type: 'integer' },
-				username: { type: 'string'},
+				username: { 
+					type: 'string',
+				},
 				email: { type: 'string', format: 'email' },
 				picture: { type: 'string' },
 			}

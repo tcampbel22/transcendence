@@ -65,12 +65,12 @@ const TournamentGameEnd: React.FC<EndGameProps> = ({
     winner === 'left' ? (userUsername || 'You') : (p2Username || 'Opponent');
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center">
-      <div className="bg-beige p-8 rounded-lg text-center shadow-lg max-w-sm w-full space-y-4">
-        <h1 className="text-2xl font-bold">🎉 Winner of {stage}! 🎉</h1>
+    <div className="fixed inset-0 bg-gray-900 opacity-98 flex items-center justify-center text-xl">
+      <div className="border p-8 rounded text-center max-w-md w-full space-y-4">
+        <h1 className="text-2xl font-bold">Winner of {stage}!</h1>
 		<h2 className="text-3xl font-bold">{winnerName}</h2>
         <p className="text-xl">
-          {isFinal ? 'You won the tournament!' : 'You won this match!'}
+          {isFinal ? 'You won the tournament!' : ''}
         </p>
         <p className="font-semibold">
           Final Score: {p1score} : {p2score}
@@ -78,7 +78,7 @@ const TournamentGameEnd: React.FC<EndGameProps> = ({
         <button
           onClick={postWinner}
           disabled={isSubmitting}
-          className="mt-4 px-6 py-2 border-2 border-amber-200 rounded hover:bg-black hover:text-beige transition"
+          className="mt-4 px-6 py-2 border-2 border-amber-200 rounded hover:bg-amber-200 hover:text-gray-900 hover:scale-110 transition ease-out-300"
         >
           {isSubmitting
             ? 'Submitting...'

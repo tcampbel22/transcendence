@@ -28,9 +28,10 @@ const Register:React.FC = () => {
 			const response = await api.post(`${API_URL}/register`, payload, {withCredentials: true}) //product
 			return response.data.id
 		} catch (error: any) {
-			console.error("Error:", error.response?.data || error.message);
-			setError("Registration failed")
-			return;
+			// console.error(error.message)
+			// console.error("Error:", error.response?.data || error.message);
+			// setError()
+			throw new Error(error);
 		}
 	}
 
@@ -39,24 +40,40 @@ const Register:React.FC = () => {
 		setTimeout(() => {
 			setError('');
 		  }, 3000);
+		const payload = {
+			username,
+			email,
+			password,
+		};
 		try {
 			if (!username || !password || !email) {
 				setError("Missing field: all fields are required")
 				return
 			}
-			await registerUser();
+			const response = await api.post(`${API_URL}/register`, payload, {withCredentials: true}) //product
 			setRegistered(true);
 			setTimeout(() => {
-			  navigate('/');
+				navigate('/');
 			}, 1000);
+			return response.data.id
 		} catch (error: any) {
-			setError(error.response?.data?.message || 'Registration failed')
+			if (error.response?.data?.message.includes('password must match'))
+				setError("password must contain 1 number and 1 uppercase letter")
+			else if (error.response?.data?.message.includes('username must match'))
+				setError("username cannot contain special characters")
+			else if (error.response?.data?.message.includes('username must NOT'))
+				setError("username must between 3 & 15 characters")
+			else if (error.response?.data?.message.includes('password must NOT'))
+				setError("password must be at least 5 characters")
+			else
+			setError("Registration failed")
+			console.error("Error:", error.response?.data || error.message);
 		}
 	}
 
 	return (
 	<div className="flex flex-col justify-center items-center gap-4">
-      	<TitleCard image={"/images/pong_12.svg"} />
+      	<TitleCard link={false} />
 		<div className='basis-md p-10 rounded text-xl border-2 border-amber-200 flex flex-col items-center'>
 			<h2 className="text-3xl mb-5 items-center text-center animate-fade-in delay-400 font-bold">Register</h2>
 			<div className='animate-slide-in'>

@@ -83,7 +83,7 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 	};	
 
 	return (
-        <div className="border flex flex-col items-center justify-between h-full w-full rounded py-4 overflow-y-scroll">
+        <div className="border flex flex-col items-center justify-between h-full w-full rounded py-6 overflow-y-scroll">
 			<h1 className="font-bold text-2xl lg:text-4xl">{username}</h1>
 			<div className="relative w-auto h-auto flex flex-col items-center m-8">
 				<div className="w-auto h-auto rounded-full border-4 border-amber-200 flex flex-col items-center justify-between">

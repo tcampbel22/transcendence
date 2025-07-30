@@ -50,7 +50,7 @@ export const ProfilePopUp:React.FC<EditValueProps> = ({ userId, onClose, onSave,
     }
 
     return (
-        <div className="fixed inset-0 flex justify-center bg-gray-900 opacity-95 items-center text-lg">
+        <div className="fixed inset-1 flex justify-center bg-gray-900 opacity-95 items-center text-lg z-50">
             <div className="p-6 border rounded w-96">
                 <h2 className="text-center text-xl font-bold pb-4">Enter New Password</h2>
                 <input

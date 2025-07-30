@@ -1,5 +1,5 @@
 type WinLoss = {
-	value: number
+	value: number | string
 	text: string
 	percent: boolean
 }

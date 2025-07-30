@@ -14,7 +14,7 @@ export const AuthInput:React.FC<InputProps> = ({ type, placeholder, auto, value,
 			// required
 			placeholder={placeholder}
 			autoComplete={auto}
-			className='border border-amber-200 py-1 px-2 rounded w-auto focus:outline-none'
+			className='border border-amber-200 py-1 px-2 rounded w-auto focus:outline-none placeholder-amber-100'
 			value={value}
 			onChange={(e) => setValue(e.target.value)}
 		/>

@@ -48,7 +48,7 @@ const TournamentSetUp: React.FC = () => {
 	};
 	return (
 		<div className="flex flex-col items-center w-full h-full">
-			<TitleCard image="/images/pong_12.svg"/>
+			<TitleCard link={true} />
 			<PlayerFilter filter={filter} handleFilter={handleFilter}/>
 			<div className="flex justify-center min-w-4xl  gap-5 my-10 overflow-y-scroll">
 				<FilterCard

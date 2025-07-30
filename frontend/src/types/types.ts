@@ -6,7 +6,8 @@ type CardProps = {
 }
 
 type TitleProps = {
-	image: string
+	image?: string;
+	link: boolean | true;
 }
 
 type HeaderProps = {

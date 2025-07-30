@@ -10,8 +10,6 @@ import { PlayerProps } from '../../types/types';
 
 type PongProps = {
   onScoreChange?: (leftScore: number, rightScore: number) => void;
-  player1?: string;
-  player2?: string;
   userInfo: PlayerProps;               
 };
 
@@ -20,6 +18,7 @@ const BOARD_WIDTH = 1000;
 const BOARD_HEIGHT = 500;
 const BALL_SPEED = 10;
 const WINNING_SCORE = 5;
+const centerPaddleY = BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2;
 
 const Pong: React.FC<PongProps> = ({
   onScoreChange, 
@@ -39,6 +38,16 @@ const Pong: React.FC<PongProps> = ({
   const keysPressed = useKeyPress();
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [gameId, setGameId] = useState<number | null>(null);
+  const leftScoreRef = useRef(leftScore);
+  const rightScoreRef = useRef(rightScore);
+
+  useEffect(() => {
+	leftScoreRef.current = leftScore;
+  }, [leftScore]);
+
+  useEffect(() => {
+	rightScoreRef.current = rightScore;
+  }, [rightScore]);
 
   const updateLeftScore = (newScore: number) => {
     setLeftScore(newScore);
@@ -63,8 +72,8 @@ const Pong: React.FC<PongProps> = ({
     setWinner(null);
     setLeftScore(0);
     setRightScore(0);
-    setLeftPaddleY(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
-    setRightPaddleY(BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2);
+    setLeftPaddleY(centerPaddleY);
+    setRightPaddleY(centerPaddleY);
     onScoreChange?.(0, 0);
     setBallX(BOARD_WIDTH / 2);
     setBallY(BOARD_HEIGHT / 2);
@@ -89,7 +98,9 @@ const Pong: React.FC<PongProps> = ({
       leftPaddleY,
       rightPaddleY,
       leftScore,
-      rightScore
+      rightScore,
+	  leftScoreRef,
+	  rightScoreRef
     });
   useStartGame({
     isGameStarted,

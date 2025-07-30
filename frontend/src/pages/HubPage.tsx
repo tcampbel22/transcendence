@@ -42,11 +42,11 @@ const Hub = () => {
   	const { userId } = userInfo;
 	const { friendsList, reFetch } = useFriendslist(userId);
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full items-center ">
       	<div className="flex flex-col lg:flex-row justify-center">
-			<TitleCard image={"/images/pong_12.svg"} />
+			<TitleCard link={true} />
         	<div className="flex flex-col lg:flex-row justify-center items-center lg:items-start lg:absolute lg:right-5 gap-2 py-10">
-				<AddFriendButton userId={userInfo.userId} onSuccess={reFetch} />
+				<AddFriendButton userId={userInfo.userId} name={name} onSuccess={reFetch} />
 				<div className="flex flex-col">
 					<FriendsButton
 					userId={userInfo.userId}

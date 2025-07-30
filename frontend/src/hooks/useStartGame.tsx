@@ -10,6 +10,7 @@ type StartGameProps = {
 };
 
 export const useStartGame = ({ isGameStarted, userId, opponent, setGameId }: StartGameProps) => {
+
 	useEffect(() => {
 		if (isGameStarted && opponent) {
 			const startGame = async () => {
@@ -37,5 +38,5 @@ export const useStartGame = ({ isGameStarted, userId, opponent, setGameId }: Sta
 
       startGame();
     }
-  }, [isGameStarted, userId, opponent?.id]);
+  }, [isGameStarted, userId, opponent]);
 };

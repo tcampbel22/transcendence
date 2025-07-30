@@ -54,19 +54,19 @@ const StartTournament = ({ players, setPlayers }: { players: PlayerProps[], setP
 	const shuffledPlayerIds = shuffleArray(players);
 	localStorage.removeItem("tournament_bracket");
 	return (
-		<div className="fixed inset-0 flex flex-col justify-center bg-gray-900 opacity-95 items-center text-6xl">
+		<div className="fixed inset-0 flex flex-col gap-6 justify-center bg-gray-900 opacity-95 items-center text-6xl">
 			<Link
 				to="/play/tournament-bracket"
 				state={{ shuffledPlayerIds }}
 			>
 				<div>
-					<button className="border m-1 p-6 rounded hover:bg-amber-200 hover:text-gray-900">
+					<button className="border m-1 p-6 rounded transition hover:bg-amber-200 hover:text-gray-900 ease-out-400 hover:scale-105">
 						Start Tournament
 					</button>
 				</div>
 			</Link>
 			<button 
-				className="border rounded text-2xl m-1 p-2 hover:bg-amber-200 hover:text-gray-900" 
+				className="border rounded text-3xl m-1 p-2 transition hover:bg-amber-200 hover:text-gray-900 ease-out-400 hover:scale-105" 
 				onClick={() => setPlayers([players[0]])}>
 					Back
 			</button>

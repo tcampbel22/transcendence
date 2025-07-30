@@ -7,9 +7,10 @@ import { useState } from "react";
 type Id = {
     userId: number;
 	onSuccess: () => void;
+	name: string | undefined;
 };
 
-const AddFriendButton = ({userId, onSuccess} : Id) => {
+const AddFriendButton = ({userId, onSuccess, name} : Id) => {
     const API_URL = import.meta.env.VITE_API_USER;
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
@@ -27,13 +28,29 @@ const AddFriendButton = ({userId, onSuccess} : Id) => {
             const payload = {
                 friendUsername: friendsName,
             }
+			if (friendsName === name)
+				throw new TypeError("Cannot be friends with yourself")
             const res = await api.post(`${API_URL}/${userId}/friends`, payload, {withCredentials: true});
             setMessage("Friend added successfully!");
 			onSuccess();
-            setIsError(false);
-        } catch (err) {
+			setTimeout(() => {
+				setIsError(false);
+				setMessage('');
+				setOpen(prev => !prev)
+			}, 1500);
+        } catch (err: any) {
             const error = err as AxiosError
-            setMessage("Failed to add friend.");
+			if (error.status === 400)
+				setMessage(`friend name is invalid`)
+			else if (error.status === 409)
+				setMessage(`you are ready friends!`)
+			else if (error.status === 404)
+				setMessage(`friend does not exist`)
+			else
+				setMessage("Failed to add friend");
+			setTimeout(() => {
+				setMessage('');
+			}, 2000);
             setIsError(true);
         }
     }
@@ -42,16 +59,16 @@ const AddFriendButton = ({userId, onSuccess} : Id) => {
         <div className="flex flex-col rounded border border-amber-200 text-center text-xl">
             <button 
 				title="Add Friend" 
-				className="flex flex-col justify-center transition-all duration-200 ease-in-out p-6 hover:bg-amber-200 hover:text-gray-900" 
+				className="flex flex-col justify-center p-6 hover:bg-amber-200 hover:text-gray-900" 
             	onClick={handleClick}
             >
                 Add Friend
             </button>
                 {open && (
-                    <div className="flex flex-col items-center text-center  my-2 rounded p-4 m-2">
-                        <input  className="border-amber-200 text-amber-100 border rounded px-2 my-2"
+                    <div className="flex flex-col items-center text-center my-2 rounded p-4 m-2">
+                        <input  className="border-amber-200 text-amber-100 border rounded px-2 py-1 my-2"
                                 type="text" 
-                                placeholder="Enter Username..."
+                                placeholder="enter username..."
                                 onChange={(e) => setFriendsName(e.target.value)}
                         />
                         <button onClick={handleAddFriend}

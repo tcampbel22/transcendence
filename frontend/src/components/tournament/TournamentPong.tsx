@@ -3,7 +3,6 @@ import { useGameLoop } from '../../hooks/useGameLoop';
 import { usePaddles } from '../../hooks/usePaddles';
 import { useKeyPress } from '../../hooks/useKeyPress';
 import { useStartGame } from "../../hooks/useStartGame";
-import { useUsername } from "../../hooks/useUsername";
 import { useTournamentBracket } from "../../hooks/useTournamentBracket";
 import GameCanvas from "../game/GameCanvas";
 import TournamentGameEnd from "./TournamentGameEnd";
@@ -62,9 +61,18 @@ const TournamentPong: React.FC<TournamentProps> = ({
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [gameId, setGameId] = useState<number | null>(null);
   const [opponent, setOpponent] = useState<PlayerProps>()
-  
-
   const user = { userId: p1UserId, username: p1Username };
+  const leftScoreRef = useRef(leftScore);
+const rightScoreRef = useRef(rightScore);
+  
+	useEffect(() => {
+	leftScoreRef.current = leftScore;
+	}, [leftScore]);
+  
+	useEffect(() => {
+	rightScoreRef.current = rightScore;
+	}, [rightScore]);
+
 
 
   useEffect(() => {
@@ -134,7 +142,9 @@ const TournamentPong: React.FC<TournamentProps> = ({
     leftPaddleY,
     rightPaddleY,
     leftScore,
-    rightScore
+    rightScore,
+	leftScoreRef,
+	rightScoreRef
   });
 
   useStartGame({
@@ -146,9 +156,9 @@ const TournamentPong: React.FC<TournamentProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-center p-4 rounded">
-    	<TitleCard image="/images/pong_12.svg" />
+    	<TitleCard link={true} />
 		<div className="relative">
-        {isGameStarted && (
+        {isGameStarted && opponent && (
           <GameCanvas
             ballX={ballX}
             ballY={ballY}

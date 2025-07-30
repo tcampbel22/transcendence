@@ -17,6 +17,7 @@ const TournamentPongWrapper: React.FC = () => {
 
   if (!state?.p1UserId || !state?.p2UserId || !state?.stage) {
     return <div className="p-10 text-center text-red-500">Missing match data</div>;
+	
   }
   return (
     <TournamentPong

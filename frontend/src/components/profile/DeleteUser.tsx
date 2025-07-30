@@ -35,8 +35,8 @@ const DeleteProfile = ({userId, onClose}: DeleteProfileProps) => {
 		}
 	}
 	return (
-		<div className="fixed inset-0 bg-gray-900 opacity-95 flex justify-center items-center text-lg">
-		    <div className="p-6 rounded shadow-lg w-96 border">
+		<div className="fixed inset-0 bg-gray-900 opacity-95 flex justify-center items-center text-lg z-50">
+		    <div className="p-6 rounded w-96 border">
                 <h2 className="text-xl text-center font-bold mb-4">Are You Sure?</h2>
                     {message && <p className={`text-sm text-center mb-2 ${
                         messageType === 'success' ? 'text-green-400' : 'text-red-400'}`}>

@@ -14,10 +14,9 @@ const OneVsOnePage: React.FC = () => {
 	}
 	return (
 		<div className="flex flex-col items-center justify-center max-w-screen">
-			<div className="text-amber-200">
-				<TitleCard image="/images/pong_12.svg"/>
+				<TitleCard link={true} />
 				<Pong onScoreChange={(left, right) => setScores({ left, right })} userInfo={user} />
-			</div>
+
 		</div>
 	)
 }

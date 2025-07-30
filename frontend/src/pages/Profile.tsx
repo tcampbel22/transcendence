@@ -30,7 +30,6 @@ const Profile = () => {
 		getUserData()
 	}, [userId])
 
-	//avatar component for the profile picture, not sure if this is the place to extract user info and send it to the component or just user id there
 	return (
 			<div className="grid grid-cols-4 grid-rows-3 gap-4 p-4 h-full overflow-x-auto">
 				<div className="col-span-1 row-span-3 " style={{ gridTemplateRows: "1fr 2fr 2fr" }}>
@@ -46,7 +45,7 @@ const Profile = () => {
 				</div>
 				
 				<div className="col-span-1 row-span-1">
-					<WinsLosses value={Number.isNaN(victories / gamesPlayed) ? 0 : victories / gamesPlayed * 100 } text="Win Percentage" percent={true}/>
+					<WinsLosses value={Number.isNaN(victories / gamesPlayed) ? 0 : (victories / gamesPlayed * 100).toPrecision(2) } text="Win Percentage" percent={true}/>
 				</div>
 
 
