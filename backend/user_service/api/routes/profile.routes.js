@@ -1,10 +1,10 @@
 import { profileController } from "../controllers/profile.controller.js"
 import * as schemas from "../schemas/profile.schema.js"
-import authenticate from "../../../libs/jwt_authenticator/jwt_authenticator.js";
+import { authenticate } from "../utils/jwt_authenticator.js";
 
 export default async function profileRoutes(fastify, options) {
-	fastify.addHook("preHandler", authenticate); //UNCOMMENT THIS LINE TO ENABLE AUTHENTICATION
-    
+	fastify.addHook("preHandler", authenticate);
+
 	// Check if user exists
     fastify.get("/api/validate/:id", { schema: schemas.validateUserSchema }, profileController.validateUser);
     

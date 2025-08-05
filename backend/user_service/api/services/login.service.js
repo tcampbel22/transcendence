@@ -1,8 +1,7 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { prisma } from "../../database/db.js";
-import { HttpStatusCode } from "axios";
-import { ErrorNotFound, ErrorUnAuthorized, handleError } from "@app/errors"
+import { ErrorNotFound } from "../utils/error.js"
 
 const JWT_SECRET = process.env.JWT_SECRET;
 

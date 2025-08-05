@@ -25,6 +25,14 @@ export const BracketCell:React.FC<BreacketCellProps> = ({
 				{stage === 'semifinal' && tType === 4 ? (<VertLine xDir={xDir} yDir={yDir} hasPlayed={hasPlayed}/>) : null}
                 {stage === 'final' && tType === 8 ? (<ShortHoriLine xDir="" yDir="" hasPlayed={hasPlayed}/>) : null}
                 {stage === 'final' && tType === 4 ? (<HoriLine xDir="" yDir="" hasPlayed={hasPlayed}/>) : null}
+				{stage !== 'final' && tType === 8 ? (
+					<>
+						<ShortHoriLine xDir="left" yDir="" hasPlayed={hasPlayed} />
+						{index === 0 || index === 3 || stage === 'semifinal' ? (
+						<VertLine xDir="left" yDir={yDir} hasPlayed={hasPlayed} />
+						) : (null)}
+					</>
+					) : (null)}
 				<MatchBox
                   playerA={p1Id}
                   playerB={p2Id}
@@ -39,14 +47,6 @@ export const BracketCell:React.FC<BreacketCellProps> = ({
                     });
                   }}
                 />
-				{stage !== 'final' && tType === 8 ? (
-					<>
-						<ShortHoriLine xDir="left" yDir="" hasPlayed={hasPlayed} />
-						{index === 0 || index === 3 || stage === 'semifinal' ? (
-						<VertLine xDir="left" yDir={yDir} hasPlayed={hasPlayed} />
-						) : (null)}
-					</>
-					) : (null)}
         </div>
 	)
 }

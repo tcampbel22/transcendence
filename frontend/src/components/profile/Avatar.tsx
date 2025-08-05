@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../lib/api";
 import { AxiosError } from "axios";
-import  axios  from	"axios"
-import EditProfile from "./EditProfile";
-import ChangePassword from "./ChangePassword";
 import DeleteProfile from "./DeleteUser";
 import { ProfileButton } from "./ProfileButton";
 import { ProfilePopUp } from "./ProfilePopUp";
@@ -22,7 +19,7 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 	const [username, setUsername] = useState('');
 	const [email, setEmail] = useState('');
 	const [refreshUser, setRefreshUser] = useState(false);
-	const [imageUrl, setImageUrl] = useState<string>(`${BASE_URL}/uploads/default.png`);
+	const [imageUrl, setImageUrl] = useState<string>('images/default.png');
 	const [imageFile, setImageFile] = useState<File | null>(null);
 	const [enabled, setEnabled] = useState(is2faEnabled);
 	//need to add actual values to the userId.
@@ -39,8 +36,6 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 				setEmail(response.data.email);
 				if (response.data.picture) {
 					setImageUrl(`${BASE_URL}${response.data.picture}?${Date.now()}`);
-				  } else {
-					setImageUrl(`${BASE_URL}/uploads/default.png`);
 				  }
 			} 
 			catch (err: any) {
@@ -86,11 +81,11 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
         <div className="border flex flex-col items-center justify-between h-full w-full rounded py-6 overflow-y-scroll">
 			<h1 className="font-bold text-2xl lg:text-4xl">{username}</h1>
 			<div className="relative w-auto h-auto flex flex-col items-center m-8">
-				<div className="w-auto h-auto rounded-full border-4 border-amber-200 flex flex-col items-center justify-between">
+				<div className="min-w-60 min-h-60 w-auto h-auto rounded-full border-4 border-amber-200 flex flex-col items-center justify-between">
 					<img 
 						src={imageUrl} 
 						alt="Profile Picture"
-						onError={() => setImageUrl(`${BASE_URL}/uploads/default.png`)} 
+						onError={() => setImageUrl(`/images/default.png`)} 
 						className="w-auto h-auto rounded-full object-cover"
 					/>
 				</div>

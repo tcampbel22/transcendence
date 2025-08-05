@@ -1,10 +1,10 @@
 import { profileService } from "../services/profile.service.js"
-import { ErrorBadRequest, ErrorNotFound, ErrorUnAuthorized, handleError } from "@app/errors"
-import logger from "@eleekku/logger"
-import fs from "fs";
-import util from "util";
-import { pipeline } from "stream";
+import { ErrorBadRequest, ErrorNotFound, handleError } from "../utils/error.js"
+import { S3 } from "../utils/tigrisClient.js";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import path from "path";
+
+const BUCKET_NAME = process.env.BUCKET_NAME || "picture-uploads"
 
 export const profileController = {
 	
@@ -53,14 +53,14 @@ export const profileController = {
 		const { newValue } = request.body;
 		try {
 			const user = await profileService.updateUsername(parseInt(id), newValue);
-			logger.info(`User ${id}'s username updated to ${newValue}`);
+			request.log.info(`User ${id}'s username updated to ${newValue}`);
 			return reply.code(201).send({
 				message: `User ${id}'s username updated successfully`,
 				id: user.id,
 				newUsername: user.username,
 			});
 		} catch (err) {
-			logger.error(`Failed to update user ${id}'s username: ${err.message}`);
+			request.log.error(`Failed to update user ${id}'s username: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to update user ${id}'s username`);
 		}
@@ -75,25 +75,27 @@ export const profileController = {
 			const fileExtension = path.extname(data.filename).toLowerCase();
 			if (!['.jpg', '.jpeg', '.png'].includes(fileExtension))
 				throw new ErrorBadRequest(`File should be jpg, jpeg or png`);
-			
 			const filename = `user_${id}${fileExtension}`;
-
-			const uploadDir = process.env.NODE_ENV === 'production' ? '/app/uploads' : './uploads';
-			const filepath = `${uploadDir}/${filename}`;
-			const pictureUrl = `/uploads/${filename}`;
 			
-			const pump = util.promisify(pipeline);
-			await pump(data.file, fs.createWriteStream(filepath));
+			await S3.send(new PutObjectCommand({
+				Bucket: BUCKET_NAME,
+				Key: filename,
+				Body: data.file,
+				ContentType: data.mimetype,
+			}));
+			
+			const pictureUrl = `https://${BUCKET_NAME}.fly.storage.tigris.dev/${filename}`;
 			
 			const user = await profileService.updatePicture(parseInt(id), pictureUrl);
-			logger.info(`User ${id}'s profile picture updated`);
+			
+			request.log.info(`User ${id}'s profile picture updated`);
 			return reply.code(201).send({
 				message: `User ${id}'s profile picture updated successfully`,
 				id: user.id,
 				newPicture: user.picture,
 			});
 		} catch (err) {
-			request.log.error(err);
+			request.log.error({ err }, "Failed to upload profile pic");
 			return handleError(err, reply, `Failed to update user ${id}'s profile picture`);
 		}
 	},
@@ -101,16 +103,15 @@ export const profileController = {
 	async updatePassword(request, reply) {
 		const { id } = request.params;
 		const { newValue } = request.body;
-		console.error("DEBUG: newVlaue:", request.body)
 		try {
 			const user = await profileService.updatePassword(parseInt(id), newValue);
-			logger.info(`User ${id}'s password updated`);
+			request.log.info(`User ${id}'s password updated`);
 			return reply.code(201).send({
 				message: `User ${id}'s password updated successfully`,
 				id: user.id,
 			});
 		} catch (err) {
-			logger.error(`Failed to update user ${id}'s password: ${err.message}`);
+			request.log.error(`Failed to update user ${id}'s password: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to update user ${id}'s password`);
 		}
@@ -124,7 +125,7 @@ export const profileController = {
 		}
 		try {
 			const user = await profileService.update2faStatus(parseInt(id), is2faEnabled);
-			logger.info(`User ${id}'s 2FA status updated to ${user.is2faEnabled}`);
+			request.log.info(`User ${id}'s 2FA status updated to ${user.is2faEnabled}`);
 			return reply.code(201).send({
 				message: `User ${id}'s 2FA status updated successfully`,
 				id: user.id,
@@ -132,7 +133,7 @@ export const profileController = {
 			});
 		}
 		catch (err) {
-			logger.error(`Failed to update user ${id}'s 2FA status: ${err.message}`);
+			request.log.error(`Failed to update user ${id}'s 2FA status: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to update user ${id}'s 2FA status`);
 		}
@@ -143,14 +144,14 @@ export const profileController = {
 		const { id, password } = request.body
 		try {
 			const user = await profileService.validatePassword(parseInt(id), password);
-			logger.info(`User registered to play: ${user.username}, ID: ${user.id}`);
+			request.log.info(`User registered to play: ${user.username}, ID: ${user.id}`);
 			reply.status(200).send({
 				message: `User ${id} password successfully validated`,
 				id: user.id,
 				username: user.username,
 			});  
 		} catch (err) {
-			logger.error(`Error validating user password: ${err.message}`);
+			request.log.error(`Error validating user password: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to validate user ${id}'s password`);
 		}
@@ -184,7 +185,7 @@ export const profileController = {
 				matchesPlayed: user.matchesPlayed,
 			})
 		} catch (err) {
-			logger.error(`Failed to fetch user ${id}'s stats: ${err.message}`);
+			request.log.error(`Failed to fetch user ${id}'s stats: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to update user ${id}'s stats`);
 		}
@@ -195,7 +196,7 @@ export const profileController = {
 			const matchHistory = await profileService.getMatchHistory(parseInt(id));	
 			return reply.code(200).send(matchHistory)
 		} catch (err) {
-			logger.error(`Failed to fetch user ${id}'s match history: ${err.message}`);
+			request.log.error(`Failed to fetch user ${id}'s match history: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to fetch user ${id}'s match history`);
 		}
@@ -204,10 +205,10 @@ export const profileController = {
 		const { id } = request.params;
 		try {
 			await profileService.deleteUser(parseInt(id));
-			logger.info(`User ${id} deleted successfully`);
+			request.log.info(`User ${id} deleted successfully`);
 			return reply.code(204).send({ message: `User ${id} deleted successfully` });
 		} catch (err) {
-			logger.error(`Failed to delete user ${id}: ${err.message}`);
+			request.log.error(`Failed to delete user ${id}: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to delete user ${id}:  ${err.message}`);
 		} 
@@ -227,7 +228,7 @@ export const profileController = {
 				friendList,
 			});
 		} catch (err) {
-			logger.error(`Failed to fetch user ${id}'s friend list: ${err.message}`);
+			request.log.error(`Failed to fetch user ${id}'s friend list: ${err.message}`);
 			request.log.error(err);
 			return handleError(err, reply, `Failed to fetch user ${id}'s friend list`);
 		}
@@ -237,14 +238,14 @@ export const profileController = {
 		const { friendUsername } = request.body;
 		try {
 			const friendId = await profileService.addFriend(parseInt(id), friendUsername);
-			logger.info(`User ${id} added user ${friendUsername} as a friend`);
+			request.log.info(`User ${id} added user ${friendUsername} as a friend`);
 			return reply.code(201).send({ 
 				message: `Friendship created between user ${id} and user ${friendUsername}`,
 				friendUsername,
 				friendId
 			});
 		} catch (err) {
-			logger.error(`Failed to add user ${friendUsername} to user ${id}'s friend list: ${err.message}`);
+			request.log.error(`Failed to add user ${friendUsername} to user ${id}'s friend list: ${err.message}`);
 			return handleError(err, reply, `Failed to add friend to user ${id}'s friend list:`, err);
 		}
 	},
@@ -253,10 +254,10 @@ export const profileController = {
 		const { friendUsername } = request.body;
 		try {
 			const friendId = await profileService.deleteFriend(parseInt(id), friendUsername);
-			logger.info(`User ${id} deleted user ${friendId} from their friend list`);
+			request.log.info(`User ${id} deleted user ${friendId} from their friend list`);
 			return reply.code(201).send({ message: `User ${id} friendship with ${friendUsername} has ended permanently` })
 		} catch (err) {
-			logger.error(`Failed to delete user ${friendUsername} from user ${id}'s friend list: ${err.message}`);
+			request.log.error(`Failed to delete user ${friendUsername} from user ${id}'s friend list: ${err.message}`);
 			return handleError(err, reply, `Failed to delete user ${id}'s friend ${friendUsername} friendship`);
 		}
 	}

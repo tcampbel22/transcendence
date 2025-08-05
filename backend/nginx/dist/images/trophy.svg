@@ -1,0 +1,19 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#FDE68A" fill="none" stroke-width="3" >
+    <!-- Trophy Cup -->
+    <path d="M70 50 L130 50 Q130 90 100 100 Q70 90 70 50 Z" />
+    
+    <!-- Left Handle -->
+    <path d="M70 50 C40 50, 40 90, 70 90" />
+    
+    <!-- Right Handle -->
+    <path d="M130 50 C160 50, 160 90, 130 90" />
+    
+    <!-- Stem -->
+    <rect x="90" y="100" width="20" height="30" />
+    
+    <!-- Base -->
+    <rect x="70" y="130" width="60" height="10" />
+    <rect x="60" y="140" width="80" height="10" />
+  </g>
+</svg>

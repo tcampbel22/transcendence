@@ -1,37 +1,19 @@
 import { prisma } from "../../database/db.js";
 import axios from "axios";
-import fs from "fs";
-import https from "https";
 import {
-  ErrorConflict,
   ErrorNotFound,
   ErrorCustom,
-  ErrorUnAuthorized,
-  ErrorBadRequest,
-} from "@app/errors";
-import logger from "@eleekku/logger";
+} from "../utils/error.js";
 
 const isProduction = process.env.NODE_ENV === "production";
 const SERVICE_URL = isProduction
-  ? "https://nginx:4433/users"
+  ? "http://tc-user-service/api"
   : "http://localhost:3002/api";
-
-let agent;
-if (isProduction) {
-  try {
-  	agent = new https.Agent({
-  	ca: fs.readFileSync("ssl/nginx.cert.pem"), // Path to the Nginx certificate
-  });
-  } catch (err) {
-  	logger.error("Failed to find SSL certificates", 502);
-  };
-}
-const axiosConfig = isProduction ? { httpsAgent: agent } : {};
 
 export const gameService = {
   async startGame(player1Id, player2Id)
   {
-    logger.info(`Starting game for players ${player1Id} and ${player2Id}`);
+    fastify.log.info(`Starting game for players ${player1Id} and ${player2Id}`);
     try {
       const p1Response = await axios.get(
       `${SERVICE_URL}/validate/${player1Id}`,
@@ -58,7 +40,7 @@ export const gameService = {
         throw new ErrorCustom(`Error retrieving player`, p2Response.status);
 
 	  //Create default game row
-      logger.info(`Creating game for players ${player1Id} and ${player2Id}`);
+      fastify.log.info(`Creating game for players ${player1Id} and ${player2Id}`);
       const newGame = await prisma.game.create({
         data: {
           player1Id: player1Id,
@@ -70,7 +52,7 @@ export const gameService = {
       });
       return newGame;
     } catch (err) {
-      logger.error("Game creation failed:", err.message);
+      fastify.log.error("Game creation failed:", err.message);
       console.error("Game creation failed");
       throw err;
     }
@@ -114,7 +96,7 @@ export const gameService = {
         );
       } catch (err) {
         console.log(`Failed to update player 1's stats`);
-        logger.error(`Failed to update player 1's stats`, err.message);
+        fastify.log.error(`Failed to update player 1's stats`, err.message);
       }
 
       //Update P2 userstats, if it exists
@@ -135,13 +117,13 @@ export const gameService = {
           );
         } catch (err) {
           console.log(`Failed to update player 2's stats`);
-          logger.error(`Failed to update player 2's stats`, err.message);
+          fastify.log.error(`Failed to update player 2's stats`, err.message);
         }
       }
       return updatedGame;
     } catch (err) {
       console.error("Failed to finish game");
-      logger.error("Failed to finish game: ", err.message);
+      fastify.log.error("Failed to finish game: ", err.message);
       throw ErrorCustom(err.message, err.status);
     }
   },

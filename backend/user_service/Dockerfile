@@ -4,7 +4,6 @@ WORKDIR /app/
 
 COPY package*.json /app/
 COPY index.js /app/
-COPY ssl/ /app/ssl/
 RUN npm install
 
 COPY ./api /app/api/

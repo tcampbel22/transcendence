@@ -1,7 +1,6 @@
 import { loginService } from "../services/login.service.js";
 import jsonwebtoken from "jsonwebtoken";
-import logger from "@eleekku/logger"
-import { ErrorNotFound, ErrorUnAuthorized, handleError } from "@app/errors"
+import { ErrorNotFound, ErrorUnAuthorized, handleError } from "../utils/error.js"
 
 export const loginController = {
 
@@ -21,7 +20,7 @@ export const loginController = {
 				sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax",
 				maxAge: 3600
 			});
-			logger.info(`User logged in: ${login.user.username}, ID: ${login.user.id}`);
+			request.log.info(`User logged in: ${login.user.username}, ID: ${login.user.id}`);
 			reply.status(200).send({
 				userId: login.user.id,
 				username: login.user.username,
@@ -30,7 +29,7 @@ export const loginController = {
 				is2faEnabled: login.user.is2faEnabled
 			});  
 		} catch (err) {
-			logger.error(`Error logging in user: ${err.message}`);
+			request.log.error(`Error logging in user: ${err.message}`);
 			reply.status(500).send({ message: "loginUser: Internal server error!" });
 		}
 	},
@@ -46,14 +45,14 @@ export const loginController = {
 				const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
 				userId = decoded.id;
 				username = decoded.username;
-				logger.info(`User logged out: ${username}, ID: ${userId}`);
+				request.log.info(`User logged out: ${username}, ID: ${userId}`);
 				await loginService.logoutUser(parseInt(userId));
 			} catch (err) {
 				// Token is invalid or expired, just proceed to clear cookie
-				logger.info("Logout: token was invalid or expired.");
+				request.log.info("Logout: token was invalid or expired.");
 			}
 			} else {
-			logger.info("Logout: no token present.");
+			request.log.info("Logout: no token present.");
 			}
 
 			reply.clearCookie("token");
@@ -61,7 +60,7 @@ export const loginController = {
 			message: "Logged out successfully"
 			});
 		} catch (err) {
-			logger.error(`Error logging out user: ${err.message}`);
+			request.log.error(`Error logging out user: ${err.message}`);
 			return handleError(err, reply, `Failed to logout user`);
 		}
 	}

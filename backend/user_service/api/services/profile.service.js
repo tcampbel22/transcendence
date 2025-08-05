@@ -1,16 +1,13 @@
 import { prisma } from "../../database/db.js";
 import argon2 from "argon2";
 import axios from "axios";
-import logger from "@eleekku/logger";
-import fs from "fs";
-import https from "https";
 import {
   ErrorConflict,
   ErrorNotFound,
   ErrorCustom,
   ErrorUnAuthorized,
-  ErrorBadRequest,
-} from "@app/errors";
+} from "../utils/error.js";
+import fastify from "fastify";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -227,8 +224,8 @@ export const profileService = {
   // Fetches a user's match history
   async getMatchHistory(id) {
     const gameServiceBaseUrl =
-      process.env.NODE_ENV === "production"
-        ? "https://nginx:4433/games"
+      isProduction
+        ? "http://tc-game-service/api"
         : "http://localhost:3001/api";
     // Fetch the user's basic information
     const user = await prisma.user.findUnique({
@@ -243,18 +240,6 @@ export const profileService = {
       throw new ErrorNotFound(`getMatchHistory: User ${id} cannot be found`);
 
     try {
-      // Load Nginx certificate
-	  let agent; 
-	  if (isProduction) { 
-		try {
-			agent = new https.Agent({
-			ca: fs.readFileSync("ssl/nginx.cert.pem"), // Path to the Nginx certificate
-		});
-		} catch (err) {
-			throw ErrorCustom("Failed to find SSL certificates", 502);
-		};
-	  }
-	  const axiosConfig = isProduction ? { httpsAgent: agent } : {}; // Needed to add so ssl is bypassed in testing
 	// Fetch match history from the game service
     const response = await axios.get(`${gameServiceBaseUrl}/user/${id}`, {
       headers: {
@@ -284,7 +269,7 @@ export const profileService = {
             game.player1Score == null || // Allow 0 as a valid value
             game.player2Score == null
           ) {
-            logger.error(`Invalid game data: ${JSON.stringify(game)}`);
+            fastify.log.error(`Invalid game data: ${JSON.stringify(game)}`);
             return null; // Skip invalid games
           }
 
@@ -316,7 +301,7 @@ export const profileService = {
       );
       return matchHistory;
     } catch (err) {
-      logger.error(`getMatchHistory: Failed to retrieve match history`);
+      fastify.log.error(`getMatchHistory: Failed to retrieve match history`);
       throw new ErrorCustom(err.message, err.statusCode);
     }
   },

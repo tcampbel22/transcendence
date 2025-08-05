@@ -1,6 +1,6 @@
 import { gameController } from "../controllers/game.controller.js";
 import * as schema from "../schemas/game.schema.js"
-import authenticate from "../../../libs/jwt_authenticator/jwt_authenticator.js";
+import { authenticate } from "../utils/jwt_authenticator.js";
 
 export default async function gameRoutes(fastify, options) {
 
