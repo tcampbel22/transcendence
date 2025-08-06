@@ -10,7 +10,7 @@ primary_region = 'arn'
 
 [mount]
   source = 'user_db'
-  destination = '/database/data/'
+  destination = '/data'
   
 [http_service]
   internal_port = 3002
