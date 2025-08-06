@@ -20,7 +20,10 @@ export default async function profileRoutes(fastify, options) {
     // Update user name
     fastify.put("/api/:id", { schema: schemas.updateUsernameSchema }, profileController.updateUsername);
     
-    // Update profile pic
+	// Fetch profile pic
+    fastify.get("/api/:id/picture", { schema: schemas.getUserPictureSchema }, profileController.getUserPicture);
+    
+	// Update profile pic
     fastify.put("/api/:id/picture", { schema: schemas.updatePictureSchema }, profileController.updatePicture);
 
     // update 2fa status

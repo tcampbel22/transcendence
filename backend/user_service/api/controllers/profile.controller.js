@@ -1,10 +1,11 @@
 import { profileService } from "../services/profile.service.js"
-import { ErrorBadRequest, ErrorNotFound, handleError } from "../utils/error.js"
+import { ErrorBadRequest, ErrorCustom, ErrorNotFound, handleError } from "../utils/error.js"
 import { S3 } from "../utils/tigrisClient.js";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import path from "path";
 
 const BUCKET_NAME = process.env.BUCKET_NAME || "picture-uploads"
+const MAX_FILE_SIZE = parseInt(process.env.MAX_FILE_SIZE) || 1000000;
 
 export const profileController = {
 	
@@ -61,8 +62,25 @@ export const profileController = {
 			});
 		} catch (err) {
 			request.log.error(`Failed to update user ${id}'s username: ${err.message}`);
-			request.log.error(err);
 			return handleError(err, reply, `Failed to update user ${id}'s username`);
+		}
+	},
+	async getUserPicture(request, reply) {
+		const { id } = request.params;
+		try {
+			const user = await profileService.getUser(id);
+
+			const pic = await fetch(user.picture);
+			if (!pic)
+				throw new ErrorNotFound("Picture not found");
+			const picBuffer = await pic.arrayBuffer();
+			return reply.code(200)
+					.header('Content-type', 'application/octet-stream')
+					.header('Content-Length', picBuffer.byteLength)
+					.send(Buffer.from(picBuffer))
+		} catch (err) {
+			request.log.error(`Failed to get user ${id}'s profile picture: ${err.message}`);
+			return handleError(err, reply, `Failed to get user ${id}'s profile picture`);
 		}
 	},
 	async updatePicture(request, reply) {
@@ -72,18 +90,22 @@ export const profileController = {
 			const data = await request.file();
 			if (!data)
 				throw new ErrorNotFound(`No file uploaded`);
+			const buffer = await data.toBuffer();
+			if (buffer > MAX_FILE_SIZE)
+				throw new ErrorCustom("File size limit reached", 413);
 			const fileExtension = path.extname(data.filename).toLowerCase();
 			if (!['.jpg', '.jpeg', '.png'].includes(fileExtension))
 				throw new ErrorBadRequest(`File should be jpg, jpeg or png`);
-			const filename = `user_${id}${fileExtension}`;
+			const filename = `${id}${fileExtension}`;
 			
 			await S3.send(new PutObjectCommand({
 				Bucket: BUCKET_NAME,
 				Key: filename,
-				Body: data.file,
+				Body: buffer,
 				ContentType: data.mimetype,
+				ContentLength: buffer.length,
+
 			}));
-			
 			const pictureUrl = `https://${BUCKET_NAME}.fly.storage.tigris.dev/${filename}`;
 			
 			const user = await profileService.updatePicture(parseInt(id), pictureUrl);

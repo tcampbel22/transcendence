@@ -5,3 +5,5 @@
 fly.toml
 .env
 node_modules
+*.db 
+**/*.db

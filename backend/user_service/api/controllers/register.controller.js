@@ -19,7 +19,7 @@ export const registerController = {
 					id: existingUser.id
 				 });
 			}
-			const picture = 'default.png';
+			const picture = 'images/default.png';
 			const user = await registerService.registerUser({ username, email, password, picture });
 			request.log.info(`User registered: ${user.username}, ID: ${user.id}`);
 			reply.code(201).send({

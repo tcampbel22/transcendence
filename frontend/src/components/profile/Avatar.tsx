@@ -34,8 +34,15 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 				const response = await api.get(`${API_URL}/${userId}`, { withCredentials: true });
 				setUsername(response.data.username);
 				setEmail(response.data.email);
-				if (response.data.picture) {
-					setImageUrl(`${BASE_URL}${response.data.picture}?${Date.now()}`);
+				
+				if (response.data.picture && response.data.picture !== "default.png") {
+					const picture = await api.get(`${API_URL}/${userId}/picture`, 
+							{ 
+								withCredentials: true,
+								responseType: 'blob',
+							 })
+					const imageURL = URL.createObjectURL(picture.data);
+					setImageUrl(imageURL);
 				  }
 			} 
 			catch (err: any) {
@@ -81,12 +88,12 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
         <div className="border flex flex-col items-center justify-between h-full w-full rounded py-6 overflow-y-scroll">
 			<h1 className="font-bold text-2xl lg:text-4xl">{username}</h1>
 			<div className="relative w-auto h-auto flex flex-col items-center m-8">
-				<div className="min-w-60 min-h-60 w-auto h-auto rounded-full border-4 border-amber-200 flex flex-col items-center justify-between">
+				<div className="min-w-60 min-h-60 max-w-90 max-h-90 w-auto h-auto rounded-full border-4 border-amber-200 flex flex-col items-center justify-between">
 					<img 
 						src={imageUrl} 
 						alt="Profile Picture"
 						onError={() => setImageUrl(`/images/default.png`)} 
-						className="w-auto h-auto rounded-full object-cover"
+						className="min-w-60 min-h-60 max-w-90 max-h-90 rounded-full "
 					/>
 				</div>
 				<button

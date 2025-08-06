@@ -8,6 +8,10 @@ primary_region = 'arn'
 
 [build]
 
+[mount]
+  source = 'user_db'
+  destination = '/database/data/'
+  
 [http_service]
   internal_port = 3002
   force_https = true

@@ -11,7 +11,9 @@ all: build-frontend
 
 build-frontend:
 	cd frontend && npm install && npm run build
+	@echo "$(YELLOW)Removing old dist...$(RESET)"
 	rm -rf backend/nginx/dist
+	@echo "$(YELLOW)Adding new dist...$(RESET)"
 	@if [ ! -d backend/file_service/dist ]; then \
 		mv frontend/dist backend/nginx/; \
 	fi
@@ -19,9 +21,6 @@ build-frontend:
 basic: build-frontend
 	@echo "$(YELLOW)Deploying nginx...$(RESET)"
 	@fly deploy backend/nginx
-	@echo "$(GREEN)Docker images built.$(RESET)"
-	@echo "$(YELLOW)Deploying user-service...$(RESET)"
-	@fly deploy backend/user_service
 	@echo "$(GREEN)Docker images built.$(RESET)"
 
 

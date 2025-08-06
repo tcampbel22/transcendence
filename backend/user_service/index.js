@@ -25,8 +25,10 @@ fastify.register(multipart, {
   addToBody: false,
   limits: {
     fileSize: 10 * 1024 * 1024,
+	files: 1,
   },
 });
+
 try {
   fastify.register(loginRoutes);
   fastify.register(registerRoutes);

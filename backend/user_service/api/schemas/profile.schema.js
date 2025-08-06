@@ -93,6 +93,22 @@ export const updateUsernameSchema = {
   },
 };
 
+export const getUserPictureSchema = {
+	params: idParamsSchema,
+	response: {
+	  200: {
+		type: "string",
+		contentEncoding: 'binary',
+		contentMediaType: 'application/octet-stream'
+	  },
+	},
+	400: errorResponseSchema,
+	401: errorResponseSchema,
+	404: errorResponseSchema,
+	500: errorResponseSchema,
+};
+  
+
 export const updatePictureSchema = {
   params: idParamsSchema,
   consumes: ["multipart/form-data"],
@@ -161,8 +177,8 @@ export const validatePasswordSchema = {
         type: "string",
         minLength: 5,
         // Requires 1 uppercase, 1 number and cannot contain the word password
-        // pattern: '^(?!.*password)(?=.*[A-Z])(?=.*\\d).{5,}$'
-        pattern: "^[A-Za-z0-9]+$",
+        pattern: '^(?!.*password)(?=.*[A-Z])(?=.*\\d).{5,}$',
+        // pattern: "^[A-Za-z0-9]+$",
       },
     },
     additionalProperties: false,
