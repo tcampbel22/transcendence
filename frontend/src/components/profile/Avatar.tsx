@@ -9,19 +9,21 @@ type AvatarInfo = {
 	userId: number;
 	is2faEnabled: boolean;
 };
+const DEFAULT_IMG = 'images/default.png';
 
 const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 	const API_URL = import.meta.env.VITE_API_USER;
 	const BASE_URL = import.meta.env.VITE_BASE_USER_URL || '';
-	const [editIsOpen, setEditOpen] = useState(false);
-	const [passwordIsOpen, setPasswordOpen] = useState(false);
-	const [deleteIsOpen, setDeleteOpen] = useState(false);
-	const [username, setUsername] = useState('');
-	const [email, setEmail] = useState('');
+	const [editIsOpen, setEditOpen] = useState<boolean>(false);
+	const [passwordIsOpen, setPasswordOpen] = useState<boolean>(false);
+	const [deleteIsOpen, setDeleteOpen] = useState<boolean>(false);
+	const [username, setUsername] = useState<string>('');
+	const [email, setEmail] = useState<string>('');
 	const [refreshUser, setRefreshUser] = useState(false);
-	const [imageUrl, setImageUrl] = useState<string>('images/default.png');
+	const [imageUrl, setImageUrl] = useState<string>(DEFAULT_IMG);
 	const [imageFile, setImageFile] = useState<File | null>(null);
-	const [enabled, setEnabled] = useState(is2faEnabled);
+	const [enabled, setEnabled] = useState<boolean>(is2faEnabled);
+	const [imgError, setImgError] = useState<boolean>(false);
 	//need to add actual values to the userId.
 
 	useEffect(() => {
@@ -35,7 +37,7 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 				setUsername(response.data.username);
 				setEmail(response.data.email);
 				
-				if (response.data.picture && response.data.picture !== "default.png") {
+				if (response.data.picture && response.data.picture !== DEFAULT_IMG) {
 					const picture = await api.get(`${API_URL}/${userId}/picture`, 
 							{ 
 								withCredentials: true,
@@ -43,11 +45,16 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 							 })
 					const imageURL = URL.createObjectURL(picture.data);
 					setImageUrl(imageURL);
-				  }
+				} else {
+					setImageUrl(DEFAULT_IMG);
+					setImgError(false)
+				}
 			} 
 			catch (err: any) {
 				const error = err as AxiosError;
 				console.error("Error:", error.message);
+				setImageUrl(DEFAULT_IMG);
+				setImgError(false)
 			}
 		};
 		fetchUserInfo()
@@ -92,7 +99,10 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 					<img 
 						src={imageUrl} 
 						alt="Profile Picture"
-						onError={() => setImageUrl(`/images/default.png`)} 
+						onError={() => {
+							if (!imgError) {
+								setImgError(true)
+								setImageUrl(DEFAULT_IMG)}}} 
 						className="min-w-60 min-h-60 max-w-90 max-h-90 rounded-full "
 					/>
 				</div>

@@ -1,3 +1,4 @@
+import { S3ServiceException } from "@aws-sdk/client-s3";
 
 export class ErrorBadRequest extends Error {
 	constructor(message) {
@@ -46,7 +47,7 @@ export class ErrorConflict extends Error {
 export class ErrorInternalServer extends Error {
 	constructor(message) {
 		super(message);
-		this.name = 'BadRequestError';
+		this.name = 'InternalServerError';
 		this.statusCode = 500;
 		Error.captureStackTrace(this, this.constructor);
 	}
@@ -77,7 +78,8 @@ export function handleError(err, reply, defaultMessage) {
 		err instanceof ErrorUnAuthorized ||
 		err instanceof ErrorBadGateway ||
 		err instanceof ErrorCustom ||
-		err instanceof ErrorForbidden) {
+		err instanceof ErrorForbidden ||
+		err instanceof S3ServiceException) {
 	  return reply.code(err.statusCode).send({ message: err.message });
 	}
 	

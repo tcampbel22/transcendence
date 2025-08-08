@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for tc-game-service on 2025-08-01T12:31:33+03:00
+# fly.toml app configuration file generated for tc-game-service on 2025-08-08T10:48:00+03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -7,6 +7,10 @@ app = 'tc-game-service'
 primary_region = 'arn'
 
 [build]
+
+[mount]
+  source = 'game_db'
+  destination = '/data'
 
 [http_service]
   internal_port = 3001
@@ -17,9 +21,7 @@ primary_region = 'arn'
   processes = ['app']
 
 [[vm]]
-  memory = '1gb'
-  cpu_kind = 'shared'
-  cpus = 1
+  size = 'shared-cpu-1x'
 
 [experimental]
   private_network = true

@@ -7,9 +7,11 @@ import {
   ErrorCustom,
   ErrorUnAuthorized,
 } from "../utils/error.js";
-import fastify from "fastify";
 
 const isProduction = process.env.NODE_ENV === "production";
+const gameServiceBaseUrl = isProduction
+  ? "http://tc-game-service.internal:3001/api"
+  : "http://localhost:3001/api";
 
 export const profileService = {
   // Check if user is in db
@@ -223,10 +225,8 @@ export const profileService = {
   },
   // Fetches a user's match history
   async getMatchHistory(id) {
-    const gameServiceBaseUrl =
-      isProduction
-        ? "http://tc-game-service/api"
-        : "http://localhost:3001/api";
+
+	console.log("URL:", gameServiceBaseUrl)
     // Fetch the user's basic information
     const user = await prisma.user.findUnique({
       where: { id: id },
@@ -244,13 +244,12 @@ export const profileService = {
     const response = await axios.get(`${gameServiceBaseUrl}/user/${id}`, {
       headers: {
         "x-internal-key": process.env.INTERNAL_KEY,
-      },
-      ...axiosConfig
+      }
     });
       if (response.status !== 200)
         throw new ErrorCustom(
           `Error retrieving match history ${response.statusText}`,
-          response.status,
+          503,
         );
 
       const games = response.data.userGames;
@@ -266,10 +265,10 @@ export const profileService = {
           if (
             game.id == null || // Check for null or undefined
             game.createdAt == null ||
-            game.player1Score == null || // Allow 0 as a valid value
+            game.player1Score == null ||
             game.player2Score == null
           ) {
-            fastify.log.error(`Invalid game data: ${JSON.stringify(game)}`);
+            console.error(`Invalid game data: ${JSON.stringify(game)}`);
             return null; // Skip invalid games
           }
 
@@ -301,8 +300,8 @@ export const profileService = {
       );
       return matchHistory;
     } catch (err) {
-      fastify.log.error(`getMatchHistory: Failed to retrieve match history`);
-      throw new ErrorCustom(err.message, err.statusCode);
+      console.error(`getMatchHistory: Failed to retrieve match history`);
+      throw err;
     }
   },
 

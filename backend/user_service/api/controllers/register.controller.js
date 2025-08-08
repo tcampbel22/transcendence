@@ -8,12 +8,12 @@ export const registerController = {
 		try {
 			const { username, email, password } = request.body;
 			if (password.toLowerCase().includes(username.toLowerCase())) {
-				request.log.info(`User registration failed: ${username} tried to use username in password`);
+				request.log.error(`User registration failed: ${username} tried to use username in password`);
 				return reply.code(400).send({ message: "Password cannot contain username or vice versa" });
 			}
 			const existingUser = await checkForExistingUser(prisma, username);
 			if (existingUser) {
-				request.log.info(`User registration failed: ${username} already exists`);
+				request.log.error(`User registration failed: ${username} already exists`);
 				return reply.code(409).send({ 
 					message: "Username or email already taken",
 					id: existingUser.id
@@ -30,7 +30,7 @@ export const registerController = {
 				picture
 			});
 		} catch (err) {
-			request.log.error(`Error registering user: ${err}`);
+			request.log.error(`Error registering user: ${err.message}`);
 			return reply.code(500).send({ message: "Internal server error" });
 		}
 	}

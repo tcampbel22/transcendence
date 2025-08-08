@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect } from "react";
 import { TitleCard } from "../utils/TitleCard";
 import { AuthInput } from "../utils/AuthInput";
+import { Loading } from "../utils/Loading";
+import { useLoadingScreenToggle } from "../../hooks/useHealthCheck";
+import { Error } from "../utils/Error";
 
 const Login = () => {
   const API_URL = import.meta.env.VITE_API_USER;
@@ -15,6 +18,7 @@ const Login = () => {
   const [loginError, setLoginError] = useState("");
   const [googleClicked, setGoogleClicked] = useState(false);
   const navigate = useNavigate();
+  const { loading, error, isReady } = useLoadingScreenToggle();
 
 
 	const handleGoogleLogin = async () => {
@@ -73,6 +77,9 @@ const Login = () => {
 		setPassword('')
 		setUsername('')
 	}
+	
+	// if (loading && !isReady) return <Loading />
+	// if (error && !isReady) return <Error />
 
   return (
     <div className="flex flex-col justify-center items-center animate-fade-in">

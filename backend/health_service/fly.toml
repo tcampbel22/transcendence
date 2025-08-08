@@ -1,19 +1,15 @@
-# fly.toml app configuration file generated for tc-user-service on 2025-08-01T11:09:17+03:00
+# fly.toml app configuration file generated for tc-healthcheck on 2025-08-08T16:27:16+03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'tc-user-service'
+app = 'tc-healthcheck'
 primary_region = 'arn'
 
 [build]
 
-[mount]
-  source = 'user_db'
-  destination = '/data'
-  
 [http_service]
-  internal_port = 3002
+  internal_port = 3000
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
@@ -21,9 +17,7 @@ primary_region = 'arn'
   processes = ['app']
 
 [[vm]]
-  memory = '1gb'
-  cpu_kind = 'shared'
-  cpus = 1
+  size = 'shared-cpu-1x'
 
 [experimental]
   private_network = true

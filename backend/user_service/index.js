@@ -3,6 +3,7 @@ import { testConnection } from "./database/db.js";
 import loginRoutes from "./api/routes/login.routes.js";
 import registerRoutes from "./api/routes/register.routes.js";
 import profileRoutes from "./api/routes/profile.routes.js";
+import healthRoutes from "./api/routes/health.routes.js"
 import cors from "@fastify/cors";
 import fastifyCookie from "@fastify/cookie";
 import multipart from "@fastify/multipart";
@@ -30,6 +31,7 @@ fastify.register(multipart, {
 });
 
 try {
+  fastify.register(healthRoutes);
   fastify.register(loginRoutes);
   fastify.register(registerRoutes);
   fastify.register(profileRoutes);
