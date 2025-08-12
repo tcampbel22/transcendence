@@ -4,23 +4,31 @@ const fastify = Fastify({
 	logger: true
 })
 
-//Make this 2 functions and stop pinging once the connection is made
-const checkAllServices = async () => {
-	const user = await fetch("https://tc-user-service.fly.dev/api/health");
-	const game = await fetch("https://tc-game-service.fly.dev/api/health");
+
+const checkUserService = async () => {
+	user = await fetch("https://tc-user-service.fly.dev/api/health");
 	console.log(user)
-	console.log(game)
-	if (user.status === 401 && game.status === 200)
+	if (user.status === 200 || user.status === 401)
 		return true;
-	else 
-		return false;
+	else
+		return user = await fetch("https://tc-user-service.fly.dev/api/health");
+}
+
+const checkGameService = async () => {
+	let game = await fetch("https://tc-game-service.fly.dev/api/health");
+	console.log(game)
+	if (game.status === 200 || game.status === 401)
+		return true;
+	else
+		game = await fetch("https://tc-game-service.fly.dev/api/health");
 }
 
 fastify.get("/health-check", async (request, reply) => {
 	try {
-		const allHealthy = await checkAllServices();
+		const userHealthy = await checkUserService();
+		const gameHealthy = await checkGameService();
 		
-		if (allHealthy) {
+		if (userHealthy && gameHealthy) {
 			request.log.info("All services are running")
 			return reply.send(200).send({ message: "All services are running"});
 		}

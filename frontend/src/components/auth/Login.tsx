@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect } from "react";
 import { TitleCard } from "../utils/TitleCard";
 import { AuthInput } from "../utils/AuthInput";
-import { Loading } from "../utils/Loading";
+import { Loading } from "../../Loading";
 import { useLoadingScreenToggle } from "../../hooks/useHealthCheck";
 import { Error } from "../utils/Error";
 
@@ -18,7 +18,7 @@ const Login = () => {
   const [loginError, setLoginError] = useState("");
   const [googleClicked, setGoogleClicked] = useState(false);
   const navigate = useNavigate();
-  const { loading, error, isReady } = useLoadingScreenToggle();
+//   const { loading, error, isReady } = useLoadingScreenToggle();
 
 
 	const handleGoogleLogin = async () => {

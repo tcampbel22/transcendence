@@ -1,5 +1,5 @@
 import React from "react"
-import { TitleCard } from "./TitleCard"
+import { TitleCard } from "./components/utils/TitleCard"
 
 export const Loading:React.FC = () => {
 	return (

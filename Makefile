@@ -10,7 +10,10 @@ RESET = $$(printf '\033[0m')
 all: build-frontend
 
 build-frontend:
+	
+	@echo "$(YELLOW)Building frontend...$(RESET)"
 	cd frontend && npm install && npm run build
+	@cp frontend/loading.html frontend/dist
 	@echo "$(YELLOW)Removing old dist...$(RESET)"
 	rm -rf backend/nginx/dist
 	@echo "$(YELLOW)Adding new dist...$(RESET)"

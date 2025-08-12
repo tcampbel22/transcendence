@@ -1,5 +1,10 @@
 FROM nginx
 
-COPY conf/nginx.conf /etc/nginx/nginx.conf
+COPY conf/loading.conf /etc/nginx/nginx.loading.conf
+COPY conf/nginx.conf /etc/nginx/nginx.prod.conf
 COPY dist/ /frontend/dist
-ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
+COPY start-up.sh /start-up.sh
+RUN chmod +x /start-up.sh
+# ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
+
+CMD ["/start-up.sh"]
