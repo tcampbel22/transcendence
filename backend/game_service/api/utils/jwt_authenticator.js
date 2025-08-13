@@ -8,6 +8,8 @@ const authenticate = async (request, reply) => {
     // Skip authentication for internal requests
     return;
   }
+  if (request.routerPath === '/api/health')
+		return
 	try {
     const token = request.cookies.token;
     if (!token) {
