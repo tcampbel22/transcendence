@@ -1,34 +1,30 @@
 #!/bin/sh
 
-nginx -c /etc/nginx/nginx.loading.conf -g 'daemon off;' &
-NGINX_PID=$!
 
-		echo "Warming up other services"
-		echo "Warming up user service"
-		
-		http_code_user=$(curl -s -o /dev/null -w '%{http_code}' --retry 5 --retry-delay 3 --max-time 30 https://tc-user-service.fly.dev/api/health )
-		if [ "$http_code_user" != "200" ] && [ "$http_code_user" != "401" ]; then
-			echo "Failed to start user service: HTTP $http_code_user"
-    		exit 1
-		fi
-		echo "User service is running"
+echo "Warming up other services"
 
-		echo "Warming up game service"
-		http_code_game=$(curl -s -o /dev/null -w '%{http_code}' --retry 5 --retry-delay 3 --max-time 30 https://tc-game-service.fly.dev/api/health)
-		if [ "$http_code_game" != "200" ] && [ "$http_code_game" != "401" ]; then
-			echo "Failed to start game service: HTTP $http_code_game"
-    		exit 1
-		fi
-		echo "Game service is running"
+check_service() {
+	local service_url="$1"
+	local retries
+	code=$(curl -s -o /dev/null -w '%{http_code}' "$service_url" || true)
+	[ "$code" = "200" ] || [ "$code" = "401" ]
+}
 
-	echo "All services responded, starting Nginx..."
+until check_service https://tc-user-service.fly.dev/api/health; do
+	sleep 1
+done
+echo "User service is running"
 
+until check_service https://tc-game-service.fly.dev/api/health; do
+	sleep 1
+done
+echo "Game service is running"
+
+
+echo "All services responded, starting Nginx..."
+
+echo "Adding prod config"
 cp /etc/nginx/nginx.prod.conf /etc/nginx/nginx.conf
-nginx -s reload
-if [ $? -ne 0 ]; then
-  echo "Nginx reload failed!"
-  exit 1
-fi
-sleep 1
-# wait $NGINX_PID
-# exec "nginx", "-g", "daemon off;"
+
+echo "Launching new config"
+exec nginx -g "daemon off;"

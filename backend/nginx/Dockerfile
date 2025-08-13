@@ -7,4 +7,4 @@ COPY start-up.sh /start-up.sh
 RUN chmod +x /start-up.sh
 # ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
 
-CMD ["/start-up.sh"]
+ENTRYPOINT ["/start-up.sh"]
