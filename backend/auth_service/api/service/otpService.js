@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 const SECRET_KEY = process.env.FASTIFY_SECURE_SECRET;
 
 export const generateOTPToken = (otp) => {
-    return jwt.sign({ otp }, SECRET_KEY, { expiresIn: "5m" });
+    return jwt.sign({ otp }, SECRET_KEY, { expiresIn: "15m" });
 };
 
 export const verifyOTPToken = (token, userOtp) => {

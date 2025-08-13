@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect} from "react";
 import { useLocation } from "react-router-dom";
-import { userIdFromState } from "../hooks/userIdFromState";
-import { userNameFromState } from "../hooks/useNameFromState";
 import FriendsButton from "../components/friends/FriendsButton";
 import AddFriendButton from "../components/friends/AddFriendButton";
 import { useFriendslist } from "../hooks/useFriendsList";
 import { Card } from "../components/utils/Card";
 import { TitleCard } from "../components/utils/TitleCard";
-import useAllUsers from "../hooks/useAllUsers";
 import { useUsername } from "../hooks/useUsername";
 
 interface FullUserInfo {

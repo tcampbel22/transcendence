@@ -21,4 +21,4 @@ const authenticate = async (request, reply) => {
   }
 }
 
-export default authenticate;
+export { authenticate } ;

@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../lib/api";
 import { AxiosError } from "axios";
-import  axios  from	"axios"
-import EditProfile from "./EditProfile";
-import ChangePassword from "./ChangePassword";
 import DeleteProfile from "./DeleteUser";
 import { ProfileButton } from "./ProfileButton";
 import { ProfilePopUp } from "./ProfilePopUp";
@@ -12,19 +9,21 @@ type AvatarInfo = {
 	userId: number;
 	is2faEnabled: boolean;
 };
+const DEFAULT_IMG = 'images/default.png';
 
 const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 	const API_URL = import.meta.env.VITE_API_USER;
 	const BASE_URL = import.meta.env.VITE_BASE_USER_URL || '';
-	const [editIsOpen, setEditOpen] = useState(false);
-	const [passwordIsOpen, setPasswordOpen] = useState(false);
-	const [deleteIsOpen, setDeleteOpen] = useState(false);
-	const [username, setUsername] = useState('');
-	const [email, setEmail] = useState('');
+	const [editIsOpen, setEditOpen] = useState<boolean>(false);
+	const [passwordIsOpen, setPasswordOpen] = useState<boolean>(false);
+	const [deleteIsOpen, setDeleteOpen] = useState<boolean>(false);
+	const [username, setUsername] = useState<string>('');
+	const [email, setEmail] = useState<string>('');
 	const [refreshUser, setRefreshUser] = useState(false);
-	const [imageUrl, setImageUrl] = useState<string>(`${BASE_URL}/uploads/default.png`);
+	const [imageUrl, setImageUrl] = useState<string>(DEFAULT_IMG);
 	const [imageFile, setImageFile] = useState<File | null>(null);
-	const [enabled, setEnabled] = useState(is2faEnabled);
+	const [enabled, setEnabled] = useState<boolean>(is2faEnabled);
+	const [imgError, setImgError] = useState<boolean>(false);
 	//need to add actual values to the userId.
 
 	useEffect(() => {
@@ -37,15 +36,25 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
 				const response = await api.get(`${API_URL}/${userId}`, { withCredentials: true });
 				setUsername(response.data.username);
 				setEmail(response.data.email);
-				if (response.data.picture) {
-					setImageUrl(`${BASE_URL}${response.data.picture}?${Date.now()}`);
-				  } else {
-					setImageUrl(`${BASE_URL}/uploads/default.png`);
-				  }
+				
+				if (response.data.picture && response.data.picture !== DEFAULT_IMG) {
+					const picture = await api.get(`${API_URL}/${userId}/picture`, 
+							{ 
+								withCredentials: true,
+								responseType: 'blob',
+							 })
+					const imageURL = URL.createObjectURL(picture.data);
+					setImageUrl(imageURL);
+				} else {
+					setImageUrl(DEFAULT_IMG);
+					setImgError(false)
+				}
 			} 
 			catch (err: any) {
 				const error = err as AxiosError;
 				console.error("Error:", error.message);
+				setImageUrl(DEFAULT_IMG);
+				setImgError(false)
 			}
 		};
 		fetchUserInfo()
@@ -86,12 +95,15 @@ const Avatar = ({userId, is2faEnabled}: AvatarInfo) => {
         <div className="border flex flex-col items-center justify-between h-full w-full rounded py-6 overflow-y-scroll">
 			<h1 className="font-bold text-2xl lg:text-4xl">{username}</h1>
 			<div className="relative w-auto h-auto flex flex-col items-center m-8">
-				<div className="w-auto h-auto rounded-full border-4 border-amber-200 flex flex-col items-center justify-between">
+				<div className="min-w-60 min-h-60 max-w-90 max-h-90 w-auto h-auto rounded-full border-4 border-amber-200 flex flex-col items-center justify-between">
 					<img 
 						src={imageUrl} 
 						alt="Profile Picture"
-						onError={() => setImageUrl(`${BASE_URL}/uploads/default.png`)} 
-						className="w-auto h-auto rounded-full object-cover"
+						onError={() => {
+							if (!imgError) {
+								setImgError(true)
+								setImageUrl(DEFAULT_IMG)}}} 
+						className="min-w-60 min-h-60 max-w-90 max-h-90 rounded-full "
 					/>
 				</div>
 				<button

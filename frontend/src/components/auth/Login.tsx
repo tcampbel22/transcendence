@@ -6,15 +6,19 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect } from "react";
 import { TitleCard } from "../utils/TitleCard";
 import { AuthInput } from "../utils/AuthInput";
+import { Loading } from "../../Loading";
+import { useLoadingScreenToggle } from "../../hooks/useHealthCheck";
+import { Error } from "../utils/Error";
 
 const Login = () => {
   const API_URL = import.meta.env.VITE_API_USER;
-	const API_AUTH = import.meta.env.VITE_API_AUTH;
+  const API_AUTH = import.meta.env.VITE_API_AUTH;
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [loginError, setLoginError] = useState("");
   const [googleClicked, setGoogleClicked] = useState(false);
   const navigate = useNavigate();
+//   const { loading, error, isReady } = useLoadingScreenToggle();
 
 
 	const handleGoogleLogin = async () => {
@@ -25,7 +29,7 @@ const Login = () => {
 	useEffect(() => {
 		if (!googleClicked) return;
 		const receiveMessage = (event:MessageEvent) => {
-			if (event.origin !== "https://localhost:4433" && event.origin !== "http://localhost:5173") 
+			if (event.origin !== "https://transendence.fly.dev" && event.origin !== "http://localhost:5173") 
 					return;
 			if (!event.data.statusCode) {
           navigate('/hub', { state: { userId: event.data.userId, username: event.data.username } });
@@ -73,6 +77,9 @@ const Login = () => {
 		setPassword('')
 		setUsername('')
 	}
+	
+	// if (loading && !isReady) return <Loading />
+	// if (error && !isReady) return <Error />
 
   return (
     <div className="flex flex-col justify-center items-center animate-fade-in">

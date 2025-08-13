@@ -13,7 +13,6 @@ const Profile = () => {
 	const [victories, setVictories] = useState(0);
 	const [losses, setLoses] = useState(0);
 	const [gamesPlayed, setGames] = useState(0);
-
 	useEffect (() => {
 		const getUserData = async () => {
 			try {
@@ -45,7 +44,7 @@ const Profile = () => {
 				</div>
 				
 				<div className="col-span-1 row-span-1">
-					<WinsLosses value={Number.isNaN(victories / gamesPlayed) ? 0 : (victories / gamesPlayed * 100).toPrecision(2) } text="Win Percentage" percent={true}/>
+					<WinsLosses value={Number.isNaN(victories / gamesPlayed) ? 0 : (victories / gamesPlayed * 100).toPrecision(3) } text="Win Percentage" percent={true}/>
 				</div>
 
 

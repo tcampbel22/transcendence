@@ -1,9 +1,10 @@
-FROM nginx:1.27-alpine
+FROM nginx
 
-RUN mkdir -p /var/log/nginx
+COPY conf/loading.conf /etc/nginx/nginx.loading.conf
+COPY conf/nginx.conf /etc/nginx/nginx.prod.conf
+COPY dist/ /frontend/dist
+COPY start-up.sh /start-up.sh
+RUN chmod +x /start-up.sh
+# ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
 
-COPY conf/nginx.conf /etc/nginx/nginx.conf
-COPY ssl/ /etc/nginx/ssl/
-COPY ssl/ /etc/nginx/ssl/
-
-ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
+ENTRYPOINT ["/start-up.sh"]

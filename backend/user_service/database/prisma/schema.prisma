@@ -20,7 +20,7 @@ model User {
   username String   @unique
   email    String
   password String
-  picture  String   @default("uploads/default.png")
+  picture  String   @default("images/default.png")
   isOnline Boolean  @default(false)
   is2faEnabled Boolean  @default(false)
 

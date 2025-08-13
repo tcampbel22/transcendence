@@ -17,24 +17,6 @@ const Register:React.FC = () => {
 	const [error, setError] = useState('')
 	const navigate = useNavigate();
 
-	const registerUser = async () => {
-
-		const payload = {
-			username,
-			email,
-			password,
-		};
-		try {
-			const response = await api.post(`${API_URL}/register`, payload, {withCredentials: true}) //product
-			return response.data.id
-		} catch (error: any) {
-			// console.error(error.message)
-			// console.error("Error:", error.response?.data || error.message);
-			// setError()
-			throw new Error(error);
-		}
-	}
-
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		setTimeout(() => {

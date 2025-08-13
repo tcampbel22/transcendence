@@ -1,28 +1,18 @@
 import Fastify from "fastify";
 import { testConnection } from "./database/db.js";
+import healthRoutes from "./api/routes/health.routes.js";
 import gameRoutes from "./api/routes/game.routes.js";
-import logger from "@eleekku/logger";
-import fs from "fs";
 import cors from "@fastify/cors";
 import fastifyCookie from "@fastify/cookie";
 
-const SSL_CERT_PATH = "ssl/cert.pem";
-const SSL_KEY_PATH = "ssl/key.pem";
-
-const isProduction = process.env.NODE_ENV === "production";
 
 const fastify = Fastify({
-  logger: true,
-  ...(isProduction && {
-    https: {
-      key: fs.readFileSync(SSL_KEY_PATH),
-      cert: fs.readFileSync(SSL_CERT_PATH),
-    },
-  }),
-});
+	logger: true });
 
+const isDev = process.env.NODE_ENV === "dev";
+const origin = isDev ? "http://localhost:5173" : "https://transendence.fly.dev"
 fastify.register(cors, {
-  origin: ["http://localhost:5173"], // 👈 Vite's default dev server port
+  origin: [origin],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "x-internal-key"],
   credentials: true,
@@ -32,6 +22,7 @@ try {
   fastify.register(fastifyCookie, {
   secret: process.env.JWT_SECRET, // for cookies signature
   });
+  fastify.register(healthRoutes);
   fastify.register(gameRoutes);
 } catch (err) {
   fastify.log.error(err);
@@ -39,19 +30,17 @@ try {
 
 // Start the server
 const start = async () => {
-  try {
-    console.log("Connecting to DB from:", process.cwd());
-    const dbConnected = await testConnection();
-    if (!dbConnected) {
-      logger.error("game_service failed to connect to the database");
-      throw new Error("Failed to connect to the database");
-    }
-    await fastify.listen({ port: 3001, host: "0.0.0.0" });
-    logger.info("game_service connected to the database");
-  } catch (err) {
-    logger.error(err);
-    fastify.log.error(err);
-    process.exit(1);
-  }
+    try {
+		const dbConnected = await testConnection();
+		const port = process.env.PORT || 3001
+		if (!dbConnected) {
+		  throw new Error("Failed to connect to the user database");
+		}
+		await fastify.listen({ port, host: '::' });
+		fastify.log.info(`user service listening on ${port}`)
+	  } catch (err) {
+		fastify.log.error(err);
+		process.exit(1);
+	  }
 };
 start();

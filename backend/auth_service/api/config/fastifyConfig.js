@@ -11,7 +11,6 @@ The session cookie is set to be secure, HTTP-only, and accessible throughout the
 import Fastify from 'fastify';
 import fastifySecureSession from '@fastify/secure-session';
 import dotenv from 'dotenv';
-import fs from "fs";
 import emailRoutes from "../routes/emailRoutes.js";
 import cors from "@fastify/cors";
 
@@ -19,22 +18,14 @@ dotenv.config();
 
 const isProduction = process.env.NODE_ENV === "production";
 
-const fastify = Fastify({
-    logger: true,
-    ...(isProduction && {
-        https: {
-            key: fs.readFileSync("./ssl/key.pem"),
-            cert: fs.readFileSync("./ssl/cert.pem"),
-        },
-    }),
-});
+const fastify = Fastify();
 
 fastify.register(fastifySecureSession, {
     secret: Buffer.from(process.env.FASTIFY_SECURE_SECRET),
     cookie: {
         path: '/',
         httpOnly: true,
-        secure: isProduction, // Solo cookies seguras en producción
+        secure: isProduction,
     },
 });
 

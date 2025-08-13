@@ -8,7 +8,7 @@
 
  const redirectURL =
  process.env.NODE_ENV === "production"
-     ? "https://localhost:4433"
+     ? "https://transendence.fly.dev"
      : "http://localhost:5173";
  
  export const googleCallback = async (req, reply) => {
@@ -27,7 +27,7 @@
         let response;
         if (process.env.NODE_ENV === "production") {
         response = await axios.post(
-             `https://nginx:4433/users/register`,
+             `http://tc-user-service/api/register`,
              payload,
              { httpsAgent }
          );
@@ -52,13 +52,13 @@
             let response;
             if (process.env.NODE_ENV === "production") {
                 response = await axios.post(
-                `https://nginx:4433/users/login`,
+                `http://tc-user-service/api/login`,
                 loginInput,
                 { httpsAgent }
             );
             }
             else {
-            response = await axios.post("http://localhost:3002/api/login", loginInput, {withCredentials: true});
+            	response = await axios.post("http://localhost:3002/api/login", loginInput, {withCredentials: true});
             }
             const userData = encodeURIComponent(JSON.stringify({ 
                                                                     userId: response.data.userId, 

@@ -13,6 +13,7 @@
 	},
 	"dependencies": {
 		"@eleekku/logger": "^1.0.0",
+		"game_service": "file:backend/game_service",
 		"https": "^1.0.0"
 	}
 }

@@ -1,1 +1,6 @@
 .gitkeep
+.env
+node_modules
+**/node_modules
+**/*.db
+database/data

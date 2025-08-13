@@ -2,12 +2,10 @@
 import { Routes, Route } from "react-router-dom"
 import Register from "../auth/Register"
 import OneVsOnePage from "../../pages/OneVsOnePage"
-import TournamentPage from "../tournament/TournamentPage"
 import Login from "../auth/Login"
 import Hub from "../../pages/HubPage"
 import Profile from "../../pages/Profile"
 import OTPInput from "../auth/2FA"
-import "../../index.css" // Import CSS file for styles
 import Logout from "../auth/Logout"
 import TournamentType from "../tournament/TournamentType"
 import TournamentSetUp from "../tournament/TournamentSetUp"
