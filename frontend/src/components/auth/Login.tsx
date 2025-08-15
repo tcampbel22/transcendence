@@ -7,8 +7,6 @@ import React, { useEffect } from "react";
 import { TitleCard } from "../utils/TitleCard";
 import { AuthInput } from "../utils/AuthInput";
 import { Loading } from "../../Loading";
-import { useLoadingScreenToggle } from "../../hooks/useHealthCheck";
-import { Error } from "../utils/Error";
 
 const Login = () => {
   const API_URL = import.meta.env.VITE_API_USER;
@@ -18,7 +16,6 @@ const Login = () => {
   const [loginError, setLoginError] = useState("");
   const [googleClicked, setGoogleClicked] = useState(false);
   const navigate = useNavigate();
-//   const { loading, error, isReady } = useLoadingScreenToggle();
 
 
 	const handleGoogleLogin = async () => {
@@ -78,13 +75,10 @@ const Login = () => {
 		setUsername('')
 	}
 	
-	// if (loading && !isReady) return <Loading />
-	// if (error && !isReady) return <Error />
-
   return (
     <div className="flex flex-col justify-center items-center animate-fade-in">
       	<TitleCard link={false} />
-	  	<div className="basis-md p-10 rounded border-2 text-xl border-amber-200 flex flex-col items-center">
+	  	<div className="basis-md p-10 mb-6 rounded border-2 text-xl border-amber-200 flex flex-col items-center">
         	<h2 className="font-bold text-3xl mb-5 ">Login</h2>
 			<form
 				className="flex flex-col items-center gap-4 mb-6"
@@ -94,7 +88,7 @@ const Login = () => {
 				<AuthInput type="password" placeholder="password..." value={password} auto="Password" setValue={setPassword}/>
 				<button
 					type="submit"
-					className="border border-amber-200 rounded px-2 py-1 mt-2 hover:bg-amber-200 hover:text-gray-900"
+					className="border rounded px-2 py-1 mt-2 hover:bg-amber-200 hover:text-gray-900"
 				>
 					Sign in
 				</button>

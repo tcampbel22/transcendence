@@ -5,15 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="icon" href="/images/favicon.webp"/>
     <title>Loading...</title>
-	<script>
+	<script nonce="NONCE">
+		const urls = ['/user', '/game']; // List of URLs to fetch from
+
 		setInterval(() => {
-			fetch('/user').then(res => {
-				if (res.status === 200 || res.status === 401)
-					window.location.href = '/index.html?nocache=' + new Date().getTime()
-			})
-			.catch(() => {
-				console.error("Failed to reach service")
-			})
+			Promise.all(
+				urls.map(url =>
+					fetch(url)
+						.then(res => {
+							if (res.status === 200) {
+								return { url, success: true };
+							}
+							return { url, success: false };
+						})
+						.catch(() => ({ url, success: false }))
+				)
+			).then(results => {
+				const successful = results.find(result => result.success);
+				if (successful) {
+					window.location.href = '/index.html?nocache=' + new Date().getTime();
+				} else {
+					console.error("Failed to reach all services");
+				}
+			});
 		}, 3000);
 	</script>
 	<style>

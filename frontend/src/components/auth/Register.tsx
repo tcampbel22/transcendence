@@ -56,7 +56,7 @@ const Register:React.FC = () => {
 	return (
 	<div className="flex flex-col justify-center items-center gap-4">
       	<TitleCard link={false} />
-		<div className='basis-md p-10 rounded text-xl border-2 border-amber-200 flex flex-col items-center'>
+		<div className='basis-md p-10 mb-6 rounded text-xl border-2 border-amber-200 flex flex-col items-center'>
 			<h2 className="text-3xl mb-5 items-center text-center animate-fade-in delay-400 font-bold">Register</h2>
 			<div className='animate-slide-in'>
 				<form className="flex flex-col items-center gap-4 mb-6" onSubmit={handleSubmit}>

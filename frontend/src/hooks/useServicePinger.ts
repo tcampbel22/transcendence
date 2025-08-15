@@ -11,7 +11,7 @@ const useServicePinger = (services: string[]) => {
         );
         console.log("Services pinged successfully");
       } catch (err) {
-        console.error("Error pinging services", err);
+        // console.error("Error pinging services", err);
       }
     };
 
@@ -19,8 +19,8 @@ const useServicePinger = (services: string[]) => {
 
     const timeout = setTimeout(() => {
       clearInterval(interval);
-      console.log("Stopped pinging services after 20 minutes");
-    }, 1200000);
+      console.log("Stopped pinging services after 10 minutes");
+    }, 600000);
 
     return () => {
       clearInterval(interval);

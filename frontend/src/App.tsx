@@ -29,7 +29,7 @@ const App: React.FC = () => {
         setReady(true);
       } catch (err) {
         retries.current += 1;
-        console.error("Service check failed", err);
+        // console.error("Service check failed", err);
 
         if (retries.current > 5) {
           setError(true);

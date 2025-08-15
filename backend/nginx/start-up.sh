@@ -1,5 +1,8 @@
 #!/bin/sh
 
+echo "Loading the loading conf"
+nginx -c /etc/nginx/nginx.loading.conf
+echo "Loading page now live"
 
 echo "Warming up other services"
 
@@ -22,6 +25,15 @@ echo "Game service is running"
 
 
 echo "All services responded, starting Nginx..."
+nginx_pid=$(cat /var/run/nginx.pid 2>/dev/null || echo 0)
+echo "$nginx_pid"
+if [ "$nginx_pid" -gt 0 ]; then
+	kill -QUIT "$nginx_pid"
+	while [ -e /var/run/nginx.pid ]; do
+		sleep 0.5
+	done
+fi
+echo "Loading configuration stopped."
 
 echo "Adding prod config"
 cp /etc/nginx/nginx.prod.conf /etc/nginx/nginx.conf

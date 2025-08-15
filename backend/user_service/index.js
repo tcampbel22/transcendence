@@ -16,7 +16,7 @@ const isDev = process.env.NODE_ENV === "development";
 const origin = isDev ? "http://localhost:5173" : "https://transendence.fly.dev"
 
 fastify.register(cors, {
-  origin: [origin],
+  origin: ["http://localhost:5173", "https://transendence.fly.dev"],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "x-internal-key"],
   credentials: true,
