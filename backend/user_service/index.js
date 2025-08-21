@@ -12,11 +12,8 @@ import multipart from "@fastify/multipart";
 const fastify = Fastify({
 	logger: true });
 
-const isDev = process.env.NODE_ENV === "development";
-const origin = isDev ? "http://localhost:5173" : "https://transendence.fly.dev"
-
 fastify.register(cors, {
-  origin: ["http://localhost:5173", "https://transendence.fly.dev"],
+  origin: ["http://localhost:5173", "https://transendence.fly.dev", "https://tcampbel22@github.io"],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "x-internal-key"],
   credentials: true,

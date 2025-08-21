@@ -1,3 +1,5 @@
 export const healthController = (request, reply) => {
-	return  reply.status(200).send({ status: "ok" });
+	reply.header('Access-Control-Allow-Origin', '*');
+	return  reply.status(200).send({
+		status: "ok" });
 }

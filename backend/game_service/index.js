@@ -9,20 +9,18 @@ import fastifyCookie from "@fastify/cookie";
 const fastify = Fastify({
 	logger: true });
 
-const isDev = process.env.NODE_ENV === "dev";
-const origin = isDev ? "http://localhost:5173" : "https://transendence.fly.dev"
 fastify.register(cors, {
-  origin: [origin],
+  origin: ["http://localhost:5173", "https://transendence.fly.dev", "https://tcampbel22@github.io"],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "x-internal-key"],
   credentials: true,
 });
 
 try {
+  fastify.register(healthRoutes);
   fastify.register(fastifyCookie, {
   secret: process.env.JWT_SECRET, // for cookies signature
   });
-  fastify.register(healthRoutes);
   fastify.register(gameRoutes);
 } catch (err) {
   fastify.log.error(err);
