@@ -32,6 +32,17 @@ const Register:React.FC = () => {
 				setError("Missing field: all fields are required")
 				return
 			}
+			const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]$/;
+			if (!emailPattern.test(email)) {
+				setError("Please enter a valid email address")
+				return
+			}
+			const pw_pattern = '^(?!.*password)(?=.*[A-Z])(?=.*\\d).{5,}$'
+			if (!password.match(pw_pattern)) {
+				setError("Password must contain as least 1 number and 1 uppercase chararcter")
+				return
+			}
+
 			const response = await api.post(`${API_URL}/register`, payload, {withCredentials: true}) //product
 			setRegistered(true);
 			setTimeout(() => {
@@ -48,8 +59,8 @@ const Register:React.FC = () => {
 			else if (error.response?.data?.message.includes('password must NOT'))
 				setError("password must be at least 5 characters")
 			else
-			setError("Registration failed")
-			console.error("Error:", error.response?.data || error.message);
+				setError("Registration failed")
+				console.error("Error:", error.response?.data || error.message);
 		}
 	}
 
@@ -63,6 +74,7 @@ const Register:React.FC = () => {
 					<AuthInput type="text" placeholder='username...' auto="new-email" value={username} setValue={setUsername}/>
 					<AuthInput type="email" placeholder='email@example.com' auto="new-email" value={email} setValue={setEmail}/>
 					<AuthInput type="password" placeholder='password...' auto="new-password" value={password} setValue={setPassword}/>
+					<p className='text-xs text-center'>*Password must contain 1 number <br></br>and 1 uppercase letter</p>
 					<button  type="submit" className='border border-amber-200 rounded px-3 py-1 my-3 hover:bg-amber-200 hover:text-gray-900'>Register</button>
 					{error && 
 					(

@@ -46,11 +46,18 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+	setTimeout(() => {
+		setLoginError('');
+	  }, 3000);
 		const loginInput = {
 			username,
 			password,
 		}
 		try {
+			if (!username || !password) {
+				setLoginError("Missing field: Username or password is empty")
+				return
+			}
 			const response = await api.post(`${API_URL}/login`, loginInput, { withCredentials: true });
 			const userEmail = response.data.email;
 
@@ -65,7 +72,7 @@ const Login = () => {
 			navigate('/2fa', { state: { userData: response.data, otpToken: otpToken.data.token } });
 		} catch (error: any) {
 			console.error("Error:", error.response?.data || error.message);
-			setLoginError("invalid username or password")
+			setLoginError("Invalid username or password")
 			setTimeout(() => {
 				setLoginError('');
 			  }, 3000);
